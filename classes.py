@@ -19,13 +19,14 @@
 
 Примечание:
     Перед использованием убедитесь, что установлены все необходимые зависимости.
+    
 """
 
 import os
 from PIL import Image
 from pillow_heif import register_heif_opener
 
-# Импорт для поддержки AVIF
+# Импорт для поддержки AVIF - самый современный формат
 try:
     import pillow_avif
     AVIF_AVAILABLE = True
