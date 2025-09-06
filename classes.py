@@ -2,7 +2,7 @@
 Модуль classes.py содержит класс ImageCompressor для сжатия изображений в различные форматы.
 
 Классы:
-    ImageCompressor: Класс для сжатия изображений в формат HEIF, WebP или AVIF.
+    ImageCompressor: Класс для сжатия изображений в формат HEIF, WebP, AVIF или JPEG.
 
 Зависимости:
     - os: Для работы с файловой системой.
@@ -19,7 +19,7 @@
 
 Примечание:
     Перед использованием убедитесь, что установлены все необходимые зависимости.
-    
+
 """
 
 import os
@@ -29,6 +29,7 @@ from pillow_heif import register_heif_opener
 # Импорт для поддержки AVIF - самый современный формат
 try:
     import pillow_avif
+
     AVIF_AVAILABLE = True
 except ImportError:
     AVIF_AVAILABLE = False
@@ -57,18 +58,17 @@ class ImageCompressor:
         output_format (str): Получает или устанавливает формат выходных изображений.
     """
 
-    supported_formats = (".jpg", ".jpeg", ".png")
-    output_formats = {"HEIF": ".heic", "WEBP": ".webp", "AVIF": ".avif"}
+    supported_formats = (".jpg", ".jpeg", ".png", ".heic", ".heif", ".avif")
+    output_formats = {"HEIF": ".heic", "WEBP": ".webp", "AVIF": ".avif", "JPEG": ".jpg"}
 
     def __init__(self, quality: int = 50, output_format: str = "HEIF"):
         self.__quality = quality
         self.__output_format = output_format.upper()
 
-        # Инициализируем HEIF если выбран
-        if self.__output_format == "HEIF":
-            register_heif_opener()
+        # Инициализируем HEIF для чтения и записи
+        register_heif_opener()
 
-        # Проверяем поддержку AVIF
+        # Проверяем поддержку AVIF для записи
         if self.__output_format == "AVIF":
             if not AVIF_AVAILABLE:
                 raise ImportError(
@@ -182,9 +182,11 @@ class ImageCompressor:
         self.__output_format = value
 
         # Инициализируем необходимые кодеки
-        if value == "HEIF":
-            register_heif_opener()
-        elif value == "AVIF":
+        # HEIF всегда инициализируем для чтения входных файлов
+        register_heif_opener()
+
+        # Дополнительная проверка AVIF для записи
+        if value == "AVIF":
             if not AVIF_AVAILABLE:
                 raise ImportError(
                     "Для поддержки AVIF установите плагин: pip install pillow-avif-plugin"
@@ -202,15 +204,18 @@ def main() -> None:
     print("1. HEIF (.heic) - высокая эффективность сжатия")
     print("2. WebP (.webp) - хорошая совместимость и качество")
     print("3. AVIF (.avif) - новейший формат с максимальным сжатием")
+    print("4. JPEG (.jpg) - универсальный стандартный формат")
 
     format_choice = input(
-        "Введите номер формата (1-3) или нажмите Enter для HEIF по умолчанию: "
+        "Введите номер формата (1-4) или нажмите Enter для HEIF по умолчанию: "
     ).strip()
 
     if format_choice == "2":
         output_format = "WEBP"
     elif format_choice == "3":
         output_format = "AVIF"
+    elif format_choice == "4":
+        output_format = "JPEG"
     else:
         output_format = "HEIF"
 
