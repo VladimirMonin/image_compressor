@@ -1,11 +1,11 @@
 # -*- mode: python ; coding: utf-8 -*-
-# PyInstaller spec file for Image Compressor (Console Version)
+# PyInstaller spec file for Image Compressor (Multiprocessing Version)
 
 import sys
 from pathlib import Path
 
 a = Analysis(
-    ['classes.py'],
+    ['main.py'],
     pathex=[],
     binaries=[],
     datas=[],
@@ -18,6 +18,12 @@ a = Analysis(
         'multiprocessing',
         'multiprocessing.spawn',
         'multiprocessing.pool',
+        'multiprocessing.process',
+        'multiprocessing.util',
+        'multiprocessing.managers',
+        'concurrent.futures',
+        'queue',
+        'threading',
     ],
     hookspath=[],
     hooksconfig={},
@@ -30,6 +36,12 @@ a = Analysis(
         'pandas',
         'IPython',
         'jupyter',
+        'pytest',
+        'unittest',
+        'PyQt6',
+        'PyQt5',
+        'PySide2',
+        'PySide6',
     ],
     noarchive=False,
     optimize=2,
@@ -46,7 +58,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name='ImageCompressor',
+    name='ImageCompressorMP',
     debug=False,
     bootloader_ignore_signals=False,
     strip=True,
