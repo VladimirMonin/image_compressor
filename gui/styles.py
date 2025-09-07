@@ -4,7 +4,7 @@ CSS стили для GUI компрессора изображений.
 
 # Стили для кнопок
 BUTTON_STYLES = {
-    'start': """
+    "start": """
         QPushButton {
             background-color: #27ae60;
             color: white;
@@ -20,8 +20,7 @@ BUTTON_STYLES = {
             background-color: #bdc3c7;
         }
     """,
-    
-    'stop': """
+    "stop": """
         QPushButton {
             background-color: #e74c3c;
             color: white;
@@ -37,8 +36,7 @@ BUTTON_STYLES = {
             background-color: #bdc3c7;
         }
     """,
-    
-    'clear': """
+    "clear": """
         QPushButton {
             background-color: #f39c12;
             color: white;
@@ -53,12 +51,12 @@ BUTTON_STYLES = {
         QPushButton:disabled {
             background-color: #bdc3c7;
         }
-    """
+    """,
 }
 
 # Стили для DropZone
 DROPZONE_STYLES = {
-    'normal': """
+    "normal": """
         QFrame {
             border: 2px dashed #cccccc;
             border-radius: 10px;
@@ -69,14 +67,13 @@ DROPZONE_STYLES = {
             background-color: #f0f8ff;
         }
     """,
-    
-    'active': """
+    "active": """
         QFrame {
             border: 2px dashed #0078d4;
             border-radius: 10px;
             background-color: #e6f3ff;
         }
-    """
+    """,
 }
 
 # Стили для других элементов

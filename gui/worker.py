@@ -20,8 +20,14 @@ class CompressionWorker(QThread):
     log_message = pyqtSignal(str)  # Сообщение для лога
     finished_processing = pyqtSignal(int, int)  # успешных, ошибок
 
-    def __init__(self, files: List[str], quality: int, format_type: str, 
-                 delete_original: bool = False, postfix: str = "_compressed"):
+    def __init__(
+        self,
+        files: List[str],
+        quality: int,
+        format_type: str,
+        delete_original: bool = False,
+        postfix: str = "_compressed",
+    ):
         super().__init__()
         # Удаляем дубликаты из списка файлов
         self.files = list(set(files))
@@ -62,15 +68,17 @@ class CompressionWorker(QThread):
                     # Определяем выходной путь
                     input_path = Path(file_path)
                     extension = compressor.output_formats[self.format_type]
-                    
+
                     # Проверяем, совпадает ли расширение входного и выходного файла
                     input_extension = input_path.suffix.lower()
                     output_extension = extension.lower()
-                    
+
                     if input_extension == output_extension and not self.delete_original:
                         # Добавляем постфикс при совпадении расширений
                         base_name = input_path.stem
-                        output_path = input_path.parent / f"{base_name}{self.postfix}{extension}"
+                        output_path = (
+                            input_path.parent / f"{base_name}{self.postfix}{extension}"
+                        )
                     else:
                         output_path = input_path.with_suffix(extension)
 
@@ -92,7 +100,9 @@ class CompressionWorker(QThread):
                     if output_path.exists():
                         original_size = input_path.stat().st_size
                         compressed_size = output_path.stat().st_size
-                        saved_bytes, saved_percent = get_savings_info(original_size, compressed_size)
+                        saved_bytes, saved_percent = get_savings_info(
+                            original_size, compressed_size
+                        )
 
                         if saved_percent > 0:
                             self.log_message.emit(
@@ -110,9 +120,13 @@ class CompressionWorker(QThread):
                         if self.delete_original and input_path != output_path:
                             try:
                                 input_path.unlink()
-                                self.log_message.emit(f"🗑️ Удален оригинальный файл: {input_path.name}")
+                                self.log_message.emit(
+                                    f"🗑️ Удален оригинальный файл: {input_path.name}"
+                                )
                             except Exception as e:
-                                self.log_message.emit(f"⚠️ Не удалось удалить оригинал {input_path.name}: {str(e)}")
+                                self.log_message.emit(
+                                    f"⚠️ Не удалось удалить оригинал {input_path.name}: {str(e)}"
+                                )
 
                         successful += 1
                     else:

@@ -6,6 +6,7 @@
 if __name__ == "__main__":
     try:
         from gui import main
+
         main()
     except ImportError as e:
         print("❌ Ошибка импорта GUI модулей!")

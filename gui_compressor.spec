@@ -47,6 +47,11 @@ a = Analysis(
         # Наши модули
         'classes',
         'gui',
+        'gui.main_window',
+        'gui.worker', 
+        'gui.widgets',
+        'gui.styles',
+        'gui.utils',
     ],
     hookspath=[],
     hooksconfig={},

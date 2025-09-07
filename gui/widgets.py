@@ -5,8 +5,17 @@
 import os
 from typing import List
 from PyQt6.QtWidgets import (
-    QFrame, QVBoxLayout, QHBoxLayout, QLabel, QSlider, QRadioButton, 
-    QButtonGroup, QGroupBox, QFileDialog, QLineEdit, QWidget
+    QFrame,
+    QVBoxLayout,
+    QHBoxLayout,
+    QLabel,
+    QSlider,
+    QRadioButton,
+    QButtonGroup,
+    QFileDialog,
+    QLineEdit,
+    QWidget,
+    QCheckBox,
 )
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QFont, QDragEnterEvent, QDropEvent
@@ -32,7 +41,7 @@ class DropZone(QFrame):
         self.setMinimumHeight(150)
 
         # Настройка стиля
-        self.setStyleSheet(DROPZONE_STYLES['normal'])
+        self.setStyleSheet(DROPZONE_STYLES["normal"])
 
         # Лейбл с инструкцией
         layout = QVBoxLayout()
@@ -53,13 +62,13 @@ class DropZone(QFrame):
         """Обработка начала перетаскивания."""
         if event.mimeData().hasUrls():
             event.accept()
-            self.setStyleSheet(DROPZONE_STYLES['active'])
+            self.setStyleSheet(DROPZONE_STYLES["active"])
         else:
             event.ignore()
 
     def dragLeaveEvent(self, event):
         """Обработка выхода из зоны перетаскивания."""
-        self.setStyleSheet(DROPZONE_STYLES['normal'])
+        self.setStyleSheet(DROPZONE_STYLES["normal"])
 
     def dropEvent(self, event: QDropEvent):
         """Обработка отпускания файлов."""
@@ -95,13 +104,13 @@ class DropZone(QFrame):
 
 class QualityWidget(QWidget):
     """Виджет для выбора качества сжатия."""
-    
+
     value_changed = pyqtSignal(int)
-    
+
     def __init__(self, initial_value: int = 80):
         super().__init__()
         self.init_ui(initial_value)
-    
+
     def init_ui(self, initial_value: int):
         """Инициализация виджета качества."""
         layout = QHBoxLayout()
@@ -119,12 +128,12 @@ class QualityWidget(QWidget):
         layout.addWidget(self.slider)
         layout.addWidget(self.label)
         self.setLayout(layout)
-    
+
     def on_value_changed(self, value: int):
         """Обновление отображения при изменении значения."""
         self.label.setText(str(value))
         self.value_changed.emit(value)
-    
+
     def get_value(self) -> int:
         """Получить текущее значение качества."""
         return self.slider.value()
@@ -132,11 +141,11 @@ class QualityWidget(QWidget):
 
 class FormatWidget(QWidget):
     """Виджет для выбора формата сжатия."""
-    
+
     def __init__(self, default_format: str = "WEBP"):
         super().__init__()
         self.init_ui(default_format)
-    
+
     def init_ui(self, default_format: str):
         """Инициализация виджета формата."""
         layout = QHBoxLayout()
@@ -172,7 +181,7 @@ class FormatWidget(QWidget):
         layout.addStretch()
 
         self.setLayout(layout)
-    
+
     def get_selected_format(self) -> str:
         """Получить выбранный формат."""
         if self.heif_radio.isChecked():
@@ -188,45 +197,39 @@ class FormatWidget(QWidget):
 
 class FileOptionsWidget(QWidget):
     """Виджет для настроек обработки файлов."""
-    
+
     def __init__(self):
         super().__init__()
         self.init_ui()
-    
+
     def init_ui(self):
         """Инициализация виджета настроек файлов."""
         layout = QVBoxLayout()
 
-        # Чекбоксы удаления оригинальных файлов
-        self.delete_original_radio = QRadioButton("🗑️ Удалять оригинальные файлы")
-        self.keep_original_radio = QRadioButton("💾 Сохранять оригинальные файлы")
-        self.keep_original_radio.setChecked(True)  # По умолчанию сохраняем
-
-        # Группа для радиокнопок
-        self.file_action_group = QButtonGroup()
-        self.file_action_group.addButton(self.delete_original_radio, 0)
-        self.file_action_group.addButton(self.keep_original_radio, 1)
-
-        layout.addWidget(self.delete_original_radio)
-        layout.addWidget(self.keep_original_radio)
+        # Чекбокс удаления оригинальных файлов
+        self.delete_original_checkbox = QCheckBox("🗑️ Удалять оригинальные файлы")
+        self.delete_original_checkbox.setChecked(False)  # По умолчанию НЕ удаляем
+        layout.addWidget(self.delete_original_checkbox)
 
         # Настройка постфикса для одинаковых расширений
         postfix_layout = QHBoxLayout()
         postfix_layout.addWidget(QLabel("📝 Постфикс при совпадении расширений:"))
-        
+
         self.postfix_input = QLineEdit("_compressed")
         self.postfix_input.setPlaceholderText("_compressed")
-        self.postfix_input.setToolTip("Добавляется к имени файла при совпадении входного и выходного расширения")
-        
+        self.postfix_input.setToolTip(
+            "Добавляется к имени файла при совпадении входного и выходного расширения"
+        )
+
         postfix_layout.addWidget(self.postfix_input)
         layout.addLayout(postfix_layout)
 
         self.setLayout(layout)
-    
+
     def get_delete_original(self) -> bool:
         """Получить настройку удаления оригинальных файлов."""
-        return self.delete_original_radio.isChecked()
-    
+        return self.delete_original_checkbox.isChecked()
+
     def get_postfix(self) -> str:
         """Получить постфикс для файлов."""
         return self.postfix_input.text().strip() or "_compressed"

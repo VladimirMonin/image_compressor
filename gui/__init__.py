@@ -15,10 +15,11 @@ from .main_window import ImageCompressorGUI
 from .worker import CompressionWorker
 from .widgets import DropZone, QualityWidget, FormatWidget, FileOptionsWidget
 
+
 def main():
     """Главная функция запуска GUI приложения."""
     from PyQt6.QtWidgets import QApplication
-    
+
     app = QApplication(sys.argv)
 
     # Настройка темы приложения
@@ -31,4 +32,13 @@ def main():
     # Запуск приложения
     sys.exit(app.exec())
 
-__all__ = ['ImageCompressorGUI', 'CompressionWorker', 'DropZone', 'QualityWidget', 'FormatWidget', 'FileOptionsWidget', 'main']
+
+__all__ = [
+    "ImageCompressorGUI",
+    "CompressionWorker",
+    "DropZone",
+    "QualityWidget",
+    "FormatWidget",
+    "FileOptionsWidget",
+    "main",
+]

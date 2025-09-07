@@ -4,8 +4,16 @@
 
 import sys
 from PyQt6.QtWidgets import (
-    QMainWindow, QVBoxLayout, QHBoxLayout, QWidget, QLabel, 
-    QProgressBar, QTextEdit, QPushButton, QGroupBox, QMessageBox
+    QMainWindow,
+    QVBoxLayout,
+    QHBoxLayout,
+    QWidget,
+    QLabel,
+    QProgressBar,
+    QTextEdit,
+    QPushButton,
+    QGroupBox,
+    QMessageBox,
 )
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QFont
@@ -65,6 +73,7 @@ class ImageCompressorGUI(QMainWindow):
         file_options_layout = QVBoxLayout(file_options_group)
 
         self.file_options_widget = FileOptionsWidget()
+        self.file_options_widget.show()  # Принудительно показываем
         file_options_layout.addWidget(self.file_options_widget)
 
         settings_layout.addWidget(file_options_group)
@@ -89,17 +98,17 @@ class ImageCompressorGUI(QMainWindow):
         self.start_button = QPushButton("🚀 Начать сжатие")
         self.start_button.setEnabled(False)
         self.start_button.clicked.connect(self.start_compression)
-        self.start_button.setStyleSheet(BUTTON_STYLES['start'])
+        self.start_button.setStyleSheet(BUTTON_STYLES["start"])
 
         self.stop_button = QPushButton("⏹️ Остановить")
         self.stop_button.setEnabled(False)
         self.stop_button.clicked.connect(self.stop_compression)
-        self.stop_button.setStyleSheet(BUTTON_STYLES['stop'])
+        self.stop_button.setStyleSheet(BUTTON_STYLES["stop"])
 
         self.clear_button = QPushButton("🗑️ Очистить очередь")
         self.clear_button.setEnabled(False)
         self.clear_button.clicked.connect(self.clear_queue)
-        self.clear_button.setStyleSheet(BUTTON_STYLES['clear'])
+        self.clear_button.setStyleSheet(BUTTON_STYLES["clear"])
 
         buttons_layout.addWidget(self.start_button)
         buttons_layout.addWidget(self.stop_button)
@@ -135,7 +144,7 @@ class ImageCompressorGUI(QMainWindow):
         """Обработка перетащенных файлов."""
         # Получаем все изображения из переданных путей
         image_files = get_image_files_from_paths(files)
-        
+
         # Добавляем новые файлы к существующим (не заменяем!)
         new_files = []
         for file_path in image_files:
@@ -195,13 +204,17 @@ class ImageCompressorGUI(QMainWindow):
         if duplicate_count > 0:
             self.log_text.append(f"⚠️ Удалено дубликатов: {duplicate_count}")
         self.log_text.append(f"📋 Формат: {format_type}, Качество: {quality}")
-        self.log_text.append(f"🗑️ Удалять оригиналы: {'Да' if delete_original else 'Нет'}")
+        self.log_text.append(
+            f"🗑️ Удалять оригиналы: {'Да' if delete_original else 'Нет'}"
+        )
         if not delete_original:
             self.log_text.append(f"📝 Постфикс: {postfix}")
         self.log_text.append("=" * 50)
 
         # Запускаем рабочий поток с уникальными файлами
-        self.worker = CompressionWorker(unique_files, quality, format_type, delete_original, postfix)
+        self.worker = CompressionWorker(
+            unique_files, quality, format_type, delete_original, postfix
+        )
         self.worker.progress_updated.connect(self.progress_bar.setValue)
         self.worker.log_message.connect(self.log_text.append)
         self.worker.finished_processing.connect(self.compression_finished)
