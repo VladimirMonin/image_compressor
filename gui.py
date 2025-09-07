@@ -36,6 +36,8 @@ from PyQt6.QtWidgets import (
     QMessageBox,
     QSpacerItem,
     QSizePolicy,
+    QLineEdit,
+    QCheckBox,
 )
 from PyQt6.QtCore import Qt, QThread, pyqtSignal, QMimeData, QUrl, QTimer
 from PyQt6.QtGui import QFont, QPalette, QColor, QDragEnterEvent, QDropEvent
@@ -54,12 +56,14 @@ class CompressionWorker(QThread):
     log_message = pyqtSignal(str)  # Сообщение для лога
     finished_processing = pyqtSignal(int, int)  # успешных, ошибок
 
-    def __init__(self, files: List[str], quality: int, format_type: str):
+    def __init__(self, files: List[str], quality: int, format_type: str, delete_original: bool = False, postfix: str = "_compressed"):
         super().__init__()
         # Удаляем дубликаты из списка файлов
         self.files = list(set(files))
         self.quality = quality
         self.format_type = format_type
+        self.delete_original = delete_original
+        self.postfix = postfix
         self.is_cancelled = False
 
     def run(self):
@@ -93,7 +97,17 @@ class CompressionWorker(QThread):
                     # Определяем выходной путь
                     input_path = Path(file_path)
                     extension = compressor.output_formats[self.format_type]
-                    output_path = input_path.with_suffix(extension)
+                    
+                    # Проверяем, совпадает ли расширение входного и выходного файла
+                    input_extension = input_path.suffix.lower()
+                    output_extension = extension.lower()
+                    
+                    if input_extension == output_extension and not self.delete_original:
+                        # Добавляем постфикс при совпадении расширений
+                        base_name = input_path.stem
+                        output_path = input_path.parent / f"{base_name}{self.postfix}{extension}"
+                    else:
+                        output_path = input_path.with_suffix(extension)
 
                     # Отладочная информация
                     self.log_message.emit(f"🔄 Обрабатываем: {input_path}")
@@ -131,6 +145,14 @@ class CompressionWorker(QThread):
                             self.log_message.emit(
                                 f"✅ {input_path.name} -> {output_path.name} (размер увеличился)"
                             )
+
+                        # Удаляем оригинальный файл, если это требуется
+                        if self.delete_original and input_path != output_path:
+                            try:
+                                input_path.unlink()
+                                self.log_message.emit(f"🗑️ Удален оригинальный файл: {input_path.name}")
+                            except Exception as e:
+                                self.log_message.emit(f"⚠️ Не удалось удалить оригинал {input_path.name}: {str(e)}")
 
                         successful += 1
                     else:
@@ -341,6 +363,36 @@ class ImageCompressorGUI(QMainWindow):
         format_layout.addStretch()
 
         settings_layout.addLayout(format_layout)
+
+        # Настройки обработки файлов
+        file_options_group = QGroupBox("📁 Настройки обработки файлов")
+        file_options_layout = QVBoxLayout(file_options_group)
+
+        # Чекбокс удаления оригинальных файлов
+        self.delete_original_checkbox = QRadioButton("🗑️ Удалять оригинальные файлы")
+        self.keep_original_checkbox = QRadioButton("💾 Сохранять оригинальные файлы")
+        self.keep_original_checkbox.setChecked(True)  # По умолчанию сохраняем
+
+        # Группа для радиокнопок
+        self.file_action_group = QButtonGroup()
+        self.file_action_group.addButton(self.delete_original_checkbox, 0)
+        self.file_action_group.addButton(self.keep_original_checkbox, 1)
+
+        file_options_layout.addWidget(self.delete_original_checkbox)
+        file_options_layout.addWidget(self.keep_original_checkbox)
+
+        # Настройка постфикса для одинаковых расширений
+        postfix_layout = QHBoxLayout()
+        postfix_layout.addWidget(QLabel("📝 Постфикс при совпадении расширений:"))
+        
+        self.postfix_input = QLineEdit("_compressed")
+        self.postfix_input.setPlaceholderText("_compressed")
+        self.postfix_input.setToolTip("Добавляется к имени файла при совпадении входного и выходного расширения")
+        
+        postfix_layout.addWidget(self.postfix_input)
+        file_options_layout.addLayout(postfix_layout)
+
+        settings_layout.addWidget(file_options_group)
         main_layout.addWidget(settings_group)
 
         # Кнопки управления
@@ -542,6 +594,8 @@ class ImageCompressorGUI(QMainWindow):
         # Получаем настройки
         quality = self.quality_slider.value()
         format_type = self.get_selected_format()
+        delete_original = self.delete_original_checkbox.isChecked()
+        postfix = self.postfix_input.text().strip() or "_compressed"
 
         # Блокируем интерфейс
         self.start_button.setEnabled(False)
@@ -559,11 +613,14 @@ class ImageCompressorGUI(QMainWindow):
         if duplicate_count > 0:
             self.log_text.append(f"⚠️ Удалено дубликатов: {duplicate_count}")
         self.log_text.append(f"📋 Формат: {format_type}, Качество: {quality}")
+        self.log_text.append(f"🗑️ Удалять оригиналы: {'Да' if delete_original else 'Нет'}")
+        if not delete_original:
+            self.log_text.append(f"📝 Постфикс: {postfix}")
         self.log_text.append("=" * 50)
 
         # Запускаем рабочий поток с уникальными файлами
         unique_files = list(dict.fromkeys(self.files_to_process))
-        self.worker = CompressionWorker(unique_files, quality, format_type)
+        self.worker = CompressionWorker(unique_files, quality, format_type, delete_original, postfix)
         self.worker.progress_updated.connect(self.progress_bar.setValue)
         self.worker.log_message.connect(self.log_text.append)
         self.worker.finished_processing.connect(self.compression_finished)
