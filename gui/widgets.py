@@ -45,9 +45,7 @@ class DropZone(QFrame):
 
         # Лейбл с инструкцией
         layout = QVBoxLayout()
-        self.label = QLabel(
-            "📁 Перетащите сюда файлы или папки\nили нажмите для выбора"
-        )
+        self.label = QLabel("📁 Перетащите сюда файлы или папки\nили нажмите для выбора")
         self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.label.setFont(QFont("Arial", 12))
         self.label.setStyleSheet(DROPZONE_LABEL_STYLE)
@@ -89,7 +87,7 @@ class DropZone(QFrame):
         file_dialog = QFileDialog()
         file_dialog.setFileMode(QFileDialog.FileMode.ExistingFiles)
         file_dialog.setNameFilter(
-            "Изображения (*.jpg *.jpeg *.png *.heic *.heif *.avif);;Все файлы (*)"
+            "Изображения (*.jpg *.jpeg *.png *.webp *.heic *.heif *.avif);;Все файлы (*)"
         )
 
         if file_dialog.exec():
@@ -193,6 +191,103 @@ class FormatWidget(QWidget):
         elif self.jpeg_radio.isChecked():
             return "JPEG"
         return "WEBP"
+
+
+class ResizeDimensionsWidget(QWidget):
+    """Виджет для задания максимальных размеров изображения."""
+
+    def __init__(self):
+        super().__init__()
+        self.init_ui()
+
+    def init_ui(self):
+        """Инициализация виджета размеров."""
+        layout = QVBoxLayout()
+
+        # Чекбокс включения resize
+        self.enable_resize_checkbox = QCheckBox("📐 Изменять размер изображений")
+        self.enable_resize_checkbox.setChecked(False)
+        self.enable_resize_checkbox.stateChanged.connect(self.toggle_inputs)
+        layout.addWidget(self.enable_resize_checkbox)
+
+        # Поля ввода размеров
+        dimensions_layout = QHBoxLayout()
+
+        dimensions_layout.addWidget(QLabel("Макс. ширина:"))
+        self.width_input = QLineEdit()
+        self.width_input.setPlaceholderText("1920")
+        self.width_input.setMaximumWidth(100)
+        self.width_input.setEnabled(False)
+        dimensions_layout.addWidget(self.width_input)
+
+        dimensions_layout.addWidget(QLabel("пикс."))
+        dimensions_layout.addSpacing(20)
+
+        dimensions_layout.addWidget(QLabel("Макс. высота:"))
+        self.height_input = QLineEdit()
+        self.height_input.setPlaceholderText("1080")
+        self.height_input.setMaximumWidth(100)
+        self.height_input.setEnabled(False)
+        dimensions_layout.addWidget(self.height_input)
+
+        dimensions_layout.addWidget(QLabel("пикс."))
+        dimensions_layout.addStretch()
+
+        layout.addLayout(dimensions_layout)
+
+        # Подсказка
+        hint_label = QLabel(
+            "💡 Изображение будет пропорционально уменьшено, чтобы вписаться в указанные границы"
+        )
+        hint_label.setStyleSheet("color: #666; font-size: 10px;")
+        hint_label.setWordWrap(True)
+        layout.addWidget(hint_label)
+
+        self.setLayout(layout)
+
+    def toggle_inputs(self, state):
+        """Включение/выключение полей ввода."""
+        enabled = state == 2  # Qt.CheckState.Checked == 2
+        self.width_input.setEnabled(enabled)
+        self.height_input.setEnabled(enabled)
+
+    def is_resize_enabled(self) -> bool:
+        """Проверка, включен ли resize."""
+        return self.enable_resize_checkbox.isChecked()
+
+    def get_max_width(self) -> int:
+        """Получить максимальную ширину."""
+        enabled = self.is_resize_enabled()
+        text_value = self.width_input.text().strip()
+        print(f"🔍 DEBUG get_max_width: enabled={enabled}, text='{text_value}'")
+
+        if not enabled:
+            return None
+        try:
+            value = text_value
+            result = int(value) if value else None
+            print(f"🔍 DEBUG get_max_width: returning {result}")
+            return result
+        except ValueError as e:
+            print(f"🔍 DEBUG get_max_width: ValueError {e}")
+            return None
+
+    def get_max_height(self) -> int:
+        """Получить максимальную высоту."""
+        enabled = self.is_resize_enabled()
+        text_value = self.height_input.text().strip()
+        print(f"🔍 DEBUG get_max_height: enabled={enabled}, text='{text_value}'")
+
+        if not enabled:
+            return None
+        try:
+            value = text_value
+            result = int(value) if value else None
+            print(f"🔍 DEBUG get_max_height: returning {result}")
+            return result
+        except ValueError as e:
+            print(f"🔍 DEBUG get_max_height: ValueError {e}")
+            return None
 
 
 class FileOptionsWidget(QWidget):

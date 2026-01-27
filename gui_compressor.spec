@@ -14,13 +14,12 @@ a = Analysis(
         'pillow_heif',
         'pillow_heif._pillow_heif',
         'pillow_heif.constants',
-        'pillow_avif',
-        'pillow_avif_plugin',
         'PIL._tkinter_finder',
         'PIL.ImageQt',
         'PIL.ImageFile',
         'PIL.Image',
         'PIL.ImageOps',
+        'PIL.WebPImagePlugin',  # WebP поддержка
         
         # PyQt6 модули
         'PyQt6.QtCore',

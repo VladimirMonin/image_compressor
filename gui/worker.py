@@ -27,6 +27,8 @@ class CompressionWorker(QThread):
         format_type: str,
         delete_original: bool = False,
         postfix: str = "_compressed",
+        max_width: int = None,
+        max_height: int = None,
     ):
         super().__init__()
         # Удаляем дубликаты из списка файлов
@@ -35,6 +37,8 @@ class CompressionWorker(QThread):
         self.format_type = format_type
         self.delete_original = delete_original
         self.postfix = postfix
+        self.max_width = max_width
+        self.max_height = max_height
         self.is_cancelled = False
 
     def run(self):
@@ -57,7 +61,10 @@ class CompressionWorker(QThread):
 
             # Создаем компрессор
             compressor = ImageCompressor(
-                quality=self.quality, output_format=self.format_type
+                quality=self.quality,
+                output_format=self.format_type,
+                max_width=self.max_width,
+                max_height=self.max_height,
             )
 
             for i, file_path in enumerate(unique_files):
@@ -76,9 +83,7 @@ class CompressionWorker(QThread):
                     if input_extension == output_extension and not self.delete_original:
                         # Добавляем постфикс при совпадении расширений
                         base_name = input_path.stem
-                        output_path = (
-                            input_path.parent / f"{base_name}{self.postfix}{extension}"
-                        )
+                        output_path = input_path.parent / f"{base_name}{self.postfix}{extension}"
                     else:
                         output_path = input_path.with_suffix(extension)
 
@@ -89,9 +94,7 @@ class CompressionWorker(QThread):
                     # Проверяем права на запись в папку
                     output_dir = output_path.parent
                     if not os.access(output_dir, os.W_OK):
-                        raise PermissionError(
-                            f"Нет прав на запись в папку: {output_dir}"
-                        )
+                        raise PermissionError(f"Нет прав на запись в папку: {output_dir}")
 
                     # Сжимаем изображение
                     compressor.compress_image(str(input_path), str(output_path))
@@ -105,9 +108,7 @@ class CompressionWorker(QThread):
                         )
 
                         if saved_percent > 0:
-                            self.log_message.emit(
-                                f"✅ {input_path.name} -> {output_path.name}"
-                            )
+                            self.log_message.emit(f"✅ {input_path.name} -> {output_path.name}")
                             self.log_message.emit(
                                 f"   💾 Экономия: {saved_bytes:,} байт ({saved_percent:.1f}%)"
                             )
@@ -130,9 +131,7 @@ class CompressionWorker(QThread):
 
                         successful += 1
                     else:
-                        raise FileNotFoundError(
-                            f"Выходной файл не создался: {output_path}"
-                        )
+                        raise FileNotFoundError(f"Выходной файл не создался: {output_path}")
 
                     self.file_processed.emit(input_path.name)
 

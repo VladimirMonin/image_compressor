@@ -18,7 +18,7 @@ def get_image_files_from_paths(file_paths: List[str]) -> List[str]:
         Список путей к файлам изображений
     """
     image_files = []
-    supported_extensions = (".jpg", ".jpeg", ".png", ".heic", ".heif", ".avif")
+    supported_extensions = (".jpg", ".jpeg", ".png", ".webp", ".heic", ".heif", ".avif")
 
     for file_path in file_paths:
         if os.path.isfile(file_path):

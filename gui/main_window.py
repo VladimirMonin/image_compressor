@@ -18,7 +18,13 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QFont
 
-from .widgets import DropZone, QualityWidget, FormatWidget, FileOptionsWidget
+from .widgets import (
+    DropZone,
+    QualityWidget,
+    FormatWidget,
+    FileOptionsWidget,
+    ResizeDimensionsWidget,
+)
 from .worker import CompressionWorker
 from .styles import BUTTON_STYLES, PROGRESS_BAR_STYLE, LOG_TEXT_STYLE, TITLE_STYLE
 from .utils import get_image_files_from_paths
@@ -67,6 +73,10 @@ class ImageCompressorGUI(QMainWindow):
         # Выбор формата
         self.format_widget = FormatWidget(default_format="WEBP")
         settings_layout.addWidget(self.format_widget)
+
+        # Настройки размеров изображений
+        self.resize_widget = ResizeDimensionsWidget()
+        settings_layout.addWidget(self.resize_widget)
 
         # Настройки обработки файлов
         file_options_group = QGroupBox("📁 Настройки обработки файлов")
@@ -157,14 +167,10 @@ class ImageCompressorGUI(QMainWindow):
             self.clear_button.setEnabled(True)  # Активируем кнопку очистки
             self.log_text.append(f"📁 Добавлено новых изображений: {len(new_files)}")
             self.log_text.append(f"📊 Всего в очереди: {len(self.files_to_process)}")
-            self.statusBar().showMessage(
-                f"Готово к обработке {len(self.files_to_process)} файлов"
-            )
+            self.statusBar().showMessage(f"Готово к обработке {len(self.files_to_process)} файлов")
 
             # Обновляем текст в зоне
-            self.drop_zone.update_label(
-                f"📁 В очереди: {len(self.files_to_process)} файлов"
-            )
+            self.drop_zone.update_label(f"📁 В очереди: {len(self.files_to_process)} файлов")
         else:
             if not self.files_to_process:
                 self.start_button.setEnabled(False)
@@ -177,9 +183,7 @@ class ImageCompressorGUI(QMainWindow):
     def start_compression(self):
         """Начало процесса сжатия."""
         if not self.files_to_process:
-            QMessageBox.warning(
-                self, "Предупреждение", "Сначала выберите файлы для обработки!"
-            )
+            QMessageBox.warning(self, "Предупреждение", "Сначала выберите файлы для обработки!")
             return
 
         # Получаем настройки
@@ -187,6 +191,8 @@ class ImageCompressorGUI(QMainWindow):
         format_type = self.format_widget.get_selected_format()
         delete_original = self.file_options_widget.get_delete_original()
         postfix = self.file_options_widget.get_postfix()
+        max_width = self.resize_widget.get_max_width()
+        max_height = self.resize_widget.get_max_height()
 
         # Блокируем интерфейс
         self.start_button.setEnabled(False)
@@ -196,6 +202,21 @@ class ImageCompressorGUI(QMainWindow):
         # Очищаем лог
         self.log_text.clear()
 
+        # Валидация resize параметров
+        if self.resize_widget.is_resize_enabled():
+            if not max_width or not max_height:
+                QMessageBox.warning(
+                    self, "Ошибка валидации", "Необходимо указать оба значения: ширину и высоту!"
+                )
+                self.start_button.setEnabled(True)
+                return
+            if max_width <= 0 or max_height <= 0:
+                QMessageBox.warning(
+                    self, "Ошибка валидации", "Размеры должны быть положительными числами!"
+                )
+                self.start_button.setEnabled(True)
+                return
+
         # Подсчитываем уникальные файлы
         unique_files = list(dict.fromkeys(self.files_to_process))
         duplicate_count = len(self.files_to_process) - len(unique_files)
@@ -204,16 +225,16 @@ class ImageCompressorGUI(QMainWindow):
         if duplicate_count > 0:
             self.log_text.append(f"⚠️ Удалено дубликатов: {duplicate_count}")
         self.log_text.append(f"📋 Формат: {format_type}, Качество: {quality}")
-        self.log_text.append(
-            f"🗑️ Удалять оригиналы: {'Да' if delete_original else 'Нет'}"
-        )
+        if max_width and max_height:
+            self.log_text.append(f"📐 Макс. размеры: {max_width}x{max_height} пикс.")
+        self.log_text.append(f"🗑️ Удалять оригиналы: {'Да' if delete_original else 'Нет'}")
         if not delete_original:
             self.log_text.append(f"📝 Постфикс: {postfix}")
         self.log_text.append("=" * 50)
 
         # Запускаем рабочий поток с уникальными файлами
         self.worker = CompressionWorker(
-            unique_files, quality, format_type, delete_original, postfix
+            unique_files, quality, format_type, delete_original, postfix, max_width, max_height
         )
         self.worker.progress_updated.connect(self.progress_bar.setValue)
         self.worker.log_message.connect(self.log_text.append)
@@ -230,9 +251,7 @@ class ImageCompressorGUI(QMainWindow):
 
         self.compression_finished(0, 0, cancelled=True)
 
-    def compression_finished(
-        self, successful: int, errors: int, cancelled: bool = False
-    ):
+    def compression_finished(self, successful: int, errors: int, cancelled: bool = False):
         """Завершение процесса сжатия."""
         # Разблокируем интерфейс
         self.start_button.setEnabled(True)
@@ -245,9 +264,7 @@ class ImageCompressorGUI(QMainWindow):
             self.log_text.append("=" * 50)
             self.log_text.append(f"✅ Обработка завершена!")
             self.log_text.append(f"📊 Успешно: {successful}, Ошибок: {errors}")
-            self.statusBar().showMessage(
-                f"Готово! Обработано: {successful}, ошибок: {errors}"
-            )
+            self.statusBar().showMessage(f"Готово! Обработано: {successful}, ошибок: {errors}")
 
             # Показываем результат
             QMessageBox.information(
@@ -261,8 +278,6 @@ class ImageCompressorGUI(QMainWindow):
         self.files_to_process = []
         self.start_button.setEnabled(False)
         self.clear_button.setEnabled(False)
-        self.drop_zone.update_label(
-            "📁 Перетащите сюда файлы или папки\nили нажмите для выбора"
-        )
+        self.drop_zone.update_label("📁 Перетащите сюда файлы или папки\nили нажмите для выбора")
         self.log_text.append("🗑️ Очередь файлов очищена")
         self.statusBar().showMessage("Готов к работе")

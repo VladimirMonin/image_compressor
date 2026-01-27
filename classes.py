@@ -61,9 +61,17 @@ class ImageCompressor:
     supported_formats = (".jpg", ".jpeg", ".png", ".heic", ".heif", ".avif")
     output_formats = {"HEIF": ".heic", "WEBP": ".webp", "AVIF": ".avif", "JPEG": ".jpg"}
 
-    def __init__(self, quality: int = 50, output_format: str = "HEIF"):
+    def __init__(
+        self,
+        quality: int = 50,
+        output_format: str = "HEIF",
+        max_width: int = None,
+        max_height: int = None,
+    ):
         self.__quality = quality
         self.__output_format = output_format.upper()
+        self.__max_width = max_width
+        self.__max_height = max_height
 
         # Инициализируем HEIF для чтения и записи
         register_heif_opener()
@@ -78,6 +86,7 @@ class ImageCompressor:
     def compress_image(self, input_path: str, output_path: str) -> None:
         """
         Сжимает изображение и сохраняет его в выбранном формате.
+        При необходимости выполняет пропорциональное уменьшение до заданных размеров.
         Args:
             input_path (str): Путь к исходному изображению.
             output_path (str): Путь для сохранения сжатого изображения.
@@ -85,6 +94,26 @@ class ImageCompressor:
             None
         """
         with Image.open(input_path) as img:
+            # ОТЛАДКА
+            print(f"🔍 DEBUG: max_width={self.__max_width}, max_height={self.__max_height}")
+            print(f"🔍 DEBUG: Исходный размер изображения: {img.size}")
+
+            # Применяем пропорциональное уменьшение, если заданы размеры
+            if self.__max_width and self.__max_height:
+                # Вычисляем новые размеры с сохранением пропорций
+                img_width, img_height = img.size
+                # Вычисляем соотношение для масштабирования
+                ratio = min(self.__max_width / img_width, self.__max_height / img_height)
+
+                # Если изображение больше целевых размеров - уменьшаем
+                if ratio < 1:
+                    new_width = int(img_width * ratio)
+                    new_height = int(img_height * ratio)
+                    img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
+                    print(
+                        f"Изменен размер: {img_width}x{img_height} -> {new_width}x{new_height} пикс."
+                    )
+
             img.save(output_path, self.__output_format, quality=self.__quality)
         print(f"Сжато: {input_path} -> {output_path} (формат: {self.__output_format})")
 

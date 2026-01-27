@@ -1,4 +1,37 @@
+# Виртуальные окружения
 .venv/
+venv/
+env/
+ENV/
+
+# PyInstaller
 build/
 dist/
-*__pycache__
+*.spec.bak
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Тестовые файлы
+test_images/
+output/
+*.log
+
+# Freeze файл (для разработки)
+requirements_freeze.txt

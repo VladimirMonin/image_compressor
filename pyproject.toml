@@ -1,0 +1,63 @@
+[project]
+name = "image-compressor"
+version = "1.0.0"
+description = "Image compression tool with GUI support for multiple formats"
+authors = [
+    { name = "Vladimir Monin", email = "your-email@example.com" }
+]
+requires-python = ">=3.10"
+readme = "README.md"
+license = { text = "MIT" }
+keywords = ["image", "compression", "gui", "webp", "heic", "avif"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Multimedia :: Graphics :: Graphics Conversion",
+]
+
+dependencies = [
+    "pillow>=12.0.0",
+    "pillow-heif>=1.1.0",
+    "PyQt6>=6.10.0",
+    "pyinstaller>=6.15.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "black>=24.0.0",
+    "ruff>=0.8.0",
+]
+
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["gui"]
+
+[tool.black]
+line-length = 100
+target-version = ["py310", "py311", "py312", "py313"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP"]
+ignore = []
+
+[tool.pyinstaller]
+# Настройки для PyInstaller
+name = "ImageCompressorGUI"
+onefile = true
+console = false
+# icon = "path/to/icon.ico"  # Раскомментируйте и укажите путь к иконке
