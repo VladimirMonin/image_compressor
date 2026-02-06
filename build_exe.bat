@@ -6,13 +6,13 @@ echo ================================================
 echo.
 
 REM Проверка виртуального окружения
-if not exist "venv\Scripts\pyinstaller.exe" (
+if not exist ".venv\Scripts\pyinstaller.exe" (
     echo ❌ Виртуальное окружение не найдено или PyInstaller не установлен!
     echo.
     echo Запустите сначала:
-    echo   python -m venv venv
-    echo   .\venv\Scripts\Activate.ps1
-    echo   pip install -r requirements.txt
+    echo   uv venv
+    echo   .\.venv\Scripts\Activate.ps1
+    echo   uv pip install -r requirements.txt
     echo.
     pause
     exit /b 1
@@ -32,7 +32,7 @@ echo 🔨 Начинаю сборку...
 echo.
 
 REM Сборка через PyInstaller
-venv\Scripts\pyinstaller.exe gui_compressor.spec --clean
+.venv\Scripts\pyinstaller.exe gui_compressor.spec --clean
 
 if %ERRORLEVEL% EQU 0 (
     echo.
