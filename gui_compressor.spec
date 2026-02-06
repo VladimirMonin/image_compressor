@@ -14,6 +14,7 @@ a = Analysis(
         'pillow_heif',
         'pillow_heif._pillow_heif',
         'pillow_heif.constants',
+        'pillow_avif',
         'PIL._tkinter_finder',
         'PIL.ImageQt',
         'PIL.ImageFile',

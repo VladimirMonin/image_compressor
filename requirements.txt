@@ -4,6 +4,7 @@
 # Обработка изображений
 Pillow>=12.0.0
 pillow-heif>=1.1.0
+pillow-avif-plugin>=1.4.0
 
 # GUI
 PyQt6>=6.10.0
