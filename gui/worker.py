@@ -1,153 +1,117 @@
-"""
-Рабочий поток для сжатия изображений.
-"""
+"""QThread transport for the single synchronous application owner."""
 
-import os
-from typing import List
 from pathlib import Path
-from PyQt6.QtCore import QThread, pyqtSignal
-from pillow_heif import register_heif_opener
 
-from classes import ImageCompressor
-from .utils import get_savings_info
+from PyQt6.QtCore import QThread, pyqtSignal
+
+from image_compressor import (
+    BatchResult,
+    CancellationToken,
+    ConversionRequest,
+    ErrorCode,
+    ProgressEvent,
+    convert,
+)
+from image_compressor.diagnostics import project
+
+DESTRUCTIVE_MODE_MESSAGE = (
+    "Удаление/замена оригиналов недоступны в безопасном режиме. "
+    "Снимите флажок “Удалять оригинальные файлы”."
+)
 
 
 class CompressionWorker(QThread):
-    """Рабочий поток для сжатия изображений без блокировки UI."""
-
-    progress_updated = pyqtSignal(int)  # Прогресс в процентах
-    file_processed = pyqtSignal(str)  # Имя обработанного файла
-    log_message = pyqtSignal(str)  # Сообщение для лога
-    finished_processing = pyqtSignal(int, int)  # успешных, ошибок
+    progress_updated = pyqtSignal(int)
+    file_processed = pyqtSignal(str)
+    log_message = pyqtSignal(str)
+    finished_processing = pyqtSignal(int, int)
+    result_ready = pyqtSignal(object)
 
     def __init__(
         self,
-        files: List[str],
+        files: list[str],
         quality: int,
         format_type: str,
         delete_original: bool = False,
         postfix: str = "_compressed",
-        max_width: int = None,
-        max_height: int = None,
+        max_width: int | None = None,
+        max_height: int | None = None,
     ):
         super().__init__()
-        # Удаляем дубликаты из списка файлов
-        self.files = list(set(files))
+        self.files = tuple(files)
         self.quality = quality
         self.format_type = format_type
         self.delete_original = delete_original
         self.postfix = postfix
         self.max_width = max_width
         self.max_height = max_height
-        self.is_cancelled = False
+        self._cancellation = CancellationToken()
+        self.result: BatchResult | None = None
 
-    def run(self):
-        """Основной метод обработки в отдельном потоке."""
-        successful = 0
-        errors = 0
+    @property
+    def is_cancelled(self) -> bool:
+        return self._cancellation.is_cancelled()
 
-        # Проверяем дубликаты еще раз и сообщаем об этом
-        original_count = len(self.files)
-        unique_files = list(dict.fromkeys(self.files))  # Сохраняем порядок
-        total_files = len(unique_files)
+    def _progress(self, event: ProgressEvent) -> None:
+        if event.total and event.phase == "item_finished":
+            self.progress_updated.emit(int(event.processed / event.total * 100))
+        if event.item is not None:
+            self.log_message.emit(
+                project(
+                    "item_finished",
+                    index=event.item.index,
+                    outcome=event.item.status,
+                    stage=event.item.error.stage if event.item.error else "readback",
+                    reason=event.item.error.code if event.item.error else None,
+                )
+            )
+            if event.item.status == "succeeded":
+                self.file_processed.emit(Path(event.item.source).name)
 
-        if original_count != total_files:
-            duplicates_count = original_count - total_files
-            self.log_message.emit(f"⚠️ Найдено и удалено дубликатов: {duplicates_count}")
-
-        try:
-            # Инициализируем HEIF для чтения входных файлов
-            register_heif_opener()
-
-            # Создаем компрессор
-            compressor = ImageCompressor(
+    def run(self) -> None:
+        self.log_message.emit(project("conversion_started"))
+        self.result = convert(
+            ConversionRequest(
+                self.files,
                 quality=self.quality,
                 output_format=self.format_type,
+                recursive=True,
+                delete_original=self.delete_original,
+                postfix=self.postfix,
                 max_width=self.max_width,
                 max_height=self.max_height,
+            ),
+            cancellation=self._cancellation,
+            on_progress=self._progress,
+        )
+        counts = self.result.counts
+        for info in self.result.errors:
+            self.log_message.emit(
+                project(
+                    "conversion_finished",
+                    outcome=self.result.status,
+                    reason=info.code,
+                    stage=info.stage,
+                )
             )
+            if info.code == ErrorCode.DESTRUCTIVE_MODE_UNSUPPORTED:
+                self.log_message.emit(DESTRUCTIVE_MODE_MESSAGE)
+        self.log_message.emit(
+            project(
+                "conversion_finished",
+                outcome=self.result.status,
+                total=counts.total,
+                succeeded=counts.succeeded,
+                failed=counts.failed,
+                cancelled=counts.cancelled,
+                published=counts.published,
+            )
+        )
+        self.result_ready.emit(self.result)
+        errors = counts.failed + len(self.result.errors)
+        if self.result.status == "rejected":
+            errors = max(1, errors)
+        self.finished_processing.emit(counts.succeeded, errors)
 
-            for i, file_path in enumerate(unique_files):
-                if self.is_cancelled:
-                    break
-
-                try:
-                    # Определяем выходной путь
-                    input_path = Path(file_path)
-                    extension = compressor.output_formats[self.format_type]
-
-                    # Проверяем, совпадает ли расширение входного и выходного файла
-                    input_extension = input_path.suffix.lower()
-                    output_extension = extension.lower()
-
-                    if input_extension == output_extension and not self.delete_original:
-                        # Добавляем постфикс при совпадении расширений
-                        base_name = input_path.stem
-                        output_path = input_path.parent / f"{base_name}{self.postfix}{extension}"
-                    else:
-                        output_path = input_path.with_suffix(extension)
-
-                    # Отладочная информация
-                    self.log_message.emit(f"🔄 Обрабатываем: {input_path}")
-                    self.log_message.emit(f"📁 Выходной путь: {output_path}")
-
-                    # Проверяем права на запись в папку
-                    output_dir = output_path.parent
-                    if not os.access(output_dir, os.W_OK):
-                        raise PermissionError(f"Нет прав на запись в папку: {output_dir}")
-
-                    # Сжимаем изображение
-                    compressor.compress_image(str(input_path), str(output_path))
-
-                    # Проверяем, что файл действительно создался
-                    if output_path.exists():
-                        original_size = input_path.stat().st_size
-                        compressed_size = output_path.stat().st_size
-                        saved_bytes, saved_percent = get_savings_info(
-                            original_size, compressed_size
-                        )
-
-                        if saved_percent > 0:
-                            self.log_message.emit(f"✅ {input_path.name} -> {output_path.name}")
-                            self.log_message.emit(
-                                f"   💾 Экономия: {saved_bytes:,} байт ({saved_percent:.1f}%)"
-                            )
-                        else:
-                            self.log_message.emit(
-                                f"✅ {input_path.name} -> {output_path.name} (размер увеличился)"
-                            )
-
-                        # Удаляем оригинальный файл, если это требуется
-                        if self.delete_original and input_path != output_path:
-                            try:
-                                input_path.unlink()
-                                self.log_message.emit(
-                                    f"🗑️ Удален оригинальный файл: {input_path.name}"
-                                )
-                            except Exception as e:
-                                self.log_message.emit(
-                                    f"⚠️ Не удалось удалить оригинал {input_path.name}: {str(e)}"
-                                )
-
-                        successful += 1
-                    else:
-                        raise FileNotFoundError(f"Выходной файл не создался: {output_path}")
-
-                    self.file_processed.emit(input_path.name)
-
-                except Exception as e:
-                    errors += 1
-                    self.log_message.emit(f"❌ Ошибка {Path(file_path).name}: {str(e)}")
-
-                # Обновляем прогресс
-                progress = int(((i + 1) / total_files) * 100)
-                self.progress_updated.emit(progress)
-
-        except Exception as e:
-            self.log_message.emit(f"❌ Критическая ошибка: {str(e)}")
-
-        self.finished_processing.emit(successful, errors)
-
-    def cancel(self):
-        """Отменяет обработку."""
-        self.is_cancelled = True
+    def cancel(self) -> None:
+        self._cancellation.cancel()

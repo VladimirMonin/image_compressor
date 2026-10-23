@@ -1,37 +1,7 @@
-"""
-GUI пакет для компрессора изображений.
-
-Модули:
-    main_window - главное окно приложения
-    worker - рабочий поток для сжатия
-    widgets - UI виджеты
-    styles - CSS стили
-    utils - вспомогательные функции
-"""
+"""Optional GUI exports are lazy; importing finder/API never loads Qt."""
 
 import sys
-
-from .main_window import ImageCompressorGUI
-from .worker import CompressionWorker
-from .widgets import DropZone, QualityWidget, FormatWidget, FileOptionsWidget
-
-
-def main():
-    """Главная функция запуска GUI приложения."""
-    from PyQt6.QtWidgets import QApplication
-
-    app = QApplication(sys.argv)
-
-    # Настройка темы приложения
-    app.setStyle("Fusion")
-
-    # Создание и показ главного окна
-    window = ImageCompressorGUI()
-    window.show()
-
-    # Запуск приложения
-    sys.exit(app.exec())
-
+from importlib import import_module
 
 __all__ = [
     "ImageCompressorGUI",
@@ -42,3 +12,29 @@ __all__ = [
     "FileOptionsWidget",
     "main",
 ]
+
+
+def __getattr__(name):
+    modules = {
+        "ImageCompressorGUI": ".main_window",
+        "CompressionWorker": ".worker",
+        "DropZone": ".widgets",
+        "QualityWidget": ".widgets",
+        "FormatWidget": ".widgets",
+        "FileOptionsWidget": ".widgets",
+    }
+    if name not in modules:
+        raise AttributeError(name)
+    return getattr(import_module(modules[name], __name__), name)
+
+
+def main():
+    from PyQt6.QtWidgets import QApplication
+
+    from .main_window import ImageCompressorGUI
+
+    app = QApplication(sys.argv)
+    app.setStyle("Fusion")
+    window = ImageCompressorGUI()
+    window.show()
+    sys.exit(app.exec())

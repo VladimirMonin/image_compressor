@@ -1,7 +1,7 @@
 [project]
 name = "image-compressor"
 version = "1.0.0"
-description = "Image compression tool with GUI support for multiple formats"
+description = "Create-only image conversion API, headless CLI and optional GUI"
 authors = [
     { name = "Vladimir Monin", email = "your-email@example.com" }
 ]
@@ -22,19 +22,24 @@ classifiers = [
     "Topic :: Multimedia :: Graphics :: Graphics Conversion",
 ]
 
-dependencies = [
-    "pillow>=12.0.0",
-    "pillow-heif>=1.1.0",
-    "pillow-avif-plugin>=1.4.0",
-    "PyQt6>=6.10.0",
-    "pyinstaller>=6.15.0",
-]
+dependencies = ["Pillow>=12.0.0"]
+
+[project.scripts]
+image-compressor = "image_compressor.cli:main"
 
 [project.optional-dependencies]
+codecs = ["pillow-heif>=1.1.0", "pillow-avif-plugin>=1.4.0"]
+gui = ["PyQt6>=6.10.0"]
+build = ["pyinstaller>=6.15.0"]
 dev = [
     "pytest>=8.0.0",
+    "pytest-timeout>=2.3.0",
     "black>=24.0.0",
     "ruff>=0.8.0",
+    "mypy>=1.19.0",
+    "build>=1.2.0",
+    "wheel>=0.45.0",
+    "setuptools>=68.0",
 ]
 
 [build-system]
@@ -42,7 +47,24 @@ requires = ["setuptools>=68.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-packages = ["gui"]
+packages = ["image_compressor", "gui"]
+py-modules = ["classes", "gui_main"]
+
+[tool.setuptools.package-data]
+image_compressor = ["py.typed"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+timeout = 90
+timeout_method = "thread"
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+
+[[tool.mypy.overrides]]
+module = ["pillow_heif", "pillow_heif.*", "pillow_avif", "pillow_avif.*"]
+ignore_missing_imports = true
 
 [tool.black]
 line-length = 100

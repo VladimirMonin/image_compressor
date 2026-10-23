@@ -35,3 +35,9 @@ output/
 
 # Freeze файл (для разработки)
 requirements_freeze.txt
+
+# Локальные сессии агентов, сырые проверки и временные изображения
+.agent-work/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/

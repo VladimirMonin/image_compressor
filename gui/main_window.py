@@ -2,32 +2,33 @@
 Главное окно GUI компрессора изображений.
 """
 
-import sys
-from PyQt6.QtWidgets import (
-    QMainWindow,
-    QVBoxLayout,
-    QHBoxLayout,
-    QWidget,
-    QLabel,
-    QProgressBar,
-    QTextEdit,
-    QPushButton,
-    QGroupBox,
-    QMessageBox,
-)
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import (
+    QGroupBox,
+    QHBoxLayout,
+    QLabel,
+    QMainWindow,
+    QMessageBox,
+    QProgressBar,
+    QPushButton,
+    QTextEdit,
+    QVBoxLayout,
+    QWidget,
+)
 
+from image_compressor import ErrorCode, discover_inputs
+from image_compressor.diagnostics import project
+
+from .styles import BUTTON_STYLES, LOG_TEXT_STYLE, PROGRESS_BAR_STYLE, TITLE_STYLE
 from .widgets import (
     DropZone,
-    QualityWidget,
-    FormatWidget,
     FileOptionsWidget,
+    FormatWidget,
+    QualityWidget,
     ResizeDimensionsWidget,
 )
-from .worker import CompressionWorker
-from .styles import BUTTON_STYLES, PROGRESS_BAR_STYLE, LOG_TEXT_STYLE, TITLE_STYLE
-from .utils import get_image_files_from_paths
+from .worker import DESTRUCTIVE_MODE_MESSAGE, CompressionWorker
 
 
 class ImageCompressorGUI(QMainWindow):
@@ -37,6 +38,9 @@ class ImageCompressorGUI(QMainWindow):
         super().__init__()
         self.files_to_process = []
         self.worker = None
+        self._pending_result = None
+        self.last_result = None
+        self._close_pending = False
         self.init_ui()
 
     def init_ui(self):
@@ -151,130 +155,118 @@ class ImageCompressorGUI(QMainWindow):
         main_layout.addWidget(log_group)
 
     def handle_dropped_files(self, files):
-        """Обработка перетащенных файлов."""
-        # Получаем все изображения из переданных путей
-        image_files = get_image_files_from_paths(files)
-
-        # Добавляем новые файлы к существующим (не заменяем!)
-        new_files = []
-        for file_path in image_files:
-            if file_path not in self.files_to_process:
-                new_files.append(file_path)
-                self.files_to_process.append(file_path)
-
-        if new_files:
-            self.start_button.setEnabled(True)
-            self.clear_button.setEnabled(True)  # Активируем кнопку очистки
-            self.log_text.append(f"📁 Добавлено новых изображений: {len(new_files)}")
-            self.log_text.append(f"📊 Всего в очереди: {len(self.files_to_process)}")
-            self.statusBar().showMessage(f"Готово к обработке {len(self.files_to_process)} файлов")
-
-            # Обновляем текст в зоне
-            self.drop_zone.update_label(f"📁 В очереди: {len(self.files_to_process)} файлов")
-        else:
-            if not self.files_to_process:
-                self.start_button.setEnabled(False)
-                self.clear_button.setEnabled(False)
-                self.log_text.append("❌ Не найдено новых подходящих изображений")
-                self.statusBar().showMessage("Файлы не выбраны")
-            else:
-                self.log_text.append("ℹ️ Выбранные файлы уже в очереди")
+        """Общий discovery владеет порядком и дедупликацией выбора."""
+        result = discover_inputs([*self.files_to_process, *files], recursive=True)
+        self.files_to_process = [str(path) for path in result.paths]
+        for issue in result.issues:
+            self.log_text.append(project("item_finished", stage=issue.error.stage,
+                                         reason=issue.error.code, outcome="failed"))
+        for info in (*result.errors, *result.warnings):
+            self.log_text.append(project("item_finished", stage=info.stage, reason=info.code))
+        count = len(self.files_to_process)
+        self.log_text.append(f"В очереди: {count}; дубликатов: {result.duplicates}")
+        self.drop_zone.update_label(f"📁 В очереди: {count} файлов")
+        self.statusBar().showMessage(f"Выбрано файлов: {count}")
+        self._restore_controls()
 
     def start_compression(self):
-        """Начало процесса сжатия."""
+        """Новый запуск ждёт реального QThread.finished предыдущего."""
+        if self.worker is not None:
+            return
         if not self.files_to_process:
             QMessageBox.warning(self, "Предупреждение", "Сначала выберите файлы для обработки!")
             return
-
-        # Получаем настройки
         quality = self.quality_widget.get_value()
         format_type = self.format_widget.get_selected_format()
         delete_original = self.file_options_widget.get_delete_original()
         postfix = self.file_options_widget.get_postfix()
         max_width = self.resize_widget.get_max_width()
         max_height = self.resize_widget.get_max_height()
-
-        # Блокируем интерфейс
         self.start_button.setEnabled(False)
         self.stop_button.setEnabled(True)
+        self.clear_button.setEnabled(False)
         self.progress_bar.setValue(0)
-
-        # Очищаем лог
         self.log_text.clear()
-
-        # Валидация resize параметров
         if self.resize_widget.is_resize_enabled():
             if not max_width or not max_height:
                 QMessageBox.warning(
                     self, "Ошибка валидации", "Необходимо указать оба значения: ширину и высоту!"
                 )
-                self.start_button.setEnabled(True)
+                self._restore_controls()
                 return
             if max_width <= 0 or max_height <= 0:
                 QMessageBox.warning(
                     self, "Ошибка валидации", "Размеры должны быть положительными числами!"
                 )
-                self.start_button.setEnabled(True)
+                self._restore_controls()
                 return
-
-        # Подсчитываем уникальные файлы
-        unique_files = list(dict.fromkeys(self.files_to_process))
-        duplicate_count = len(self.files_to_process) - len(unique_files)
-
-        self.log_text.append(f"🚀 Начинаем сжатие {len(unique_files)} файлов...")
-        if duplicate_count > 0:
-            self.log_text.append(f"⚠️ Удалено дубликатов: {duplicate_count}")
-        self.log_text.append(f"📋 Формат: {format_type}, Качество: {quality}")
-        if max_width and max_height:
-            self.log_text.append(f"📐 Макс. размеры: {max_width}x{max_height} пикс.")
-        self.log_text.append(f"🗑️ Удалять оригиналы: {'Да' if delete_original else 'Нет'}")
-        if not delete_original:
-            self.log_text.append(f"📝 Постфикс: {postfix}")
-        self.log_text.append("=" * 50)
-
-        # Запускаем рабочий поток с уникальными файлами
+        self._pending_result = None
         self.worker = CompressionWorker(
-            unique_files, quality, format_type, delete_original, postfix, max_width, max_height
+            self.files_to_process, quality, format_type, delete_original, postfix,
+            max_width, max_height,
         )
         self.worker.progress_updated.connect(self.progress_bar.setValue)
         self.worker.log_message.connect(self.log_text.append)
-        self.worker.finished_processing.connect(self.compression_finished)
+        self.worker.result_ready.connect(self.compression_finished)
+        self.worker.finished.connect(self._thread_finished)
         self.worker.start()
-
         self.statusBar().showMessage("Обработка в процессе...")
 
     def stop_compression(self):
-        """Остановка процесса сжатия."""
-        if self.worker and self.worker.isRunning():
+        """Только запрос; нет wait/terminate или выдуманного terminal результата."""
+        if self.worker is not None:
             self.worker.cancel()
-            self.worker.wait()  # Ждем завершения потока
+            self.stop_button.setEnabled(False)
+            self.statusBar().showMessage("Остановка запрошена; ожидаем завершения кодека...")
 
-        self.compression_finished(0, 0, cancelled=True)
+    def compression_finished(self, result):
+        """Результат известен; worker ещё удерживается до QThread.finished."""
+        self._pending_result = result
 
-    def compression_finished(self, successful: int, errors: int, cancelled: bool = False):
-        """Завершение процесса сжатия."""
-        # Разблокируем интерфейс
-        self.start_button.setEnabled(True)
-        self.stop_button.setEnabled(False)
+    def _restore_controls(self):
+        busy = self.worker is not None
+        self.start_button.setEnabled(bool(self.files_to_process) and not busy)
+        self.clear_button.setEnabled(bool(self.files_to_process) and not busy)
+        self.stop_button.setEnabled(busy)
 
-        if cancelled:
-            self.log_text.append("⏹️ Обработка отменена пользователем")
-            self.statusBar().showMessage("Обработка отменена")
+    def _thread_finished(self):
+        worker = self.worker
+        if worker is None:
+            return
+        result = self._pending_result or worker.result
+        self.last_result = result
+        self.worker = None
+        self._pending_result = None
+        worker.deleteLater()
+        self._restore_controls()
+        if self._close_pending:
+            self.close()
+            return
+        if result is None:
+            self.statusBar().showMessage("INTERNAL_ERROR")
+            return
+        counts = result.counts
+        message = (f"Итог: {result.status}\nУспешно: {counts.succeeded}; "
+                   f"ошибок: {counts.failed + len(result.errors)}; "
+                   f"отменено: {counts.cancelled}; опубликовано: {counts.published}")
+        if any(info.code == ErrorCode.DESTRUCTIVE_MODE_UNSUPPORTED for info in result.errors):
+            message = DESTRUCTIVE_MODE_MESSAGE
+        self.log_text.append(message)
+        self.statusBar().showMessage(f"Итог: {result.status}")
+        QMessageBox.information(self, "Обработка завершена", message)
+
+    def closeEvent(self, event):  # noqa: N802
+        if self.worker is not None:
+            self._close_pending = True
+            self.stop_compression()
+            event.ignore()
         else:
-            self.log_text.append("=" * 50)
-            self.log_text.append(f"✅ Обработка завершена!")
-            self.log_text.append(f"📊 Успешно: {successful}, Ошибок: {errors}")
-            self.statusBar().showMessage(f"Готово! Обработано: {successful}, ошибок: {errors}")
-
-            # Показываем результат
-            QMessageBox.information(
-                self,
-                "Обработка завершена",
-                f"Успешно обработано: {successful} файлов\nОшибок: {errors}",
-            )
+            event.accept()
 
     def clear_queue(self):
         """Очистка очереди файлов."""
+        if self.worker is not None:
+            return
         self.files_to_process = []
         self.start_button.setEnabled(False)
         self.clear_button.setEnabled(False)
