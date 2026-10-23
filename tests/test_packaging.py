@@ -61,7 +61,7 @@ def installed(tmp_path_factory):
     # Explicit build input snapshot; do not mutate/reuse historical root build/dist outputs.
     for filename in ("pyproject.toml", "README.md", "classes.py", "gui_main.py"):
         shutil.copy2(REPO / filename, source / filename)
-    for package in ("image_compressor", "gui"):
+    for package in ("image_compressor", "gui", "gui_pyside6_v2"):
         shutil.copytree(
             REPO / package, source / package, ignore=shutil.ignore_patterns("__pycache__", "*.pyc")
         )
@@ -143,6 +143,11 @@ def test_wheel_contents_and_installed_no_qt(installed, image_factory):
         assert "classes.py" in names and "gui_main.py" in names
         assert "image_compressor/service.py" in names and "image_compressor/py.typed" in names
         assert "gui/worker.py" in names
+        assert "gui_pyside6_v2/window.py" in names
+        assert "gui_pyside6_v2/tokens.json" in names
+        assert "gui_pyside6_v2/assets/add.svg" in names
+        tokens = json.loads(archive.read("gui_pyside6_v2/tokens.json"))
+        assert set(tokens["themes"]) == {"light", "dark"}
         assert not any(
             name.startswith(("tools/", ".agent-work/", "tests/", "build/", "dist/"))
             for name in names
@@ -159,6 +164,8 @@ def test_wheel_contents_and_installed_no_qt(installed, image_factory):
     script = (
         "import importlib.util,json,pathlib,image_compressor,classes; "
         "assert importlib.util.find_spec('PyQt6') is None; "
+        "assert importlib.util.find_spec('PySide6') is None; "
+        "import gui_pyside6_v2; assert 'PySide6' not in __import__('sys').modules; "
         "assert importlib.util.find_spec('pillow_heif') is None; "
         "assert importlib.util.find_spec('pillow_avif') is None; "
         "print(json.dumps({'module':str(pathlib.Path(image_compressor.__file__).resolve()),"
@@ -167,6 +174,9 @@ def test_wheel_contents_and_installed_no_qt(installed, image_factory):
     payload = json.loads(run([python, "-I", "-c", script], outside).stdout)
     assert str(root / "headless-venv") in payload["module"]
     assert "site-packages" in payload["classes"]
+    optional = run([python, "-I", "-m", "gui_pyside6_v2"], outside, expected_exit=2)
+    assert b"gui-pyside6" in optional.stderr and b"Traceback" not in optional.stderr
+    assert optional.stdout == b""
     source = image_factory("installed source Юникод.png")
     before = source.read_bytes()
     destination = outside / "installed result.webp"

@@ -1,0 +1,514 @@
+[
+  {
+    "command": "node.set",
+    "params": {
+      "ids": [
+        24
+      ],
+      "props": {
+        "fill": "#00000000"
+      }
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "ids": [
+        40
+      ],
+      "props": {
+        "fill": "#00000000"
+      }
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "ids": [
+        44
+      ],
+      "props": {
+        "fill": "#00000000"
+      }
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "ids": [
+        45
+      ],
+      "props": {
+        "fill": "#00000000"
+      }
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "ids": [
+        52
+      ],
+      "props": {
+        "fill": "#00000000"
+      }
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "ids": [
+        53
+      ],
+      "props": {
+        "fill": "#00000000"
+      }
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "ids": [
+        54
+      ],
+      "props": {
+        "fill": "#00000000"
+      }
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "ids": [
+        60
+      ],
+      "props": {
+        "fill": "#00000000"
+      }
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "ids": [
+        64
+      ],
+      "props": {
+        "fill": "#00000000"
+      }
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "ids": [
+        70
+      ],
+      "props": {
+        "fill": "#00000000"
+      }
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "ids": [
+        71
+      ],
+      "props": {
+        "fill": "#00000000"
+      }
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "ids": [
+        75
+      ],
+      "props": {
+        "fill": "#00000000"
+      }
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "ids": [
+        77
+      ],
+      "props": {
+        "fill": "#00000000"
+      }
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "ids": [
+        85
+      ],
+      "props": {
+        "fill": "#00000000"
+      }
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "ids": [
+        88
+      ],
+      "props": {
+        "fill": "#00000000"
+      }
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "ids": [
+        105
+      ],
+      "props": {
+        "fill": "#00000000"
+      }
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "ids": [
+        116
+      ],
+      "props": {
+        "fill": "#00000000"
+      }
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "ids": [
+        117
+      ],
+      "props": {
+        "fill": "#00000000"
+      }
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "ids": [
+        124
+      ],
+      "props": {
+        "fill": "#00000000"
+      }
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "ids": [
+        125
+      ],
+      "props": {
+        "fill": "#00000000"
+      }
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "ids": [
+        126
+      ],
+      "props": {
+        "fill": "#00000000"
+      }
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "ids": [
+        154
+      ],
+      "props": {
+        "fill": "#00000000"
+      }
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "ids": [
+        161
+      ],
+      "props": {
+        "fill": "#00000000"
+      }
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "ids": [
+        162
+      ],
+      "props": {
+        "fill": "#00000000"
+      }
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "ids": [
+        166
+      ],
+      "props": {
+        "fill": "#00000000"
+      }
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "ids": [
+        168
+      ],
+      "props": {
+        "fill": "#00000000"
+      }
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "ids": [
+        176
+      ],
+      "props": {
+        "fill": "#00000000"
+      }
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "ids": [
+        179
+      ],
+      "props": {
+        "fill": "#00000000"
+      }
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "ids": [
+        196
+      ],
+      "props": {
+        "fill": "#00000000"
+      }
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "ids": [
+        207
+      ],
+      "props": {
+        "fill": "#00000000"
+      }
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "ids": [
+        208
+      ],
+      "props": {
+        "fill": "#00000000"
+      }
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "ids": [
+        215
+      ],
+      "props": {
+        "fill": "#00000000"
+      }
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "ids": [
+        216
+      ],
+      "props": {
+        "fill": "#00000000"
+      }
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "ids": [
+        217
+      ],
+      "props": {
+        "fill": "#00000000"
+      }
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "ids": [
+        245
+      ],
+      "props": {
+        "fill": "#00000000"
+      }
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "ids": [
+        252
+      ],
+      "props": {
+        "fill": "#00000000"
+      }
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "ids": [
+        253
+      ],
+      "props": {
+        "fill": "#00000000"
+      }
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "ids": [
+        257
+      ],
+      "props": {
+        "fill": "#00000000"
+      }
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "ids": [
+        259
+      ],
+      "props": {
+        "fill": "#00000000"
+      }
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "ids": [
+        267
+      ],
+      "props": {
+        "fill": "#00000000"
+      }
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "ids": [
+        270
+      ],
+      "props": {
+        "fill": "#00000000"
+      }
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "ids": [
+        287
+      ],
+      "props": {
+        "fill": "#00000000"
+      }
+    }
+  },
+  {
+    "command": "edit.duplicate",
+    "params": {
+      "ids": [
+        43
+      ],
+      "dx": 1240,
+      "dy": 0
+    }
+  },
+  {
+    "command": "edit.duplicate",
+    "params": {
+      "ids": [
+        115
+      ],
+      "dx": 1240,
+      "dy": 0
+    }
+  },
+  {
+    "command": "edit.duplicate",
+    "params": {
+      "ids": [
+        206
+      ],
+      "dx": 1240,
+      "dy": 0
+    }
+  },
+  {
+    "command": "edit.duplicate",
+    "params": {
+      "ids": [
+        115
+      ],
+      "dx": 2480,
+      "dy": 0
+    }
+  },
+  {
+    "command": "edit.duplicate",
+    "params": {
+      "ids": [
+        115
+      ],
+      "dx": 3500,
+      "dy": 0
+    }
+  }
+]

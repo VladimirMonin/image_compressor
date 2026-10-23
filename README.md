@@ -1,6 +1,6 @@
 # Image Compressor
 
-Локальное преобразование изображений через Python API, неинтерактивный CLI и существующий GUI на PyQt6. Единый исполнитель последовательно обрабатывает пакет и возвращает проверяемый поэлементный итог.
+Локальное преобразование изображений через Python API, неинтерактивный CLI, существующий GUI на PyQt6 и отдельный opt-in экспериментальный GUI на PySide6. Единый исполнитель последовательно обрабатывает пакет и возвращает проверяемый поэлементный итог.
 
 **Сохранность:** только создание нового файла, без overwrite и удаления исходника. Результат сначала кодируется/проверяется в staging, затем атомарно публикуется новым hard link и повторно читается. Неподдерживаемая файловая система получает явный отказ, не небезопасный fallback.
 
@@ -99,6 +99,20 @@ result = convert(ConversionRequest(
 
 Старые resize-getters `gui/widgets.py` и import-error ветка `gui_main.py` оставлены неизменными по границе задачи и имеют debug/raw вывод. Проверенная privacy-цепочка — новые API/CLI/facade и изменённые worker/main-window emitters, **не весь старый GUI**. Qt/controller tests не являются визуальной приёмкой.
 
+## Отдельный экспериментальный GUI · PySide6
+
+Новый desktop-дизайн создан в настоящем редактируемом FigCraft; реализация — `gui_pyside6_v2/`, без изменений ядра и прежнего окна. Две темы, RU/EN/KK, пофайловая очередь, file/folder/drop, качество/resize/postfix, настоящий batch API, stop/отложенное close и bounded log. **Удаление оригиналов явно недоступно**, а не реализовано декоративным переключателем.
+
+Используйте отдельную среду (не заменяйте старую `.venv`):
+
+```powershell
+python -m venv .agent-work\figcraft-gui-experiment\pyside6-venv
+.\.agent-work\figcraft-gui-experiment\pyside6-venv\Scripts\python.exe -m pip install ".[gui-pyside6,codecs]"
+.\.agent-work\figcraft-gui-experiment\pyside6-venv\Scripts\python.exe -m gui_pyside6_v2
+```
+
+Если экспериментальная среда уже создана, пропустите создание. Не загружайте оба Qt binding в один процесс. FigCraft не нужен для runtime. Native/exports — в `design/`; [запуск и проверки](docs/figcraft_gui_experiment/RUNNING.md) · [дизайн→Qt](docs/figcraft_gui_experiment/03-design-spec.md) · [отчёт и честная оценка](docs/figcraft_gui_experiment/REPORT.md). Эксперимент независимо принят: **технический и визуальный ACCEPT**. Reviewer отдельно выполнил 47 PySide6 и 170 legacy/API/CLI/package тестов без skips, официальный native reopen/export и Windows-native/installed проверки; точная граница — в отчёте. Это отдельное принятие, не автоматическое расширение прежнего ACCEPT и не EXE-релиз. Физические OS-dialog/drop, screen reader, другие платформы и все DPI не квалифицированы.
+
 ## Политика данных и пределы
 
 Поддерживаются обычные статические 8-bit изображения. Несколько кадров, неоговорённые 16-bit/HDR/modes, повреждённые/truncated/bomb inputs явно отвергаются. У PNG исходная разрядность проверяется по IHDR **до load**: 16-bit RGB/RGBA/LA/grayscale дают `IMAGE_MODE_UNSUPPORTED`, даже если Pillow уже показывает RGB/RGBA. Молчаливая потеря младших битов не разрешена.
@@ -115,6 +129,6 @@ Atomic no-replace hard link проверен на local NTFS. Нет unsafe fall
 
 Точные pytest/Ruff/mypy/docs commands, версии, raw exits, реальные компоненты и fault seams — [инструкция тестирования](docs/instructions/testing.md) и [verification](docs/verification/command-first-refactoring.md). Все изображения synthetic. Suite включает установку настоящего wheel вне repo в venv **без Qt**, API/CLI readback, no-clobber race, отмену/следующую операцию и QThread. Независимый Reviewer подтвердил технический результат; последующие docs/package checks closeout — author verification той же роли, не новая независимая приёмка.
 
-[BUILD_QUICK](BUILD_QUICK.md), [BUILD_README](BUILD_README.md), [UPDATE_FEATURES](UPDATE_FEATURES.md), RELEASE_NOTES и PROJECT_STATUS — исторические/сборочные материалы, не evidence новой версии. Старые EXE/build outputs не обновлялись и не выдают этот рефакторинг за выпущенный бинарник. Новый GUI, visual qualification, EXE-сборка/релиз и другие платформы — вне текущего результата.
+[BUILD_QUICK](BUILD_QUICK.md), [BUILD_README](BUILD_README.md), [UPDATE_FEATURES](UPDATE_FEATURES.md), RELEASE_NOTES и PROJECT_STATUS — исторические/сборочные материалы, не evidence новой версии. Старые EXE/build outputs не обновлялись и не выдают этот рефакторинг за выпущенный бинарник. Исторический command-first ACCEPT не включал новый GUI/visual qualification. Новый opt-in эксперимент и его собственные проверки описаны отдельно выше; EXE-сборка/релиз и другие платформы не квалифицированы.
 
 Автор исходного проекта: Vladimir Monin. Версия distribution сохранена: 1.0.0; отдельный release/EXE этой работой не создаётся. Source-срез и необходимая документация сохраняются вместе на `refactor/command-first`; доставка feature branch не означает merge/tag/release.

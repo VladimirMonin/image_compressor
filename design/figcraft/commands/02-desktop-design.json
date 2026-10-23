@@ -1,0 +1,8208 @@
+{
+  "commands": [
+    {
+      "command": "variable.createCollection",
+      "params": {
+        "name": "Theme",
+        "modes": [
+          "Light",
+          "Dark"
+        ]
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 0
+        },
+        "name": "surface/window",
+        "type": "color",
+        "values": {
+          "Light": "#F3F6FB",
+          "Dark": "#101827"
+        }
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 0
+        },
+        "name": "surface/panel",
+        "type": "color",
+        "values": {
+          "Light": "#FFFFFF",
+          "Dark": "#192537"
+        }
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 0
+        },
+        "name": "surface/raised",
+        "type": "color",
+        "values": {
+          "Light": "#EAF0F8",
+          "Dark": "#243349"
+        }
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 0
+        },
+        "name": "text/primary",
+        "type": "color",
+        "values": {
+          "Light": "#17263C",
+          "Dark": "#EDF3FC"
+        }
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 0
+        },
+        "name": "text/secondary",
+        "type": "color",
+        "values": {
+          "Light": "#50627A",
+          "Dark": "#B5C5DB"
+        }
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 0
+        },
+        "name": "border/default",
+        "type": "color",
+        "values": {
+          "Light": "#CCD7E5",
+          "Dark": "#40516B"
+        }
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 0
+        },
+        "name": "accent/action",
+        "type": "color",
+        "values": {
+          "Light": "#245EDB",
+          "Dark": "#82ACFF"
+        }
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 0
+        },
+        "name": "accent/on-action",
+        "type": "color",
+        "values": {
+          "Light": "#FFFFFF",
+          "Dark": "#10213F"
+        }
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 0
+        },
+        "name": "state/success",
+        "type": "color",
+        "values": {
+          "Light": "#176A4C",
+          "Dark": "#79DDB1"
+        }
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 0
+        },
+        "name": "state/warning",
+        "type": "color",
+        "values": {
+          "Light": "#875106",
+          "Dark": "#F6CA79"
+        }
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 0
+        },
+        "name": "state/error",
+        "type": "color",
+        "values": {
+          "Light": "#AF3444",
+          "Dark": "#FFA2AC"
+        }
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 0
+        },
+        "name": "focus/ring",
+        "type": "color",
+        "values": {
+          "Light": "#153F9D",
+          "Dark": "#B8D0FF"
+        }
+      }
+    },
+    {
+      "command": "variable.createCollection",
+      "params": {
+        "name": "Locale",
+        "modes": [
+          "RU",
+          "EN",
+          "KK"
+        ]
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 13
+        },
+        "name": "subtitle",
+        "type": "string",
+        "values": {
+          "RU": "Новые файлы. Исходники сохраняются.",
+          "EN": "New files. Originals stay safe.",
+          "KK": "Жаңа файлдар. Түпнұсқалар сақталады."
+        }
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 13
+        },
+        "name": "add",
+        "type": "string",
+        "values": {
+          "RU": "Добавить файлы",
+          "EN": "Add files",
+          "KK": "Файлдарды қосу"
+        }
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 13
+        },
+        "name": "folder",
+        "type": "string",
+        "values": {
+          "RU": "Выбрать папку",
+          "EN": "Choose folder",
+          "KK": "Қалтаны таңдау"
+        }
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 13
+        },
+        "name": "queue",
+        "type": "string",
+        "values": {
+          "RU": "Очередь",
+          "EN": "Queue",
+          "KK": "Кезек"
+        }
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 13
+        },
+        "name": "empty",
+        "type": "string",
+        "values": {
+          "RU": "Добавьте изображения",
+          "EN": "Add images to begin",
+          "KK": "Бастау үшін суреттерді қосыңыз"
+        }
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 13
+        },
+        "name": "drop",
+        "type": "string",
+        "values": {
+          "RU": "Перетащите файлы или папку сюда",
+          "EN": "Drop files or a folder here",
+          "KK": "Файлдарды не қалтаны осында сүйреңіз"
+        }
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 13
+        },
+        "name": "inputs",
+        "type": "string",
+        "values": {
+          "RU": "JPEG, PNG, WebP, HEIF, AVIF · PNG только вход",
+          "EN": "JPEG, PNG, WebP, HEIF, AVIF · PNG input only",
+          "KK": "JPEG, PNG, WebP, HEIF, AVIF · PNG тек кіріс"
+        }
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 13
+        },
+        "name": "settings",
+        "type": "string",
+        "values": {
+          "RU": "Параметры",
+          "EN": "Settings",
+          "KK": "Параметрлер"
+        }
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 13
+        },
+        "name": "format",
+        "type": "string",
+        "values": {
+          "RU": "Выходной формат",
+          "EN": "Output format",
+          "KK": "Шығыс пішімі"
+        }
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 13
+        },
+        "name": "quality",
+        "type": "string",
+        "values": {
+          "RU": "Качество",
+          "EN": "Quality",
+          "KK": "Сапа"
+        }
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 13
+        },
+        "name": "resize",
+        "type": "string",
+        "values": {
+          "RU": "Уменьшить размер",
+          "EN": "Resize to fit",
+          "KK": "Өлшемін кішірейту"
+        }
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 13
+        },
+        "name": "width",
+        "type": "string",
+        "values": {
+          "RU": "Максимальная\nширина",
+          "EN": "Maximum\nwidth",
+          "KK": "Ең үлкен\nені"
+        }
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 13
+        },
+        "name": "height",
+        "type": "string",
+        "values": {
+          "RU": "Максимальная\nвысота",
+          "EN": "Maximum\nheight",
+          "KK": "Ең үлкен\nбиіктігі"
+        }
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 13
+        },
+        "name": "postfix",
+        "type": "string",
+        "values": {
+          "RU": "Постфикс",
+          "EN": "Postfix",
+          "KK": "Постфикс"
+        }
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 13
+        },
+        "name": "postfixHelp",
+        "type": "string",
+        "values": {
+          "RU": "Для совпадающих форматов. Занятые имена не перезаписываются.",
+          "EN": "For matching formats. Existing names are never overwritten.",
+          "KK": "Бірдей пішімдер үшін. Бар файлдар қайта жазылмайды."
+        }
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 13
+        },
+        "name": "recursive",
+        "type": "string",
+        "values": {
+          "RU": "Включая подпапки",
+          "EN": "Include subfolders",
+          "KK": "Ішкі қалталарды қосу"
+        }
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 13
+        },
+        "name": "delete",
+        "type": "string",
+        "values": {
+          "RU": "Удалять оригиналы — недоступно",
+          "EN": "Delete originals — unavailable",
+          "KK": "Түпнұсқаларды жою — қолжетімсіз"
+        }
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 13
+        },
+        "name": "safe",
+        "type": "string",
+        "values": {
+          "RU": "Безопасный API всегда сохраняет исходники.",
+          "EN": "The safe API always retains originals.",
+          "KK": "Қауіпсіз API түпнұсқаларды әрқашан сақтайды."
+        }
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 13
+        },
+        "name": "start",
+        "type": "string",
+        "values": {
+          "RU": "Начать",
+          "EN": "Start",
+          "KK": "Бастау"
+        }
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 13
+        },
+        "name": "stop",
+        "type": "string",
+        "values": {
+          "RU": "Остановить",
+          "EN": "Stop",
+          "KK": "Тоқтату"
+        }
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 13
+        },
+        "name": "clear",
+        "type": "string",
+        "values": {
+          "RU": "Очистить очередь",
+          "EN": "Clear queue",
+          "KK": "Кезекті тазарту"
+        }
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 13
+        },
+        "name": "ready",
+        "type": "string",
+        "values": {
+          "RU": "Готово к запуску",
+          "EN": "Ready to start",
+          "KK": "Бастауға дайын"
+        }
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 13
+        },
+        "name": "processing",
+        "type": "string",
+        "values": {
+          "RU": "Обработка · 1 / 3",
+          "EN": "Processing · 1 / 3",
+          "KK": "Өңделуде · 1 / 3"
+        }
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 13
+        },
+        "name": "waiting",
+        "type": "string",
+        "values": {
+          "RU": "Ожидает",
+          "EN": "Ready",
+          "KK": "Дайын"
+        }
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 13
+        },
+        "name": "running",
+        "type": "string",
+        "values": {
+          "RU": "Обработка",
+          "EN": "Processing",
+          "KK": "Өңделуде"
+        }
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 13
+        },
+        "name": "done",
+        "type": "string",
+        "values": {
+          "RU": "Готово",
+          "EN": "Done",
+          "KK": "Дайын"
+        }
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 13
+        },
+        "name": "log",
+        "type": "string",
+        "values": {
+          "RU": "Журнал операции",
+          "EN": "Operation log",
+          "KK": "Әрекет журналы"
+        }
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 13
+        },
+        "name": "name",
+        "type": "string",
+        "values": {
+          "RU": "Имя файла",
+          "EN": "File name",
+          "KK": "Файл атауы"
+        }
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 13
+        },
+        "name": "suffix",
+        "type": "string",
+        "values": {
+          "RU": "Расш.",
+          "EN": "Suffix",
+          "KK": "Кеңейтім"
+        }
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 13
+        },
+        "name": "bytes",
+        "type": "string",
+        "values": {
+          "RU": "Размер",
+          "EN": "Size",
+          "KK": "Өлшем"
+        }
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 13
+        },
+        "name": "status",
+        "type": "string",
+        "values": {
+          "RU": "Статус",
+          "EN": "Status",
+          "KK": "Күй"
+        }
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 13
+        },
+        "name": "count",
+        "type": "string",
+        "values": {
+          "RU": "Доступно: 3 · Ошибок добавления: 0",
+          "EN": "Available: 3 · Selection issues: 0",
+          "KK": "Қолжетімді: 3 · Қосу қатесі: 0"
+        }
+      }
+    },
+    {
+      "command": "variable.createCollection",
+      "params": {
+        "name": "Metrics",
+        "modes": [
+          "Base"
+        ]
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 46
+        },
+        "name": "space/1",
+        "type": "number",
+        "value": 4
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 46
+        },
+        "name": "space/2",
+        "type": "number",
+        "value": 8
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 46
+        },
+        "name": "space/3",
+        "type": "number",
+        "value": 12
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 46
+        },
+        "name": "space/4",
+        "type": "number",
+        "value": 16
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 46
+        },
+        "name": "space/6",
+        "type": "number",
+        "value": 24
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 46
+        },
+        "name": "radius/panel",
+        "type": "number",
+        "value": 12
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 46
+        },
+        "name": "radius/control",
+        "type": "number",
+        "value": 8
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 46
+        },
+        "name": "type/body",
+        "type": "number",
+        "value": 14
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 46
+        },
+        "name": "type/caption",
+        "type": "number",
+        "value": 12
+      }
+    },
+    {
+      "command": "variable.create",
+      "params": {
+        "collection": {
+          "$step": 46
+        },
+        "name": "type/title",
+        "type": "number",
+        "value": 24
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Component library",
+        "width": 1120,
+        "height": 1180,
+        "props": {
+          "y": 210,
+          "layout": "vertical",
+          "padding": 24,
+          "gap": 12,
+          "clip": false
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 57
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 1
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Text",
+        "parent": {
+          "$step": 57
+        },
+        "text": "Image Compressor / editable component library",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 24,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 59
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 4
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Button / Primary",
+        "width": 184,
+        "height": 36,
+        "props": {
+          "layout": "horizontal",
+          "padding": [
+            8,
+            12,
+            8,
+            12
+          ],
+          "crossAlign": "center",
+          "mainAlign": "center",
+          "cornerRadius": 8,
+          "sizingH": "hug"
+        },
+        "parent": {
+          "$step": 57
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 61
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 7
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Label",
+        "parent": {
+          "$step": 61
+        },
+        "text": "Начать",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 14,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 63
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 8
+        }
+      }
+    },
+    {
+      "command": "component.create",
+      "params": {
+        "ids": [
+          {
+            "$step": 61
+          }
+        ]
+      }
+    },
+    {
+      "command": "component.addProperty",
+      "params": {
+        "id": {
+          "$step": 61
+        },
+        "name": "Label",
+        "type": "text",
+        "default": "Начать",
+        "layer": {
+          "$step": 63
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Button / Secondary",
+        "width": 184,
+        "height": 36,
+        "props": {
+          "layout": "horizontal",
+          "padding": [
+            8,
+            12,
+            8,
+            12
+          ],
+          "crossAlign": "center",
+          "mainAlign": "center",
+          "cornerRadius": 8,
+          "sizingH": "hug"
+        },
+        "parent": {
+          "$step": 57
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 67
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 3
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Label",
+        "parent": {
+          "$step": 67
+        },
+        "text": "Добавить файлы",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 14,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 69
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 4
+        }
+      }
+    },
+    {
+      "command": "component.create",
+      "params": {
+        "ids": [
+          {
+            "$step": 67
+          }
+        ]
+      }
+    },
+    {
+      "command": "component.addProperty",
+      "params": {
+        "id": {
+          "$step": 67
+        },
+        "name": "Label",
+        "type": "text",
+        "default": "Добавить файлы",
+        "layer": {
+          "$step": 69
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Button / Stop",
+        "width": 184,
+        "height": 36,
+        "props": {
+          "layout": "horizontal",
+          "padding": [
+            8,
+            12,
+            8,
+            12
+          ],
+          "crossAlign": "center",
+          "mainAlign": "center",
+          "cornerRadius": 8,
+          "sizingH": "hug"
+        },
+        "parent": {
+          "$step": 57
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 73
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 2
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 73
+          }
+        ],
+        "field": "stroke",
+        "variable": {
+          "$step": 11
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 73
+          }
+        ],
+        "props": {
+          "strokeWeight": 1
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Label",
+        "parent": {
+          "$step": 73
+        },
+        "text": "Остановить",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 14,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 77
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 4
+        }
+      }
+    },
+    {
+      "command": "component.create",
+      "params": {
+        "ids": [
+          {
+            "$step": 73
+          }
+        ]
+      }
+    },
+    {
+      "command": "component.addProperty",
+      "params": {
+        "id": {
+          "$step": 73
+        },
+        "name": "Label",
+        "type": "text",
+        "default": "Остановить",
+        "layer": {
+          "$step": 77
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Input",
+        "width": 184,
+        "height": 36,
+        "props": {
+          "layout": "horizontal",
+          "padding": [
+            8,
+            12,
+            8,
+            12
+          ],
+          "crossAlign": "center",
+          "mainAlign": "center",
+          "cornerRadius": 8,
+          "sizingH": "fixed"
+        },
+        "parent": {
+          "$step": 57
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 81
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 1
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 81
+          }
+        ],
+        "field": "stroke",
+        "variable": {
+          "$step": 6
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 81
+          }
+        ],
+        "props": {
+          "strokeWeight": 1
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Label",
+        "parent": {
+          "$step": 81
+        },
+        "text": "_compressed",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 14,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 85
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 4
+        }
+      }
+    },
+    {
+      "command": "component.create",
+      "params": {
+        "ids": [
+          {
+            "$step": 81
+          }
+        ]
+      }
+    },
+    {
+      "command": "component.addProperty",
+      "params": {
+        "id": {
+          "$step": 81
+        },
+        "name": "Label",
+        "type": "text",
+        "default": "_compressed",
+        "layer": {
+          "$step": 85
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Format",
+        "width": 184,
+        "height": 36,
+        "props": {
+          "layout": "horizontal",
+          "padding": [
+            8,
+            12,
+            8,
+            12
+          ],
+          "crossAlign": "center",
+          "mainAlign": "center",
+          "cornerRadius": 8,
+          "sizingH": "fixed"
+        },
+        "parent": {
+          "$step": 57
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 89
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 1
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 89
+          }
+        ],
+        "field": "stroke",
+        "variable": {
+          "$step": 6
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 89
+          }
+        ],
+        "props": {
+          "strokeWeight": 1
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Label",
+        "parent": {
+          "$step": 89
+        },
+        "text": "WebP  ▾",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 14,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 93
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 4
+        }
+      }
+    },
+    {
+      "command": "component.create",
+      "params": {
+        "ids": [
+          {
+            "$step": 89
+          }
+        ]
+      }
+    },
+    {
+      "command": "component.addProperty",
+      "params": {
+        "id": {
+          "$step": 89
+        },
+        "name": "Label",
+        "type": "text",
+        "default": "WebP  ▾",
+        "layer": {
+          "$step": 93
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Badge",
+        "width": 220,
+        "height": 36,
+        "props": {
+          "layout": "horizontal",
+          "padding": [
+            8,
+            12,
+            8,
+            12
+          ],
+          "crossAlign": "center",
+          "mainAlign": "center",
+          "cornerRadius": 8,
+          "sizingH": "hug"
+        },
+        "parent": {
+          "$step": 57
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 97
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 3
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Label",
+        "parent": {
+          "$step": 97
+        },
+        "text": "Готово к запуску",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 14,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 99
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 4
+        }
+      }
+    },
+    {
+      "command": "component.create",
+      "params": {
+        "ids": [
+          {
+            "$step": 97
+          }
+        ]
+      }
+    },
+    {
+      "command": "component.addProperty",
+      "params": {
+        "id": {
+          "$step": 97
+        },
+        "name": "Label",
+        "type": "text",
+        "default": "Готово к запуску",
+        "layer": {
+          "$step": 99
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Checkbox / default",
+        "width": 280,
+        "height": 24,
+        "props": {
+          "layout": "horizontal",
+          "gap": 8,
+          "crossAlign": "center",
+          "sizingH": "hug"
+        },
+        "parent": {
+          "$step": 57
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Indicator",
+        "width": 16,
+        "height": 16,
+        "props": {
+          "cornerRadius": 4
+        },
+        "parent": {
+          "$step": 103
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 104
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 7
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "vector",
+        "name": "Check vector",
+        "parent": {
+          "$step": 104
+        },
+        "width": 16,
+        "height": 16,
+        "path": "M4 8 L7 11 L12 5",
+        "props": {
+          "fill": "#00000000",
+          "stroke": "#FFFFFF",
+          "strokeWeight": 2
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Label",
+        "parent": {
+          "$step": 103
+        },
+        "text": "Включая подпапки",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 14,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 107
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 4
+        }
+      }
+    },
+    {
+      "command": "component.create",
+      "params": {
+        "ids": [
+          {
+            "$step": 103
+          }
+        ]
+      }
+    },
+    {
+      "command": "component.addProperty",
+      "params": {
+        "id": {
+          "$step": 103
+        },
+        "name": "Label",
+        "type": "text",
+        "default": "Включая подпапки",
+        "layer": {
+          "$step": 107
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Queue / row",
+        "width": 620,
+        "height": 48,
+        "props": {
+          "layout": "horizontal",
+          "padding": [
+            8,
+            12,
+            8,
+            12
+          ],
+          "gap": 12,
+          "crossAlign": "center",
+          "cornerRadius": 4
+        },
+        "parent": {
+          "$step": 57
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 111
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 2
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Name",
+        "parent": {
+          "$step": 111
+        },
+        "text": "sample_landscape.png",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 13,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 113
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 4
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 113
+          }
+        ],
+        "props": {
+          "width": 260,
+          "height": 20,
+          "sizingH": "fill",
+          "sizingV": "fixed",
+          "textAutoResize": "truncate",
+          "maxLines": 1
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Suffix",
+        "parent": {
+          "$step": 111
+        },
+        "text": "PNG",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 13,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 116
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 5
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 116
+          }
+        ],
+        "props": {
+          "width": 52,
+          "height": 20,
+          "sizingH": "fixed",
+          "sizingV": "fixed",
+          "textAutoResize": "truncate",
+          "maxLines": 1
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Bytes",
+        "parent": {
+          "$step": 111
+        },
+        "text": "1.8 MiB",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 13,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 119
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 5
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 119
+          }
+        ],
+        "props": {
+          "width": 72,
+          "height": 20,
+          "sizingH": "fixed",
+          "sizingV": "fixed",
+          "textAutoResize": "truncate",
+          "maxLines": 1
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Status",
+        "parent": {
+          "$step": 111
+        },
+        "text": "Ожидает",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 13,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 122
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 5
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 122
+          }
+        ],
+        "props": {
+          "width": 104,
+          "height": 20,
+          "sizingH": "fixed",
+          "sizingV": "fixed",
+          "textAutoResize": "truncate",
+          "maxLines": 1
+        }
+      }
+    },
+    {
+      "command": "component.create",
+      "params": {
+        "ids": [
+          {
+            "$step": 111
+          }
+        ]
+      }
+    },
+    {
+      "command": "component.addProperty",
+      "params": {
+        "id": {
+          "$step": 111
+        },
+        "name": "Name",
+        "type": "text",
+        "default": "sample_landscape.png",
+        "layer": {
+          "$step": 113
+        }
+      }
+    },
+    {
+      "command": "component.addProperty",
+      "params": {
+        "id": {
+          "$step": 111
+        },
+        "name": "Suffix",
+        "type": "text",
+        "default": "PNG",
+        "layer": {
+          "$step": 116
+        }
+      }
+    },
+    {
+      "command": "component.addProperty",
+      "params": {
+        "id": {
+          "$step": 111
+        },
+        "name": "Bytes",
+        "type": "text",
+        "default": "1.8 MiB",
+        "layer": {
+          "$step": 119
+        }
+      }
+    },
+    {
+      "command": "component.addProperty",
+      "params": {
+        "id": {
+          "$step": 111
+        },
+        "name": "Status",
+        "type": "text",
+        "default": "Ожидает",
+        "layer": {
+          "$step": 122
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Section / panel",
+        "width": 500,
+        "height": 72,
+        "props": {
+          "layout": "vertical",
+          "gap": 6,
+          "padding": 12,
+          "cornerRadius": 12
+        },
+        "parent": {
+          "$step": 57
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 130
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 2
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Label",
+        "parent": {
+          "$step": 130
+        },
+        "text": "Журнал операции",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 13,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 132
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 4
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Body",
+        "parent": {
+          "$step": 130
+        },
+        "text": "event=ready count=3",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 12,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 134
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 5
+        }
+      }
+    },
+    {
+      "command": "component.create",
+      "params": {
+        "ids": [
+          {
+            "$step": 130
+          }
+        ]
+      }
+    },
+    {
+      "command": "component.addProperty",
+      "params": {
+        "id": {
+          "$step": 130
+        },
+        "name": "Label",
+        "type": "text",
+        "default": "Журнал операции",
+        "layer": {
+          "$step": 132
+        }
+      }
+    },
+    {
+      "command": "component.addProperty",
+      "params": {
+        "id": {
+          "$step": 130
+        },
+        "name": "Body",
+        "type": "text",
+        "default": "event=ready count=3",
+        "layer": {
+          "$step": 134
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 61
+        },
+        "parent": {
+          "$step": 57
+        }
+      }
+    },
+    {
+      "command": "instance.setProperties",
+      "params": {
+        "ids": [
+          {
+            "$step": 139
+          }
+        ],
+        "properties": {
+          "Label": "Focus / keyboard"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 139
+          }
+        ],
+        "field": "stroke",
+        "variable": {
+          "$step": 12
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 139
+          }
+        ],
+        "props": {
+          "strokeWeight": 3
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 67
+        },
+        "parent": {
+          "$step": 57
+        }
+      }
+    },
+    {
+      "command": "instance.setProperties",
+      "params": {
+        "ids": [
+          {
+            "$step": 143
+          }
+        ],
+        "properties": {
+          "Label": "Disabled / unavailable"
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 143
+          }
+        ],
+        "props": {
+          "opacity": 0.5
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Icon-Add",
+        "width": 24,
+        "height": 24,
+        "props": {},
+        "parent": {
+          "$step": 57
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "vector",
+        "name": "Add vector",
+        "parent": {
+          "$step": 146
+        },
+        "width": 24,
+        "height": 24,
+        "path": "M12 4 L12 20 M4 12 L20 12",
+        "props": {
+          "fill": "#00000000",
+          "stroke": "#245EDB",
+          "strokeWeight": 2,
+          "strokeCap": "round"
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 146
+          }
+        ],
+        "props": {
+          "exports": [
+            {
+              "format": "svg",
+              "scale": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "command": "page.add",
+      "params": {
+        "name": "01 · Desktop screens"
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "RU-Light-Empty",
+        "width": 1120,
+        "height": 760,
+        "props": {
+          "x": 0,
+          "y": 0,
+          "layout": "vertical",
+          "padding": 20,
+          "gap": 12
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 150
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 1
+        }
+      }
+    },
+    {
+      "command": "variable.setMode",
+      "params": {
+        "ids": [
+          {
+            "$step": 150
+          }
+        ],
+        "collection": {
+          "$step": 0
+        },
+        "mode": "Light"
+      }
+    },
+    {
+      "command": "variable.setMode",
+      "params": {
+        "ids": [
+          {
+            "$step": 150
+          }
+        ],
+        "collection": {
+          "$step": 13
+        },
+        "mode": "RU"
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Header",
+        "width": 1080,
+        "height": 60,
+        "props": {
+          "layout": "horizontal",
+          "gap": 16,
+          "crossAlign": "center",
+          "sizingH": "fill"
+        },
+        "parent": {
+          "$step": 150
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Identity",
+        "width": 660,
+        "height": 56,
+        "props": {
+          "layout": "vertical",
+          "gap": 3,
+          "sizingH": "fill"
+        },
+        "parent": {
+          "$step": 154
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Text",
+        "parent": {
+          "$step": 155
+        },
+        "text": "Image Compressor",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 24,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight",
+          "fontStyle": "Semibold"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 156
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 4
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Text",
+        "parent": {
+          "$step": 155
+        },
+        "text": "Новые файлы. Исходники сохраняются.",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 13,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 158
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 5
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 158
+          }
+        ],
+        "field": "characters",
+        "variable": {
+          "$step": 14
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 67
+        },
+        "parent": {
+          "$step": 154
+        }
+      }
+    },
+    {
+      "command": "instance.setProperties",
+      "params": {
+        "ids": [
+          {
+            "$step": 161
+          }
+        ],
+        "properties": {
+          "Label": "Light / Dark"
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 161
+          }
+        ],
+        "props": {
+          "height": 34
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 89
+        },
+        "parent": {
+          "$step": 154
+        }
+      }
+    },
+    {
+      "command": "instance.setProperties",
+      "params": {
+        "ids": [
+          {
+            "$step": 164
+          }
+        ],
+        "properties": {
+          "Label": "Русский  ▾"
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 164
+          }
+        ],
+        "props": {
+          "width": 126,
+          "height": 34
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Body / flexible queue + fixed settings",
+        "width": 1080,
+        "height": 556,
+        "props": {
+          "layout": "horizontal",
+          "gap": 16,
+          "sizingH": "fill",
+          "sizingV": "fill"
+        },
+        "parent": {
+          "$step": 150
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Queue area",
+        "width": 744,
+        "height": 556,
+        "props": {
+          "layout": "vertical",
+          "gap": 12,
+          "sizingH": "fill",
+          "sizingV": "fill"
+        },
+        "parent": {
+          "$step": 167
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Add actions",
+        "width": 744,
+        "height": 36,
+        "props": {
+          "layout": "horizontal",
+          "gap": 8,
+          "sizingH": "fill"
+        },
+        "parent": {
+          "$step": 168
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 67
+        },
+        "parent": {
+          "$step": 169
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 170
+          }
+        ],
+        "field": "componentProperties/Label",
+        "variable": {
+          "$step": 15
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 67
+        },
+        "parent": {
+          "$step": 169
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 172
+          }
+        ],
+        "field": "componentProperties/Label",
+        "variable": {
+          "$step": 16
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Queue card",
+        "width": 744,
+        "height": 366,
+        "props": {
+          "layout": "vertical",
+          "gap": 8,
+          "padding": 16,
+          "sizingH": "fill",
+          "sizingV": "fill",
+          "cornerRadius": 12
+        },
+        "parent": {
+          "$step": 168
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 174
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 2
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Breathing room",
+        "width": 20,
+        "height": 24,
+        "props": {
+          "sizingV": "fill"
+        },
+        "parent": {
+          "$step": 174
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Text",
+        "parent": {
+          "$step": 174
+        },
+        "text": "Добавьте изображения",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 20,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 177
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 4
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 177
+          }
+        ],
+        "field": "characters",
+        "variable": {
+          "$step": 18
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 177
+          }
+        ],
+        "props": {
+          "sizingH": "fill",
+          "textAlign": "center",
+          "textAutoResize": "height"
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Text",
+        "parent": {
+          "$step": 174
+        },
+        "text": "Перетащите файлы или папку сюда",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 14,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 181
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 5
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 181
+          }
+        ],
+        "field": "characters",
+        "variable": {
+          "$step": 19
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 181
+          }
+        ],
+        "props": {
+          "sizingH": "fill",
+          "textAlign": "center",
+          "textAutoResize": "height"
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Text",
+        "parent": {
+          "$step": 174
+        },
+        "text": "JPEG, PNG, WebP, HEIF, AVIF · PNG только вход",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 12,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 185
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 5
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 185
+          }
+        ],
+        "field": "characters",
+        "variable": {
+          "$step": 20
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 185
+          }
+        ],
+        "props": {
+          "sizingH": "fill",
+          "textAlign": "center",
+          "textAutoResize": "height"
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Breathing room below",
+        "width": 20,
+        "height": 24,
+        "props": {
+          "sizingV": "fill"
+        },
+        "parent": {
+          "$step": 174
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 130
+        },
+        "parent": {
+          "$step": 168
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 190
+          }
+        ],
+        "field": "componentProperties/Label",
+        "variable": {
+          "$step": 40
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 190
+          }
+        ],
+        "props": {
+          "width": 700,
+          "height": 100,
+          "sizingH": "fill"
+        }
+      }
+    },
+    {
+      "command": "instance.setProperties",
+      "params": {
+        "ids": [
+          {
+            "$step": 190
+          }
+        ],
+        "properties": {
+          "Body": "event=ready"
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Settings panel",
+        "width": 320,
+        "height": 556,
+        "props": {
+          "layout": "vertical",
+          "gap": 8,
+          "padding": 16,
+          "cornerRadius": 12,
+          "sizingV": "fill"
+        },
+        "parent": {
+          "$step": 167
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 194
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 2
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Text",
+        "parent": {
+          "$step": 194
+        },
+        "text": "Параметры",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 18,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight",
+          "fontStyle": "Semibold"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 196
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 4
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 196
+          }
+        ],
+        "field": "characters",
+        "variable": {
+          "$step": 21
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Scrollable settings viewport",
+        "width": 288,
+        "height": 400,
+        "props": {
+          "layout": "vertical",
+          "gap": 6,
+          "sizingH": "fill",
+          "sizingV": "fill",
+          "clip": true
+        },
+        "parent": {
+          "$step": 194
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Settings scroll content",
+        "width": 288,
+        "height": 408,
+        "props": {
+          "layout": "vertical",
+          "gap": 6,
+          "sizingH": "fill",
+          "sizingV": "hug"
+        },
+        "parent": {
+          "$step": 199
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Text",
+        "parent": {
+          "$step": 200
+        },
+        "text": "Выходной формат",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 13,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 201
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 5
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 201
+          }
+        ],
+        "field": "characters",
+        "variable": {
+          "$step": 22
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 89
+        },
+        "parent": {
+          "$step": 200
+        }
+      }
+    },
+    {
+      "command": "instance.setProperties",
+      "params": {
+        "ids": [
+          {
+            "$step": 204
+          }
+        ],
+        "properties": {
+          "Label": "WebP  ▾"
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 204
+          }
+        ],
+        "props": {
+          "width": 288,
+          "sizingH": "fill"
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Quality row",
+        "width": 288,
+        "height": 24,
+        "props": {
+          "layout": "horizontal",
+          "gap": 8,
+          "sizingH": "fill"
+        },
+        "parent": {
+          "$step": 200
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Text",
+        "parent": {
+          "$step": 207
+        },
+        "text": "Качество",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 13,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 208
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 5
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 208
+          }
+        ],
+        "field": "characters",
+        "variable": {
+          "$step": 23
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Flexible gap",
+        "width": 20,
+        "height": 16,
+        "props": {
+          "sizingH": "fill"
+        },
+        "parent": {
+          "$step": 207
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Text",
+        "parent": {
+          "$step": 207
+        },
+        "text": "80 / 100",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 13,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 212
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 4
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Quality slider",
+        "width": 288,
+        "height": 6,
+        "props": {
+          "cornerRadius": 3,
+          "sizingH": "fill"
+        },
+        "parent": {
+          "$step": 200
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 214
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 3
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Quality value",
+        "width": 218,
+        "height": 6,
+        "props": {
+          "cornerRadius": 3
+        },
+        "parent": {
+          "$step": 214
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 216
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 7
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 103
+        },
+        "parent": {
+          "$step": 200
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 218
+          }
+        ],
+        "field": "componentProperties/Label",
+        "variable": {
+          "$step": 24
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 218
+          }
+        ],
+        "props": {
+          "opacity": 0.65
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Dimension labels",
+        "width": 288,
+        "height": 36,
+        "props": {
+          "layout": "horizontal",
+          "gap": 8,
+          "sizingH": "fill"
+        },
+        "parent": {
+          "$step": 200
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Text",
+        "parent": {
+          "$step": 221
+        },
+        "text": "Максимальная\nширина",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 12,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 222
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 5
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 222
+          }
+        ],
+        "field": "characters",
+        "variable": {
+          "$step": 25
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 222
+          }
+        ],
+        "props": {
+          "width": 140,
+          "height": 34,
+          "sizingH": "fill",
+          "textAutoResize": "height"
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Text",
+        "parent": {
+          "$step": 221
+        },
+        "text": "Максимальная\nвысота",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 12,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 226
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 5
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 226
+          }
+        ],
+        "field": "characters",
+        "variable": {
+          "$step": 26
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 226
+          }
+        ],
+        "props": {
+          "width": 140,
+          "height": 34,
+          "sizingH": "fill",
+          "textAutoResize": "height"
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Dimension fields",
+        "width": 288,
+        "height": 34,
+        "props": {
+          "layout": "horizontal",
+          "gap": 8,
+          "sizingH": "fill"
+        },
+        "parent": {
+          "$step": 200
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 81
+        },
+        "parent": {
+          "$step": 230
+        }
+      }
+    },
+    {
+      "command": "instance.setProperties",
+      "params": {
+        "ids": [
+          {
+            "$step": 231
+          }
+        ],
+        "properties": {
+          "Label": "1920"
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 231
+          }
+        ],
+        "props": {
+          "width": 140,
+          "height": 34,
+          "sizingH": "fill"
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 81
+        },
+        "parent": {
+          "$step": 230
+        }
+      }
+    },
+    {
+      "command": "instance.setProperties",
+      "params": {
+        "ids": [
+          {
+            "$step": 234
+          }
+        ],
+        "properties": {
+          "Label": "1080"
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 234
+          }
+        ],
+        "props": {
+          "width": 140,
+          "height": 34,
+          "sizingH": "fill"
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Text",
+        "parent": {
+          "$step": 200
+        },
+        "text": "Постфикс",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 13,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 237
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 5
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 237
+          }
+        ],
+        "field": "characters",
+        "variable": {
+          "$step": 27
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 81
+        },
+        "parent": {
+          "$step": 200
+        }
+      }
+    },
+    {
+      "command": "instance.setProperties",
+      "params": {
+        "ids": [
+          {
+            "$step": 240
+          }
+        ],
+        "properties": {
+          "Label": "_compressed"
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 240
+          }
+        ],
+        "props": {
+          "width": 288,
+          "height": 34,
+          "sizingH": "fill"
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Text",
+        "parent": {
+          "$step": 200
+        },
+        "text": "Для совпадающих форматов. Занятые имена не перезаписываются.",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 12,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 243
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 5
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 243
+          }
+        ],
+        "field": "characters",
+        "variable": {
+          "$step": 28
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 243
+          }
+        ],
+        "props": {
+          "width": 288,
+          "sizingH": "fill",
+          "textAutoResize": "height"
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 103
+        },
+        "parent": {
+          "$step": 200
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 247
+          }
+        ],
+        "field": "componentProperties/Label",
+        "variable": {
+          "$step": 29
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Originals safety / always visible",
+        "width": 288,
+        "height": 94,
+        "props": {
+          "layout": "vertical",
+          "gap": 6,
+          "padding": 8,
+          "cornerRadius": 8,
+          "sizingH": "fill"
+        },
+        "parent": {
+          "$step": 194
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 249
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 3
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Text",
+        "parent": {
+          "$step": 249
+        },
+        "text": "Удалять оригиналы — недоступно",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 12,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 251
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 5
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 251
+          }
+        ],
+        "field": "characters",
+        "variable": {
+          "$step": 30
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 251
+          }
+        ],
+        "props": {
+          "sizingH": "fill",
+          "textAutoResize": "height"
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Text",
+        "parent": {
+          "$step": 249
+        },
+        "text": "Безопасный API всегда сохраняет исходники.",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 12,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 255
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 5
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 255
+          }
+        ],
+        "field": "characters",
+        "variable": {
+          "$step": 31
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 255
+          }
+        ],
+        "props": {
+          "sizingH": "fill",
+          "textAutoResize": "height"
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Pinned footer",
+        "width": 1080,
+        "height": 80,
+        "props": {
+          "layout": "vertical",
+          "gap": 8,
+          "padding": 12,
+          "cornerRadius": 12,
+          "sizingH": "fill"
+        },
+        "parent": {
+          "$step": 150
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 259
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 2
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Status and controls",
+        "width": 1056,
+        "height": 36,
+        "props": {
+          "layout": "horizontal",
+          "gap": 8,
+          "crossAlign": "center",
+          "sizingH": "fill"
+        },
+        "parent": {
+          "$step": 259
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 97
+        },
+        "parent": {
+          "$step": 261
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 262
+          }
+        ],
+        "field": "componentProperties/Label",
+        "variable": {
+          "$step": 35
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 262
+          }
+        ],
+        "props": {
+          "sizingH": "fill"
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 67
+        },
+        "parent": {
+          "$step": 261
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 265
+          }
+        ],
+        "field": "componentProperties/Label",
+        "variable": {
+          "$step": 34
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 265
+          }
+        ],
+        "props": {
+          "opacity": 1
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 73
+        },
+        "parent": {
+          "$step": 261
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 268
+          }
+        ],
+        "field": "componentProperties/Label",
+        "variable": {
+          "$step": 33
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 268
+          }
+        ],
+        "props": {
+          "opacity": 0.5
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 61
+        },
+        "parent": {
+          "$step": 261
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 271
+          }
+        ],
+        "field": "componentProperties/Label",
+        "variable": {
+          "$step": 32
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 271
+          }
+        ],
+        "props": {
+          "opacity": 0.5
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Progress track",
+        "width": 1056,
+        "height": 6,
+        "props": {
+          "sizingH": "fill",
+          "cornerRadius": 3
+        },
+        "parent": {
+          "$step": 259
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 274
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 3
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "RU-Light-Queue",
+        "width": 1120,
+        "height": 760,
+        "props": {
+          "x": 0,
+          "y": 860,
+          "layout": "vertical",
+          "padding": 20,
+          "gap": 12
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 276
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 1
+        }
+      }
+    },
+    {
+      "command": "variable.setMode",
+      "params": {
+        "ids": [
+          {
+            "$step": 276
+          }
+        ],
+        "collection": {
+          "$step": 0
+        },
+        "mode": "Light"
+      }
+    },
+    {
+      "command": "variable.setMode",
+      "params": {
+        "ids": [
+          {
+            "$step": 276
+          }
+        ],
+        "collection": {
+          "$step": 13
+        },
+        "mode": "RU"
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Header",
+        "width": 1080,
+        "height": 60,
+        "props": {
+          "layout": "horizontal",
+          "gap": 16,
+          "crossAlign": "center",
+          "sizingH": "fill"
+        },
+        "parent": {
+          "$step": 276
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Identity",
+        "width": 660,
+        "height": 56,
+        "props": {
+          "layout": "vertical",
+          "gap": 3,
+          "sizingH": "fill"
+        },
+        "parent": {
+          "$step": 280
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Text",
+        "parent": {
+          "$step": 281
+        },
+        "text": "Image Compressor",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 24,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight",
+          "fontStyle": "Semibold"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 282
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 4
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Text",
+        "parent": {
+          "$step": 281
+        },
+        "text": "Новые файлы. Исходники сохраняются.",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 13,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 284
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 5
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 284
+          }
+        ],
+        "field": "characters",
+        "variable": {
+          "$step": 14
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 67
+        },
+        "parent": {
+          "$step": 280
+        }
+      }
+    },
+    {
+      "command": "instance.setProperties",
+      "params": {
+        "ids": [
+          {
+            "$step": 287
+          }
+        ],
+        "properties": {
+          "Label": "Light / Dark"
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 287
+          }
+        ],
+        "props": {
+          "height": 34
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 89
+        },
+        "parent": {
+          "$step": 280
+        }
+      }
+    },
+    {
+      "command": "instance.setProperties",
+      "params": {
+        "ids": [
+          {
+            "$step": 290
+          }
+        ],
+        "properties": {
+          "Label": "Русский  ▾"
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 290
+          }
+        ],
+        "props": {
+          "width": 126,
+          "height": 34
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Body / flexible queue + fixed settings",
+        "width": 1080,
+        "height": 556,
+        "props": {
+          "layout": "horizontal",
+          "gap": 16,
+          "sizingH": "fill",
+          "sizingV": "fill"
+        },
+        "parent": {
+          "$step": 276
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Queue area",
+        "width": 744,
+        "height": 556,
+        "props": {
+          "layout": "vertical",
+          "gap": 12,
+          "sizingH": "fill",
+          "sizingV": "fill"
+        },
+        "parent": {
+          "$step": 293
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Add actions",
+        "width": 744,
+        "height": 36,
+        "props": {
+          "layout": "horizontal",
+          "gap": 8,
+          "sizingH": "fill"
+        },
+        "parent": {
+          "$step": 294
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 67
+        },
+        "parent": {
+          "$step": 295
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 296
+          }
+        ],
+        "field": "componentProperties/Label",
+        "variable": {
+          "$step": 15
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 67
+        },
+        "parent": {
+          "$step": 295
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 298
+          }
+        ],
+        "field": "componentProperties/Label",
+        "variable": {
+          "$step": 16
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Queue card",
+        "width": 744,
+        "height": 366,
+        "props": {
+          "layout": "vertical",
+          "gap": 8,
+          "padding": 16,
+          "sizingH": "fill",
+          "sizingV": "fill",
+          "cornerRadius": 12
+        },
+        "parent": {
+          "$step": 294
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 300
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 2
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Text",
+        "parent": {
+          "$step": 300
+        },
+        "text": "Очередь",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 18,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight",
+          "fontStyle": "Semibold"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 302
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 4
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 302
+          }
+        ],
+        "field": "characters",
+        "variable": {
+          "$step": 17
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Text",
+        "parent": {
+          "$step": 300
+        },
+        "text": "Перетащите файлы или папку сюда",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 12,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 305
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 5
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 305
+          }
+        ],
+        "field": "characters",
+        "variable": {
+          "$step": 19
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 111
+        },
+        "parent": {
+          "$step": 300
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 308
+          }
+        ],
+        "props": {
+          "width": 680,
+          "height": 32,
+          "sizingH": "fill"
+        }
+      }
+    },
+    {
+      "command": "instance.setProperties",
+      "params": {
+        "ids": [
+          {
+            "$step": 308
+          }
+        ],
+        "properties": {
+          "Name": "Имя файла",
+          "Suffix": "Расш.",
+          "Bytes": "Размер",
+          "Status": "Статус"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 308
+          }
+        ],
+        "field": "componentProperties/Name",
+        "variable": {
+          "$step": 41
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 308
+          }
+        ],
+        "field": "componentProperties/Suffix",
+        "variable": {
+          "$step": 42
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 308
+          }
+        ],
+        "field": "componentProperties/Bytes",
+        "variable": {
+          "$step": 43
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 308
+          }
+        ],
+        "field": "componentProperties/Status",
+        "variable": {
+          "$step": 44
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 111
+        },
+        "parent": {
+          "$step": 300
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 315
+          }
+        ],
+        "props": {
+          "width": 680,
+          "height": 48,
+          "sizingH": "fill"
+        }
+      }
+    },
+    {
+      "command": "instance.setProperties",
+      "params": {
+        "ids": [
+          {
+            "$step": 315
+          }
+        ],
+        "properties": {
+          "Name": "landscape_synthetic.png",
+          "Suffix": "PNG",
+          "Bytes": "1.8 MiB"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 315
+          }
+        ],
+        "field": "componentProperties/Status",
+        "variable": {
+          "$step": 37
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 111
+        },
+        "parent": {
+          "$step": 300
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 319
+          }
+        ],
+        "props": {
+          "width": 680,
+          "height": 48,
+          "sizingH": "fill"
+        }
+      }
+    },
+    {
+      "command": "instance.setProperties",
+      "params": {
+        "ids": [
+          {
+            "$step": 319
+          }
+        ],
+        "properties": {
+          "Name": "portrait_ӘҒҚҢӨҰҮҺІ.jpg",
+          "Suffix": "JPG",
+          "Bytes": "640 KiB"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 319
+          }
+        ],
+        "field": "componentProperties/Status",
+        "variable": {
+          "$step": 37
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 111
+        },
+        "parent": {
+          "$step": 300
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 323
+          }
+        ],
+        "props": {
+          "width": 680,
+          "height": 48,
+          "sizingH": "fill"
+        }
+      }
+    },
+    {
+      "command": "instance.setProperties",
+      "params": {
+        "ids": [
+          {
+            "$step": 323
+          }
+        ],
+        "properties": {
+          "Name": "long_synthetic_filename_for_elision.webp",
+          "Suffix": "WEBP",
+          "Bytes": "215 KiB"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 323
+          }
+        ],
+        "field": "componentProperties/Status",
+        "variable": {
+          "$step": 37
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Table viewport",
+        "width": 20,
+        "height": 10,
+        "props": {
+          "sizingV": "fill"
+        },
+        "parent": {
+          "$step": 300
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Text",
+        "parent": {
+          "$step": 300
+        },
+        "text": "Доступно: 3 · Ошибок добавления: 0",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 12,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 328
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 5
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 328
+          }
+        ],
+        "field": "characters",
+        "variable": {
+          "$step": 45
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 130
+        },
+        "parent": {
+          "$step": 294
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 331
+          }
+        ],
+        "field": "componentProperties/Label",
+        "variable": {
+          "$step": 40
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 331
+          }
+        ],
+        "props": {
+          "width": 700,
+          "height": 100,
+          "sizingH": "fill"
+        }
+      }
+    },
+    {
+      "command": "instance.setProperties",
+      "params": {
+        "ids": [
+          {
+            "$step": 331
+          }
+        ],
+        "properties": {
+          "Body": "event=selection_finished available=3 issues=0"
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Settings panel",
+        "width": 320,
+        "height": 556,
+        "props": {
+          "layout": "vertical",
+          "gap": 8,
+          "padding": 16,
+          "cornerRadius": 12,
+          "sizingV": "fill"
+        },
+        "parent": {
+          "$step": 293
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 335
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 2
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Text",
+        "parent": {
+          "$step": 335
+        },
+        "text": "Параметры",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 18,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight",
+          "fontStyle": "Semibold"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 337
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 4
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 337
+          }
+        ],
+        "field": "characters",
+        "variable": {
+          "$step": 21
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Scrollable settings viewport",
+        "width": 288,
+        "height": 400,
+        "props": {
+          "layout": "vertical",
+          "gap": 6,
+          "sizingH": "fill",
+          "sizingV": "fill",
+          "clip": true
+        },
+        "parent": {
+          "$step": 335
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Settings scroll content",
+        "width": 288,
+        "height": 408,
+        "props": {
+          "layout": "vertical",
+          "gap": 6,
+          "sizingH": "fill",
+          "sizingV": "hug"
+        },
+        "parent": {
+          "$step": 340
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Text",
+        "parent": {
+          "$step": 341
+        },
+        "text": "Выходной формат",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 13,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 342
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 5
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 342
+          }
+        ],
+        "field": "characters",
+        "variable": {
+          "$step": 22
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 89
+        },
+        "parent": {
+          "$step": 341
+        }
+      }
+    },
+    {
+      "command": "instance.setProperties",
+      "params": {
+        "ids": [
+          {
+            "$step": 345
+          }
+        ],
+        "properties": {
+          "Label": "WebP  ▾"
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 345
+          }
+        ],
+        "props": {
+          "width": 288,
+          "sizingH": "fill"
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Quality row",
+        "width": 288,
+        "height": 24,
+        "props": {
+          "layout": "horizontal",
+          "gap": 8,
+          "sizingH": "fill"
+        },
+        "parent": {
+          "$step": 341
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Text",
+        "parent": {
+          "$step": 348
+        },
+        "text": "Качество",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 13,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 349
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 5
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 349
+          }
+        ],
+        "field": "characters",
+        "variable": {
+          "$step": 23
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Flexible gap",
+        "width": 20,
+        "height": 16,
+        "props": {
+          "sizingH": "fill"
+        },
+        "parent": {
+          "$step": 348
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Text",
+        "parent": {
+          "$step": 348
+        },
+        "text": "80 / 100",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 13,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 353
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 4
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Quality slider",
+        "width": 288,
+        "height": 6,
+        "props": {
+          "cornerRadius": 3,
+          "sizingH": "fill"
+        },
+        "parent": {
+          "$step": 341
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 355
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 3
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Quality value",
+        "width": 218,
+        "height": 6,
+        "props": {
+          "cornerRadius": 3
+        },
+        "parent": {
+          "$step": 355
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 357
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 7
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 103
+        },
+        "parent": {
+          "$step": 341
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 359
+          }
+        ],
+        "field": "componentProperties/Label",
+        "variable": {
+          "$step": 24
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 359
+          }
+        ],
+        "props": {
+          "opacity": 0.65
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Dimension labels",
+        "width": 288,
+        "height": 36,
+        "props": {
+          "layout": "horizontal",
+          "gap": 8,
+          "sizingH": "fill"
+        },
+        "parent": {
+          "$step": 341
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Text",
+        "parent": {
+          "$step": 362
+        },
+        "text": "Максимальная\nширина",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 12,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 363
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 5
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 363
+          }
+        ],
+        "field": "characters",
+        "variable": {
+          "$step": 25
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 363
+          }
+        ],
+        "props": {
+          "width": 140,
+          "height": 34,
+          "sizingH": "fill",
+          "textAutoResize": "height"
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Text",
+        "parent": {
+          "$step": 362
+        },
+        "text": "Максимальная\nвысота",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 12,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 367
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 5
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 367
+          }
+        ],
+        "field": "characters",
+        "variable": {
+          "$step": 26
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 367
+          }
+        ],
+        "props": {
+          "width": 140,
+          "height": 34,
+          "sizingH": "fill",
+          "textAutoResize": "height"
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Dimension fields",
+        "width": 288,
+        "height": 34,
+        "props": {
+          "layout": "horizontal",
+          "gap": 8,
+          "sizingH": "fill"
+        },
+        "parent": {
+          "$step": 341
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 81
+        },
+        "parent": {
+          "$step": 371
+        }
+      }
+    },
+    {
+      "command": "instance.setProperties",
+      "params": {
+        "ids": [
+          {
+            "$step": 372
+          }
+        ],
+        "properties": {
+          "Label": "1920"
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 372
+          }
+        ],
+        "props": {
+          "width": 140,
+          "height": 34,
+          "sizingH": "fill"
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 81
+        },
+        "parent": {
+          "$step": 371
+        }
+      }
+    },
+    {
+      "command": "instance.setProperties",
+      "params": {
+        "ids": [
+          {
+            "$step": 375
+          }
+        ],
+        "properties": {
+          "Label": "1080"
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 375
+          }
+        ],
+        "props": {
+          "width": 140,
+          "height": 34,
+          "sizingH": "fill"
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Text",
+        "parent": {
+          "$step": 341
+        },
+        "text": "Постфикс",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 13,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 378
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 5
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 378
+          }
+        ],
+        "field": "characters",
+        "variable": {
+          "$step": 27
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 81
+        },
+        "parent": {
+          "$step": 341
+        }
+      }
+    },
+    {
+      "command": "instance.setProperties",
+      "params": {
+        "ids": [
+          {
+            "$step": 381
+          }
+        ],
+        "properties": {
+          "Label": "_compressed"
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 381
+          }
+        ],
+        "props": {
+          "width": 288,
+          "height": 34,
+          "sizingH": "fill"
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Text",
+        "parent": {
+          "$step": 341
+        },
+        "text": "Для совпадающих форматов. Занятые имена не перезаписываются.",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 12,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 384
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 5
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 384
+          }
+        ],
+        "field": "characters",
+        "variable": {
+          "$step": 28
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 384
+          }
+        ],
+        "props": {
+          "width": 288,
+          "sizingH": "fill",
+          "textAutoResize": "height"
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 103
+        },
+        "parent": {
+          "$step": 341
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 388
+          }
+        ],
+        "field": "componentProperties/Label",
+        "variable": {
+          "$step": 29
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Originals safety / always visible",
+        "width": 288,
+        "height": 94,
+        "props": {
+          "layout": "vertical",
+          "gap": 6,
+          "padding": 8,
+          "cornerRadius": 8,
+          "sizingH": "fill"
+        },
+        "parent": {
+          "$step": 335
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 390
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 3
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Text",
+        "parent": {
+          "$step": 390
+        },
+        "text": "Удалять оригиналы — недоступно",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 12,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 392
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 5
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 392
+          }
+        ],
+        "field": "characters",
+        "variable": {
+          "$step": 30
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 392
+          }
+        ],
+        "props": {
+          "sizingH": "fill",
+          "textAutoResize": "height"
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Text",
+        "parent": {
+          "$step": 390
+        },
+        "text": "Безопасный API всегда сохраняет исходники.",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 12,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 396
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 5
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 396
+          }
+        ],
+        "field": "characters",
+        "variable": {
+          "$step": 31
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 396
+          }
+        ],
+        "props": {
+          "sizingH": "fill",
+          "textAutoResize": "height"
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Pinned footer",
+        "width": 1080,
+        "height": 80,
+        "props": {
+          "layout": "vertical",
+          "gap": 8,
+          "padding": 12,
+          "cornerRadius": 12,
+          "sizingH": "fill"
+        },
+        "parent": {
+          "$step": 276
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 400
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 2
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Status and controls",
+        "width": 1056,
+        "height": 36,
+        "props": {
+          "layout": "horizontal",
+          "gap": 8,
+          "crossAlign": "center",
+          "sizingH": "fill"
+        },
+        "parent": {
+          "$step": 400
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 97
+        },
+        "parent": {
+          "$step": 402
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 403
+          }
+        ],
+        "field": "componentProperties/Label",
+        "variable": {
+          "$step": 35
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 403
+          }
+        ],
+        "props": {
+          "sizingH": "fill"
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 67
+        },
+        "parent": {
+          "$step": 402
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 406
+          }
+        ],
+        "field": "componentProperties/Label",
+        "variable": {
+          "$step": 34
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 406
+          }
+        ],
+        "props": {
+          "opacity": 1
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 73
+        },
+        "parent": {
+          "$step": 402
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 409
+          }
+        ],
+        "field": "componentProperties/Label",
+        "variable": {
+          "$step": 33
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 409
+          }
+        ],
+        "props": {
+          "opacity": 0.5
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 61
+        },
+        "parent": {
+          "$step": 402
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 412
+          }
+        ],
+        "field": "componentProperties/Label",
+        "variable": {
+          "$step": 32
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 412
+          }
+        ],
+        "props": {
+          "opacity": 1
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Progress track",
+        "width": 1056,
+        "height": 6,
+        "props": {
+          "sizingH": "fill",
+          "cornerRadius": 3
+        },
+        "parent": {
+          "$step": 400
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 415
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 3
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "RU-Light-Processing",
+        "width": 1120,
+        "height": 760,
+        "props": {
+          "x": 0,
+          "y": 1720,
+          "layout": "vertical",
+          "padding": 20,
+          "gap": 12
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 417
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 1
+        }
+      }
+    },
+    {
+      "command": "variable.setMode",
+      "params": {
+        "ids": [
+          {
+            "$step": 417
+          }
+        ],
+        "collection": {
+          "$step": 0
+        },
+        "mode": "Light"
+      }
+    },
+    {
+      "command": "variable.setMode",
+      "params": {
+        "ids": [
+          {
+            "$step": 417
+          }
+        ],
+        "collection": {
+          "$step": 13
+        },
+        "mode": "RU"
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Header",
+        "width": 1080,
+        "height": 60,
+        "props": {
+          "layout": "horizontal",
+          "gap": 16,
+          "crossAlign": "center",
+          "sizingH": "fill"
+        },
+        "parent": {
+          "$step": 417
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Identity",
+        "width": 660,
+        "height": 56,
+        "props": {
+          "layout": "vertical",
+          "gap": 3,
+          "sizingH": "fill"
+        },
+        "parent": {
+          "$step": 421
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Text",
+        "parent": {
+          "$step": 422
+        },
+        "text": "Image Compressor",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 24,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight",
+          "fontStyle": "Semibold"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 423
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 4
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Text",
+        "parent": {
+          "$step": 422
+        },
+        "text": "Новые файлы. Исходники сохраняются.",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 13,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 425
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 5
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 425
+          }
+        ],
+        "field": "characters",
+        "variable": {
+          "$step": 14
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 67
+        },
+        "parent": {
+          "$step": 421
+        }
+      }
+    },
+    {
+      "command": "instance.setProperties",
+      "params": {
+        "ids": [
+          {
+            "$step": 428
+          }
+        ],
+        "properties": {
+          "Label": "Light / Dark"
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 428
+          }
+        ],
+        "props": {
+          "height": 34
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 89
+        },
+        "parent": {
+          "$step": 421
+        }
+      }
+    },
+    {
+      "command": "instance.setProperties",
+      "params": {
+        "ids": [
+          {
+            "$step": 431
+          }
+        ],
+        "properties": {
+          "Label": "Русский  ▾"
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 431
+          }
+        ],
+        "props": {
+          "width": 126,
+          "height": 34
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Body / flexible queue + fixed settings",
+        "width": 1080,
+        "height": 556,
+        "props": {
+          "layout": "horizontal",
+          "gap": 16,
+          "sizingH": "fill",
+          "sizingV": "fill"
+        },
+        "parent": {
+          "$step": 417
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Queue area",
+        "width": 744,
+        "height": 556,
+        "props": {
+          "layout": "vertical",
+          "gap": 12,
+          "sizingH": "fill",
+          "sizingV": "fill"
+        },
+        "parent": {
+          "$step": 434
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Add actions",
+        "width": 744,
+        "height": 36,
+        "props": {
+          "layout": "horizontal",
+          "gap": 8,
+          "sizingH": "fill"
+        },
+        "parent": {
+          "$step": 435
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 67
+        },
+        "parent": {
+          "$step": 436
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 437
+          }
+        ],
+        "field": "componentProperties/Label",
+        "variable": {
+          "$step": 15
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 67
+        },
+        "parent": {
+          "$step": 436
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 439
+          }
+        ],
+        "field": "componentProperties/Label",
+        "variable": {
+          "$step": 16
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Queue card",
+        "width": 744,
+        "height": 366,
+        "props": {
+          "layout": "vertical",
+          "gap": 8,
+          "padding": 16,
+          "sizingH": "fill",
+          "sizingV": "fill",
+          "cornerRadius": 12
+        },
+        "parent": {
+          "$step": 435
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 441
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 2
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Text",
+        "parent": {
+          "$step": 441
+        },
+        "text": "Очередь",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 18,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight",
+          "fontStyle": "Semibold"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 443
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 4
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 443
+          }
+        ],
+        "field": "characters",
+        "variable": {
+          "$step": 17
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Text",
+        "parent": {
+          "$step": 441
+        },
+        "text": "Перетащите файлы или папку сюда",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 12,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 446
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 5
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 446
+          }
+        ],
+        "field": "characters",
+        "variable": {
+          "$step": 19
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 111
+        },
+        "parent": {
+          "$step": 441
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 449
+          }
+        ],
+        "props": {
+          "width": 680,
+          "height": 32,
+          "sizingH": "fill"
+        }
+      }
+    },
+    {
+      "command": "instance.setProperties",
+      "params": {
+        "ids": [
+          {
+            "$step": 449
+          }
+        ],
+        "properties": {
+          "Name": "Имя файла",
+          "Suffix": "Расш.",
+          "Bytes": "Размер",
+          "Status": "Статус"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 449
+          }
+        ],
+        "field": "componentProperties/Name",
+        "variable": {
+          "$step": 41
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 449
+          }
+        ],
+        "field": "componentProperties/Suffix",
+        "variable": {
+          "$step": 42
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 449
+          }
+        ],
+        "field": "componentProperties/Bytes",
+        "variable": {
+          "$step": 43
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 449
+          }
+        ],
+        "field": "componentProperties/Status",
+        "variable": {
+          "$step": 44
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 111
+        },
+        "parent": {
+          "$step": 441
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 456
+          }
+        ],
+        "props": {
+          "width": 680,
+          "height": 48,
+          "sizingH": "fill"
+        }
+      }
+    },
+    {
+      "command": "instance.setProperties",
+      "params": {
+        "ids": [
+          {
+            "$step": 456
+          }
+        ],
+        "properties": {
+          "Name": "landscape_synthetic.png",
+          "Suffix": "PNG",
+          "Bytes": "1.8 MiB"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 456
+          }
+        ],
+        "field": "componentProperties/Status",
+        "variable": {
+          "$step": 39
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 111
+        },
+        "parent": {
+          "$step": 441
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 460
+          }
+        ],
+        "props": {
+          "width": 680,
+          "height": 48,
+          "sizingH": "fill"
+        }
+      }
+    },
+    {
+      "command": "instance.setProperties",
+      "params": {
+        "ids": [
+          {
+            "$step": 460
+          }
+        ],
+        "properties": {
+          "Name": "portrait_ӘҒҚҢӨҰҮҺІ.jpg",
+          "Suffix": "JPG",
+          "Bytes": "640 KiB"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 460
+          }
+        ],
+        "field": "componentProperties/Status",
+        "variable": {
+          "$step": 38
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 111
+        },
+        "parent": {
+          "$step": 441
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 464
+          }
+        ],
+        "props": {
+          "width": 680,
+          "height": 48,
+          "sizingH": "fill"
+        }
+      }
+    },
+    {
+      "command": "instance.setProperties",
+      "params": {
+        "ids": [
+          {
+            "$step": 464
+          }
+        ],
+        "properties": {
+          "Name": "long_synthetic_filename_for_elision.webp",
+          "Suffix": "WEBP",
+          "Bytes": "215 KiB"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 464
+          }
+        ],
+        "field": "componentProperties/Status",
+        "variable": {
+          "$step": 37
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Table viewport",
+        "width": 20,
+        "height": 10,
+        "props": {
+          "sizingV": "fill"
+        },
+        "parent": {
+          "$step": 441
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Text",
+        "parent": {
+          "$step": 441
+        },
+        "text": "Доступно: 3 · Ошибок добавления: 0",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 12,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 469
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 5
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 469
+          }
+        ],
+        "field": "characters",
+        "variable": {
+          "$step": 45
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 130
+        },
+        "parent": {
+          "$step": 435
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 472
+          }
+        ],
+        "field": "componentProperties/Label",
+        "variable": {
+          "$step": 40
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 472
+          }
+        ],
+        "props": {
+          "width": 700,
+          "height": 100,
+          "sizingH": "fill"
+        }
+      }
+    },
+    {
+      "command": "instance.setProperties",
+      "params": {
+        "ids": [
+          {
+            "$step": 472
+          }
+        ],
+        "properties": {
+          "Body": "event=conversion_started total=3\nevent=item_finished succeeded=1 failed=0"
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Settings panel",
+        "width": 320,
+        "height": 556,
+        "props": {
+          "layout": "vertical",
+          "gap": 8,
+          "padding": 16,
+          "cornerRadius": 12,
+          "sizingV": "fill"
+        },
+        "parent": {
+          "$step": 434
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 476
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 2
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Text",
+        "parent": {
+          "$step": 476
+        },
+        "text": "Параметры",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 18,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight",
+          "fontStyle": "Semibold"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 478
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 4
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 478
+          }
+        ],
+        "field": "characters",
+        "variable": {
+          "$step": 21
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Scrollable settings viewport",
+        "width": 288,
+        "height": 400,
+        "props": {
+          "layout": "vertical",
+          "gap": 6,
+          "sizingH": "fill",
+          "sizingV": "fill",
+          "clip": true
+        },
+        "parent": {
+          "$step": 476
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Settings scroll content",
+        "width": 288,
+        "height": 408,
+        "props": {
+          "layout": "vertical",
+          "gap": 6,
+          "sizingH": "fill",
+          "sizingV": "hug"
+        },
+        "parent": {
+          "$step": 481
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Text",
+        "parent": {
+          "$step": 482
+        },
+        "text": "Выходной формат",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 13,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 483
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 5
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 483
+          }
+        ],
+        "field": "characters",
+        "variable": {
+          "$step": 22
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 89
+        },
+        "parent": {
+          "$step": 482
+        }
+      }
+    },
+    {
+      "command": "instance.setProperties",
+      "params": {
+        "ids": [
+          {
+            "$step": 486
+          }
+        ],
+        "properties": {
+          "Label": "WebP  ▾"
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 486
+          }
+        ],
+        "props": {
+          "width": 288,
+          "sizingH": "fill"
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Quality row",
+        "width": 288,
+        "height": 24,
+        "props": {
+          "layout": "horizontal",
+          "gap": 8,
+          "sizingH": "fill"
+        },
+        "parent": {
+          "$step": 482
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Text",
+        "parent": {
+          "$step": 489
+        },
+        "text": "Качество",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 13,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 490
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 5
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 490
+          }
+        ],
+        "field": "characters",
+        "variable": {
+          "$step": 23
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Flexible gap",
+        "width": 20,
+        "height": 16,
+        "props": {
+          "sizingH": "fill"
+        },
+        "parent": {
+          "$step": 489
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Text",
+        "parent": {
+          "$step": 489
+        },
+        "text": "80 / 100",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 13,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 494
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 4
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Quality slider",
+        "width": 288,
+        "height": 6,
+        "props": {
+          "cornerRadius": 3,
+          "sizingH": "fill"
+        },
+        "parent": {
+          "$step": 482
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 496
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 3
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Quality value",
+        "width": 218,
+        "height": 6,
+        "props": {
+          "cornerRadius": 3
+        },
+        "parent": {
+          "$step": 496
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 498
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 7
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 103
+        },
+        "parent": {
+          "$step": 482
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 500
+          }
+        ],
+        "field": "componentProperties/Label",
+        "variable": {
+          "$step": 24
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 500
+          }
+        ],
+        "props": {
+          "opacity": 1
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Dimension labels",
+        "width": 288,
+        "height": 36,
+        "props": {
+          "layout": "horizontal",
+          "gap": 8,
+          "sizingH": "fill"
+        },
+        "parent": {
+          "$step": 482
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Text",
+        "parent": {
+          "$step": 503
+        },
+        "text": "Максимальная\nширина",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 12,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 504
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 5
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 504
+          }
+        ],
+        "field": "characters",
+        "variable": {
+          "$step": 25
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 504
+          }
+        ],
+        "props": {
+          "width": 140,
+          "height": 34,
+          "sizingH": "fill",
+          "textAutoResize": "height"
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Text",
+        "parent": {
+          "$step": 503
+        },
+        "text": "Максимальная\nвысота",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 12,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 508
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 5
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 508
+          }
+        ],
+        "field": "characters",
+        "variable": {
+          "$step": 26
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 508
+          }
+        ],
+        "props": {
+          "width": 140,
+          "height": 34,
+          "sizingH": "fill",
+          "textAutoResize": "height"
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Dimension fields",
+        "width": 288,
+        "height": 34,
+        "props": {
+          "layout": "horizontal",
+          "gap": 8,
+          "sizingH": "fill"
+        },
+        "parent": {
+          "$step": 482
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 81
+        },
+        "parent": {
+          "$step": 512
+        }
+      }
+    },
+    {
+      "command": "instance.setProperties",
+      "params": {
+        "ids": [
+          {
+            "$step": 513
+          }
+        ],
+        "properties": {
+          "Label": "1920"
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 513
+          }
+        ],
+        "props": {
+          "width": 140,
+          "height": 34,
+          "sizingH": "fill"
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 81
+        },
+        "parent": {
+          "$step": 512
+        }
+      }
+    },
+    {
+      "command": "instance.setProperties",
+      "params": {
+        "ids": [
+          {
+            "$step": 516
+          }
+        ],
+        "properties": {
+          "Label": "1080"
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 516
+          }
+        ],
+        "props": {
+          "width": 140,
+          "height": 34,
+          "sizingH": "fill"
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Text",
+        "parent": {
+          "$step": 482
+        },
+        "text": "Постфикс",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 13,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 519
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 5
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 519
+          }
+        ],
+        "field": "characters",
+        "variable": {
+          "$step": 27
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 81
+        },
+        "parent": {
+          "$step": 482
+        }
+      }
+    },
+    {
+      "command": "instance.setProperties",
+      "params": {
+        "ids": [
+          {
+            "$step": 522
+          }
+        ],
+        "properties": {
+          "Label": "_compressed"
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 522
+          }
+        ],
+        "props": {
+          "width": 288,
+          "height": 34,
+          "sizingH": "fill"
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Text",
+        "parent": {
+          "$step": 482
+        },
+        "text": "Для совпадающих форматов. Занятые имена не перезаписываются.",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 12,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 525
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 5
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 525
+          }
+        ],
+        "field": "characters",
+        "variable": {
+          "$step": 28
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 525
+          }
+        ],
+        "props": {
+          "width": 288,
+          "sizingH": "fill",
+          "textAutoResize": "height"
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 103
+        },
+        "parent": {
+          "$step": 482
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 529
+          }
+        ],
+        "field": "componentProperties/Label",
+        "variable": {
+          "$step": 29
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Originals safety / always visible",
+        "width": 288,
+        "height": 94,
+        "props": {
+          "layout": "vertical",
+          "gap": 6,
+          "padding": 8,
+          "cornerRadius": 8,
+          "sizingH": "fill"
+        },
+        "parent": {
+          "$step": 476
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 531
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 3
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Text",
+        "parent": {
+          "$step": 531
+        },
+        "text": "Удалять оригиналы — недоступно",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 12,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 533
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 5
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 533
+          }
+        ],
+        "field": "characters",
+        "variable": {
+          "$step": 30
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 533
+          }
+        ],
+        "props": {
+          "sizingH": "fill",
+          "textAutoResize": "height"
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "text",
+        "name": "Text",
+        "parent": {
+          "$step": 531
+        },
+        "text": "Безопасный API всегда сохраняет исходники.",
+        "props": {
+          "fontFamily": "Segoe UI",
+          "fontSize": 12,
+          "sizingH": "hug",
+          "sizingV": "hug",
+          "textAutoResize": "widthAndHeight"
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 537
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 5
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 537
+          }
+        ],
+        "field": "characters",
+        "variable": {
+          "$step": 31
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 537
+          }
+        ],
+        "props": {
+          "sizingH": "fill",
+          "textAutoResize": "height"
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Pinned footer",
+        "width": 1080,
+        "height": 80,
+        "props": {
+          "layout": "vertical",
+          "gap": 8,
+          "padding": 12,
+          "cornerRadius": 12,
+          "sizingH": "fill"
+        },
+        "parent": {
+          "$step": 417
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 541
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 2
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Status and controls",
+        "width": 1056,
+        "height": 36,
+        "props": {
+          "layout": "horizontal",
+          "gap": 8,
+          "crossAlign": "center",
+          "sizingH": "fill"
+        },
+        "parent": {
+          "$step": 541
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 97
+        },
+        "parent": {
+          "$step": 543
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 544
+          }
+        ],
+        "field": "componentProperties/Label",
+        "variable": {
+          "$step": 36
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 544
+          }
+        ],
+        "props": {
+          "sizingH": "fill"
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 67
+        },
+        "parent": {
+          "$step": 543
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 547
+          }
+        ],
+        "field": "componentProperties/Label",
+        "variable": {
+          "$step": 34
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 547
+          }
+        ],
+        "props": {
+          "opacity": 0.5
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 73
+        },
+        "parent": {
+          "$step": 543
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 550
+          }
+        ],
+        "field": "componentProperties/Label",
+        "variable": {
+          "$step": 33
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 550
+          }
+        ],
+        "props": {
+          "opacity": 1
+        }
+      }
+    },
+    {
+      "command": "instance.create",
+      "params": {
+        "component": {
+          "$step": 61
+        },
+        "parent": {
+          "$step": 543
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 553
+          }
+        ],
+        "field": "componentProperties/Label",
+        "variable": {
+          "$step": 32
+        }
+      }
+    },
+    {
+      "command": "node.set",
+      "params": {
+        "ids": [
+          {
+            "$step": 553
+          }
+        ],
+        "props": {
+          "opacity": 0.5
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "Progress track",
+        "width": 1056,
+        "height": 6,
+        "props": {
+          "sizingH": "fill",
+          "cornerRadius": 3
+        },
+        "parent": {
+          "$step": 541
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 556
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 3
+        }
+      }
+    },
+    {
+      "command": "node.create",
+      "params": {
+        "type": "frame",
+        "name": "1 of 3 completed",
+        "width": 340,
+        "height": 6,
+        "props": {
+          "cornerRadius": 3
+        },
+        "parent": {
+          "$step": 556
+        }
+      }
+    },
+    {
+      "command": "variable.bind",
+      "params": {
+        "ids": [
+          {
+            "$step": 558
+          }
+        ],
+        "field": "fill",
+        "variable": {
+          "$step": 7
+        }
+      }
+    },
+    {
+      "command": "variable.export",
+      "params": {
+        "path": "C:/PY/image_compressor/design/figcraft/variables.raw.json"
+      }
+    },
+    {
+      "command": "component.list",
+      "params": {}
+    }
+  ]
+}

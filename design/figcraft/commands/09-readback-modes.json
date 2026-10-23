@@ -1,0 +1,12 @@
+[
+ {"command":"proto.evaluate","params":{"id":43,"expression":"mode(Theme)"}},
+ {"command":"proto.evaluate","params":{"id":115,"expression":"mode(Theme)"}},
+ {"command":"proto.evaluate","params":{"id":206,"expression":"mode(Theme)"}},
+ {"command":"proto.evaluate","params":{"id":298,"expression":"mode(Theme)"}},
+ {"command":"proto.evaluate","params":{"id":370,"expression":"mode(Theme)"}},
+ {"command":"proto.evaluate","params":{"id":461,"expression":"mode(Theme)"}},
+ {"command":"proto.evaluate","params":{"id":553,"expression":"mode(Locale)"}},
+ {"command":"proto.evaluate","params":{"id":644,"expression":"mode(Locale)"}},
+ {"command":"component.properties","params":{"id":24}},
+ {"command":"component.list","params":{}}
+]

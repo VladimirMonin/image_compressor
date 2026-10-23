@@ -1,0 +1,50 @@
+{
+  "surface/window": [
+    "#F3F6FB",
+    "#101827"
+  ],
+  "surface/panel": [
+    "#FFFFFF",
+    "#192537"
+  ],
+  "surface/raised": [
+    "#EAF0F8",
+    "#243349"
+  ],
+  "text/primary": [
+    "#17263C",
+    "#EDF3FC"
+  ],
+  "text/secondary": [
+    "#50627A",
+    "#B5C5DB"
+  ],
+  "border/default": [
+    "#CCD7E5",
+    "#40516B"
+  ],
+  "accent/action": [
+    "#245EDB",
+    "#82ACFF"
+  ],
+  "accent/on-action": [
+    "#FFFFFF",
+    "#10213F"
+  ],
+  "state/success": [
+    "#176A4C",
+    "#79DDB1"
+  ],
+  "state/warning": [
+    "#875106",
+    "#F6CA79"
+  ],
+  "state/error": [
+    "#AF3444",
+    "#FFA2AC"
+  ],
+  "focus/ring": [
+    "#153F9D",
+    "#B8D0FF"
+  ]
+}

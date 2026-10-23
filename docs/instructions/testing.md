@@ -2,7 +2,7 @@
 id: ic-testing-instruction
 title: "Image Compressor — тестирование"
 kind: instruction
-status: proposed
+status: accepted
 created: "2026-10-23"
 updated: "2026-10-23"
 areas: [testing, quality]
@@ -58,4 +58,4 @@ PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 .venv/Scripts/python.exe -B -m pytest -p pytest
 
 По [правилам логирования](logging.md) проверять одновременно полезный непустой вывод и отсутствие запрещённого синтетического содержимого. Если добавлен файловый handler — flush и readback байтов обязательны; один `caplog` недостаточен.
 
-Exit0 с пропуском обязательного случая его не подтверждает. Написано, static, выполнено, отменено и принято отмечаются раздельно. Срез закончен, когда критерии реально наблюдаются и независимый Reviewer подтвердил достаточность; ограничения Windows/кодеков/совместимости называются точно. Новый GUI, визуальные изменения, MCP, сборка/выпуск EXE здесь не квалифицируются.
+Exit0 с пропуском обязательного случая его не подтверждает. Написано, static, выполнено, отменено и принято отмечаются раздельно. Срез закончен, когда критерии реально наблюдаются и независимый Reviewer подтвердил достаточность; ограничения Windows/кодеков/совместимости называются точно. Историческая command-first-проверка не квалифицировала новый GUI. В отдельно принятом [FigCraft → PySide6 эксперименте](../figcraft_gui_experiment/REPORT.md) Reviewer выполнил 47 новых и 170 прежних тестов без skips, официальный native reopen/export, просмотр текущих individual design/Qt PNG, synthetic Windows-native smoke и installed-wheel запуск. Это ограниченная проверка Windows/local NTFS/Python3.14.2, не qualification всех DPI/платформ/OS-dialog/drop. При изменении этой границы сохранять отдельные `tests_pyside6_v2/`, актуальные PNG и native/installed proof; при docs-only closeout повторять лишь затронутую проверку документов/упаковки. Новый suite — только в отдельной project-local PySide среде; старый `tests/` — в сохранённой PyQt среде, никогда не collect/import оба binding в одном процессе. MCP и EXE не квалифицируются.

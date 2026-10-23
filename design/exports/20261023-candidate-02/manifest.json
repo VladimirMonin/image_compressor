@@ -1,0 +1,54 @@
+{
+  "renderer": "FigCraft 0.10.0 official CLI / system fonts",
+  "native_sha256": "a189f98afa0b444806941fc94aa04159e6943134bcfdc6b0a395521d15937912",
+  "screens": [
+    {
+      "frame": "RU-Light-Empty",
+      "id": 43,
+      "file": "exports\\20261023-candidate-02\\light\\RU-Light-Empty.png",
+      "sha256": "7c80869972739ecae39dd4fe2061b46b1ee6a9c5bfe1728c1fed680484e04daf"
+    },
+    {
+      "frame": "RU-Light-Queue",
+      "id": 115,
+      "file": "exports\\20261023-candidate-02\\light\\RU-Light-Queue.png",
+      "sha256": "629c22be27e3e3b0a881e4fbaced20f4bf428301b4975395625f1fd4e5195398"
+    },
+    {
+      "frame": "RU-Light-Processing",
+      "id": 206,
+      "file": "exports\\20261023-candidate-02\\light\\RU-Light-Processing.png",
+      "sha256": "a9eb02a5ae6c6f4fd9722ca3584a22c4f918ea07a902f1d2eb5087254d44b09a"
+    },
+    {
+      "frame": "RU-Dark-Empty",
+      "id": 298,
+      "file": "exports\\20261023-candidate-02\\dark\\RU-Dark-Empty.png",
+      "sha256": "ad1b67363f39c24aadb5f6c137cf634f14d078f6df90e34af257440aea495efc"
+    },
+    {
+      "frame": "RU-Dark-Queue",
+      "id": 370,
+      "file": "exports\\20261023-candidate-02\\dark\\RU-Dark-Queue.png",
+      "sha256": "2e1e59e9f6d096cbc4fc467b50ca4f915dc129b83e9b92b3295432714fe84ed7"
+    },
+    {
+      "frame": "RU-Dark-Processing",
+      "id": 461,
+      "file": "exports\\20261023-candidate-02\\dark\\RU-Dark-Processing.png",
+      "sha256": "74e187359c66777e06ed6a4771b82ada72617bdcce4da4eb9a92e220412c8000"
+    },
+    {
+      "frame": "EN-Light-Queue",
+      "id": 553,
+      "file": "exports\\20261023-candidate-02\\light\\EN-Light-Queue.png",
+      "sha256": "45c305f1b942ddea9ad7eddfb5d733dc2a19b389d7ad803e81c261947705f7db"
+    },
+    {
+      "frame": "KK-Dark-Queue",
+      "id": 644,
+      "file": "exports\\20261023-candidate-02\\dark\\KK-Dark-Queue.png",
+      "sha256": "ae1ab0a8a7a1544d65266e1ba97490a3e84c984739d0be9cbeb63b1e62f03679"
+    }
+  ]
+}

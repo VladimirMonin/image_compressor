@@ -1,0 +1,126 @@
+[
+  {
+    "command": "component.addProperty",
+    "params": {
+      "id": 24,
+      "name": "Checked",
+      "type": "boolean",
+      "default": true,
+      "layer": 26
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "ids": [
+        25
+      ],
+      "field": "fill",
+      "variable": null
+    }
+  },
+  {
+    "command": "node.set",
+    "params": {
+      "ids": [
+        25
+      ],
+      "props": {
+        "fill": "#00000000",
+        "strokeWeight": 1
+      }
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "ids": [
+        25
+      ],
+      "field": "stroke",
+      "variable": "VariableID:6"
+    }
+  },
+  {
+    "command": "variable.bind",
+    "params": {
+      "ids": [
+        26
+      ],
+      "field": "stroke",
+      "variable": "VariableID:7"
+    }
+  },
+  {
+    "command": "instance.setProperties",
+    "params": {
+      "ids": [
+        81
+      ],
+      "properties": {
+        "Checked": false
+      }
+    }
+  },
+  {
+    "command": "instance.setProperties",
+    "params": {
+      "ids": [
+        172
+      ],
+      "properties": {
+        "Checked": false
+      }
+    }
+  },
+  {
+    "command": "instance.setProperties",
+    "params": {
+      "ids": [
+        336
+      ],
+      "properties": {
+        "Checked": false
+      }
+    }
+  },
+  {
+    "command": "instance.setProperties",
+    "params": {
+      "ids": [
+        427
+      ],
+      "properties": {
+        "Checked": false
+      }
+    }
+  },
+  {
+    "command": "instance.setProperties",
+    "params": {
+      "ids": [
+        610
+      ],
+      "properties": {
+        "Checked": false
+      }
+    }
+  },
+  {
+    "command": "instance.setProperties",
+    "params": {
+      "ids": [
+        701
+      ],
+      "properties": {
+        "Checked": false
+      }
+    }
+  },
+  {
+    "command": "component.properties",
+    "params": {
+      "id": 24
+    }
+  }
+]

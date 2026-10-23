@@ -1,0 +1,25 @@
+{
+  "commands": [
+    {"command":"file.new","params":{"name":"Image Compressor — FigCraft UI v2"}},
+    {"command":"page.rename","params":{"name":"00 · Foundation"}},
+    {"command":"node.create","params":{"type":"frame","name":"Proof / Auto Layout","width":800,"height":160,"props":{"layout":"horizontal","gap":16,"padding":24,"fill":"#F1F5F9"}}},
+    {"command":"node.create","params":{"type":"frame","name":"Button / Proof","parent":{"$step":2},"width":160,"height":40,"props":{"layout":"horizontal","padding":[8,16,8,16],"crossAlign":"center","mainAlign":"center","fill":"#2563EB","cornerRadius":8}}},
+    {"command":"node.create","params":{"type":"text","name":"Label","parent":{"$step":3},"text":"Start","props":{"fontFamily":"Segoe UI","fontSize":14,"fill":"#FFFFFF","sizingH":"hug","sizingV":"hug"}}},
+    {"command":"component.create","params":{"ids":[{"$step":3}]}},
+    {"command":"component.addProperty","params":{"id":{"$step":3},"name":"Label","type":"text","default":"Start","layer":{"$step":4}}},
+    {"command":"instance.create","params":{"component":{"$step":3},"parent":{"$step":2}}},
+    {"command":"instance.setProperties","params":{"ids":[{"$step":7}],"properties":{"Label":"Добавить файлы"}}},
+    {"command":"instance.create","params":{"component":{"$step":3},"parent":{"$step":2}}},
+    {"command":"instance.setProperties","params":{"ids":[{"$step":9}],"properties":{"Label":"Файлдарды қосу"}}},
+    {"command":"node.get","params":{"id":{"$step":7}}},
+    {"command":"node.get","params":{"id":{"$step":9}}},
+    {"command":"node.set","params":{"ids":[{"$step":3}],"props":{"cornerRadius":12,"height":48}}},
+    {"command":"node.get","params":{"id":{"$step":7}}},
+    {"command":"node.get","params":{"id":{"$step":9}}},
+    {"command":"node.create","params":{"type":"frame","name":"Fill spacer","parent":{"$step":2},"width":40,"height":48,"props":{"sizingH":"fill","fill":"#CBD5E1"}}},
+    {"command":"node.get","params":{"id":{"$step":16}}},
+    {"command":"node.set","params":{"ids":[{"$step":2}],"props":{"width":900}}},
+    {"command":"node.get","params":{"id":{"$step":16}}},
+    {"command":"component.list","params":{}}
+  ]
+}
