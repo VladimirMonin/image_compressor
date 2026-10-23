@@ -1,0 +1,17 @@
+# Build/runtime closure: CPython 3.14.2, Windows x64. No PyQt or editable product install.
+PyInstaller==6.18.0
+pyinstaller-hooks-contrib==2026.0
+altgraph==0.17.5
+packaging==26.0
+pefile==2024.8.26
+pywin32-ctypes==0.2.3
+setuptools==80.10.2
+PySide6==6.12.0
+PySide6_Essentials==6.12.0
+PySide6_Addons==6.12.0
+PySide6_WebEngine==6.12.0.140
+PySide6_Pdf==6.12.0.140
+shiboken6==6.12.0
+Pillow==13.0.0
+pillow-heif==1.8.1
+pillow-avif-plugin==1.6.0

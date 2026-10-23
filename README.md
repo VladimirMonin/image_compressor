@@ -30,7 +30,7 @@ Bare install требует только Pillow, **не Qt**. Если сред�
 .\.venv\Scripts\python.exe -m pip install -e ".[dev,gui,codecs]"
 ```
 
-`requirements.txt` — удобный **полный GUI/codecs/build install** для старых batch-потребителей: `python -m pip install -r requirements.txt` из корня. Единственный owner зависимостей — `pyproject.toml`. Build extra содержит PyInstaller; EXE в этой работе не собирался. Про uv — [UV_GUIDE](UV_GUIDE.md).
+`requirements.txt` — удобный **полный GUI/codecs/build install** для старых batch-потребителей: `python -m pip install -r requirements.txt` из корня. Owner зависимостей Python distribution — `pyproject.toml`; точные standalone build pins выделены в отдельный recipe. Build extra содержит PyInstaller для прежнего маршрута. В исторических command-first/source-GUI этапах EXE не собирался; последующий standalone follow-up проверен отдельно ниже. Про uv — [UV_GUIDE](UV_GUIDE.md).
 
 ## CLI
 
@@ -113,6 +113,10 @@ python -m venv .agent-work\figcraft-gui-experiment\pyside6-venv
 
 Если экспериментальная среда уже создана, пропустите создание. Не загружайте оба Qt binding в один процесс. FigCraft не нужен для runtime. Native/exports — в `design/`; [запуск и проверки](docs/figcraft_gui_experiment/RUNNING.md) · [дизайн→Qt](docs/figcraft_gui_experiment/03-design-spec.md) · [отчёт и честная оценка](docs/figcraft_gui_experiment/REPORT.md). Эксперимент независимо принят: **технический и визуальный ACCEPT**. Reviewer отдельно выполнил 47 PySide6 и 170 legacy/API/CLI/package тестов без skips, официальный native reopen/export и Windows-native/installed проверки; точная граница — в отчёте. Это отдельное принятие, не автоматическое расширение прежнего ACCEPT и не EXE-релиз. Физические OS-dialog/drop, screen reader, другие платформы и все DPI не квалифицированы.
 
+### Самостоятельный Windows EXE · PySide6 v2
+
+Готовый **Windows x64 one-file EXE независимо принят — технический и визуальный ACCEPT**. Для запуска откройте двойным щелчком `dist\windows-pyside6\20261023-candidate-02\ImageCompressorV2.exe`; устанавливать Python/Qt/кодеки не требуется. [Запуск и сборка](docs/figcraft_gui_experiment/WINDOWS_EXE.md) · [точный SHA-256 и отдельная EXE-проверка](docs/figcraft_gui_experiment/05-windows-exe-verification.md). Проверены настоящий no-argument native запуск и операции/readbacks того же SHA при исключённом внешнем Python/Qt lookup; прежний source/wheel ACCEPT остаётся отдельным фактом. Проверка выполнена на текущем Windows11 x64/local NTFS host с собственным reduced-rights Medium child, не на новом аккаунте/чистой машине и не для всех DPI. One-file использует writable TEMP. Артефакт локальный, неподписанный, без installer/публикации; системную защиту не отключать. Удаление исходников и overwrite по-прежнему недоступны.
+
 ## Политика данных и пределы
 
 Поддерживаются обычные статические 8-bit изображения. Несколько кадров, неоговорённые 16-bit/HDR/modes, повреждённые/truncated/bomb inputs явно отвергаются. У PNG исходная разрядность проверяется по IHDR **до load**: 16-bit RGB/RGBA/LA/grayscale дают `IMAGE_MODE_UNSUPPORTED`, даже если Pillow уже показывает RGB/RGBA. Молчаливая потеря младших битов не разрешена.
@@ -129,6 +133,6 @@ Atomic no-replace hard link проверен на local NTFS. Нет unsafe fall
 
 Точные pytest/Ruff/mypy/docs commands, версии, raw exits, реальные компоненты и fault seams — [инструкция тестирования](docs/instructions/testing.md) и [verification](docs/verification/command-first-refactoring.md). Все изображения synthetic. Suite включает установку настоящего wheel вне repo в venv **без Qt**, API/CLI readback, no-clobber race, отмену/следующую операцию и QThread. Независимый Reviewer подтвердил технический результат; последующие docs/package checks closeout — author verification той же роли, не новая независимая приёмка.
 
-[BUILD_QUICK](BUILD_QUICK.md), [BUILD_README](BUILD_README.md), [UPDATE_FEATURES](UPDATE_FEATURES.md), RELEASE_NOTES и PROJECT_STATUS — исторические/сборочные материалы, не evidence новой версии. Старые EXE/build outputs не обновлялись и не выдают этот рефакторинг за выпущенный бинарник. Исторический command-first ACCEPT не включал новый GUI/visual qualification. Новый opt-in эксперимент и его собственные проверки описаны отдельно выше; EXE-сборка/релиз и другие платформы не квалифицированы.
+[BUILD_QUICK](BUILD_QUICK.md), [BUILD_README](BUILD_README.md), [UPDATE_FEATURES](UPDATE_FEATURES.md), RELEASE_NOTES и PROJECT_STATUS — исторические/сборочные материалы, не evidence новой версии. Старые EXE/build outputs не обновлялись и не выдают этот рефакторинг за выпущенный бинарник. Исторический command-first ACCEPT не включал новый GUI/visual qualification. Новый opt-in эксперимент и его собственные проверки описаны отдельно выше. Разрешённый последующий Windows EXE имеет собственные recipe/artifact/verification по ссылкам выше; его статус не переписывает историческую границу. Публичный release и другие платформы не квалифицированы.
 
-Автор исходного проекта: Vladimir Monin. Версия distribution сохранена: 1.0.0; отдельный release/EXE этой работой не создаётся. Source-срез и необходимая документация сохраняются вместе на `refactor/command-first`; доставка feature branch не означает merge/tag/release.
+Автор исходного проекта: Vladimir Monin. Версия distribution сохранена: 1.0.0; публичный release не создаётся; отдельный локальный Windows EXE относится только к новому packaging follow-up. Source-срез и необходимая документация сохраняются вместе на `refactor/command-first`; доставка feature branch не означает merge/tag/release.

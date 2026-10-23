@@ -8,7 +8,7 @@ updated: "2026-10-23"
 areas: [gui, pyside6, usage]
 summary: "Изолированная optional установка, запуск, synthetic проверки и безопасная семантика экспериментального интерфейса."
 language: ru
-source_revision: "r2"
+source_revision: "r3"
 ---
 
 # Отдельный запуск
@@ -34,6 +34,10 @@ python -m venv $EnvDir
 ```powershell
 .\.venv\Scripts\python.exe gui_main.py
 ```
+
+# Без Python: отдельный Windows EXE
+
+Готовый `dist/windows-pyside6/20261023-candidate-02/ImageCompressorV2.exe` получил отдельный **независимый технический и визуальный ACCEPT**. Его можно открыть без установки Python/Qt/кодеков; инструкция и пределы — [WINDOWS_EXE](WINDOWS_EXE.md), точный SHA и свежие frozen проверки — [EXE verification](05-windows-exe-verification.md). Это Windows11 x64/local NTFS standalone-host с собственным non-elevated Medium child, не новый аккаунт/чистая unrelated machine и не все платформы/DPI. Прежний source/wheel ACCEPT не подменяется новым решением; общий GUI/API и ограничения ниже не меняются. Не используйте старый `build_exe.bat` для нового GUI.
 
 # Что делать в окне
 
