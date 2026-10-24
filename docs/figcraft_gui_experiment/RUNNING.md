@@ -4,11 +4,11 @@ title: "Запуск отдельного PySide6 GUI v2"
 kind: guide
 status: accepted
 created: "2026-10-23"
-updated: "2026-10-23"
+updated: "2026-10-24"
 areas: [gui, pyside6, usage]
 summary: "Изолированная optional установка, запуск, synthetic проверки и безопасная семантика экспериментального интерфейса."
 language: ru
-source_revision: "r3"
+source_revision: "r4"
 ---
 
 # Отдельный запуск
@@ -38,6 +38,12 @@ python -m venv $EnvDir
 # Без Python: отдельный Windows EXE
 
 Готовый `dist/windows-pyside6/20261023-candidate-02/ImageCompressorV2.exe` получил отдельный **независимый технический и визуальный ACCEPT**. Его можно открыть без установки Python/Qt/кодеков; инструкция и пределы — [WINDOWS_EXE](WINDOWS_EXE.md), точный SHA и свежие frozen проверки — [EXE verification](05-windows-exe-verification.md). Это Windows11 x64/local NTFS standalone-host с собственным non-elevated Medium child, не новый аккаунт/чистая unrelated machine и не все платформы/DPI. Прежний source/wheel ACCEPT не подменяется новым решением; общий GUI/API и ограничения ниже не меняются. Не используйте старый `build_exe.bat` для нового GUI.
+
+## Исправленные контролы — пока только source-срез
+
+Стрелки числовых полей/списков и unchecked/checked/disabled/focus флажки исправлены в существующем владельце темы и получили отдельный [технический и визуальный ACCEPT](06-controls-verification.md). Полные области стрелок действительно кликабельны, числа имеют внутренний отступ, открытые списки согласованы с Light/Dark. RU/EN/KK, компоновка, resize gates и quality-slider сохраняются. Проверены32 адресных cases и2 дополнительных native source cases;8 HiDPI cases — повтор подмножества, не новые уникальные tests.
+
+**EXE `20261023-candidate-02` не менялся и этих исправлений не содержит.** Новый интегрированный EXE ещё предстоит собрать и отдельно принять с12 новыми control SVG. Текущее изменение оформления также не включает рабочее удаление исходников или новый человеческий журнал/результаты. Эти функциональные срезы остаются отдельными; disabled deletion ниже по-прежнему не работающий switch. Installed/frozen proof прежней версии не переносится автоматически на новые assets.
 
 # Что делать в окне
 

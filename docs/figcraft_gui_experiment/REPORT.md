@@ -4,7 +4,7 @@ title: "FigCraft → PySide6 — результат инженерного эк�
 kind: verification
 status: accepted
 created: "2026-10-23"
-updated: "2026-10-23"
+updated: "2026-10-24"
 areas: [design, gui, pyside6, testing]
 summary: "Редактируемый FigCraft-дизайн, отдельный работающий GUI на принятом API и фактические проверки переноса, поставки и сохранности."
 code_ref: "58afb9b648ebe63bfb6fc2f5123e77165b3e0db9 + accepted source/test inventory SHA-256 7111b419752f74e9bb4fc3b7063c6771d7aea91d858f156f699e3e34a0e8793e"
@@ -164,3 +164,9 @@ Qt проверен при 1120×760 и900×640 logical px, в12 language/theme/
 ## Итоговая оценка пригодности связки FigCraft → PySide6
 
 **Годится с оговорками:** FigCraft полезен как настоящий редактируемый источник структуры, components, тем, tokens, SVG и visual references. Для Qt Widgets перенос остаётся разумной ручной инженерной работой. В этом эксперименте получился реальный установленный GUI на прежней логике; автоматической генерации работающего Python-интерфейса не было и не заявляется.
+
+## 2026-10-24 · отдельное исправление мелких контролов
+
+Последующий source-only срез получил собственный [технический и визуальный ACCEPT](06-controls-verification.md): полные Fusion subcontrol rules, полезные hit areas стрелок, читаемые numeric insets, согласованные открытые combo lists и различимые checkbox states обеих тем. Свежие независимые32 адресных cases плюс2 native source cases прошли;8 HiDPI cases повторяют подмножество. Просмотрены contact sheet и16 собственных отдельных PNG. Общая компоновка/RU/EN/KK и прикладное поведение сохранены.
+
+Исходные результаты/ограничения этого отчёта выше остаются исторической приёмкой своего inventory, не доказательством удобства всех последующих состояний. Controls-кандидат —15 source/test/asset paths, не новый FigCraft-дизайн и не весь feedback repair. Действующее удаление и человеческий журнал/полезные детали пока не реализованы новым функциональным срезом; прежний EXE не изменён и **не содержит controls-исправлений**. Их будущая installed/frozen проверка и новый интегрированный EXE имеют отдельный gate. Точная область, механизм, фактические capture/input проверки и packaged-resource handoff — в новом verification.

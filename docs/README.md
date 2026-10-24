@@ -4,7 +4,7 @@ title: "Image Compressor — документация"
 kind: navigation
 status: accepted
 created: "2026-10-23"
-updated: "2026-10-23"
+updated: "2026-10-24"
 areas: [engineering, architecture]
 summary: "Вход в проектные правила, принятый прикладной API и историю независимой проверки command-first-среза."
 ---
@@ -38,3 +38,5 @@ summary: "Вход в проектные правила, принятый при
 Исторический command-first-срез не включал новый дизайн. Новая отдельная задача явно разрешает [FigCraft → PySide6 эксперимент](figcraft_gui_experiment/02-implementation-plan.md), с [картой реальных функций](figcraft_gui_experiment/01-current-functionality.md), [native-дизайном и mapping](figcraft_gui_experiment/03-design-spec.md), [инструкцией запуска](figcraft_gui_experiment/RUNNING.md) и [отчётом](figcraft_gui_experiment/REPORT.md). Эксперимент получил отдельный технический и визуальный **ACCEPT**: независимые suites 47/170 без skips, native FigCraft tree/reopen/export, Windows Qt/installed readbacks. Команды, источники доказательств и NOT RUN — в его отчёте; это не EXE-релиз и не квалификация всех платформ/DPI или физического OS-dialog/drop. Прежний ACCEPT и source-only область Oracle-документов сохраняются; MCP-сервер продукта не заказан.
 
 Отдельный [standalone Windows EXE follow-up](figcraft_gui_experiment/04-windows-exe-plan.md) завершён: **независимый exact-byte технический и визуальный ACCEPT**. [Инструкция запуска/сборки](figcraft_gui_experiment/WINDOWS_EXE.md) и [EXE artifact/SHA/verification](figcraft_gui_experiment/05-windows-exe-verification.md) различают авторские и новые независимые проверки, reduced-rights standalone-host и непроверенную чистую машину/другой аккаунт. Прежние source/wheel ACCEPT и Oracle discovery не переписаны. Build venv/recipe/output изолированы; binary publication не разрешена.
+
+Последующий [source-срез мелких контролов PySide6](figcraft_gui_experiment/06-controls-verification.md) независимо принят технически и визуально: стрелочные области/числа, открытые списки и checkbox states Light/Dark. [RUNNING](figcraft_gui_experiment/RUNNING.md) отличает новые source-исправления от прежнего неизменённого EXE; [testing](instructions/testing.md) содержит адресную выборку. Реальное opt-in удаление, человеческий журнал/детали и новый интегрированный EXE остаются отдельными незавершёнными функциональными срезами. Прежние manifest/приёмки не переименованы в доказательство этих будущих возможностей.

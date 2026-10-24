@@ -9,7 +9,7 @@ from typing import Any, cast
 from PySide6.QtCore import QByteArray, Qt
 from PySide6.QtGui import QColor, QFont, QIcon, QPainter, QPalette, QPixmap
 from PySide6.QtSvg import QSvgRenderer
-from PySide6.QtWidgets import QWidget
+from PySide6.QtWidgets import QComboBox, QSpinBox, QWidget
 
 TOKENS: dict[str, Any] = json.loads(files(__package__).joinpath("tokens.json").read_text("utf-8"))
 
@@ -31,8 +31,19 @@ def add_icon(name: str) -> QIcon:
     return QIcon(pixmap)
 
 
+def _control_asset(name: str, glyph: str, disabled: bool = False) -> str:
+    """Resolve by package, never cwd; the freezer must include these SVG assets."""
+    state = "-disabled" if disabled else ""
+    return str(files(__package__).joinpath(f"assets/control-{glyph}{state}-{name}.svg")).replace(
+        "\\", "/"
+    )
+
+
 def apply_theme(window: QWidget, name: str) -> None:
     c = colors(name)
+    # QSS dimensions are logical Qt px, not physical display pixels. One shared
+    # button channel leaves an ordinary font-height target in each half of the field.
+    button_width = 2 * int(TOKENS["typography"]["body"])
     palette = QPalette()
     for role, key in (
         (QPalette.ColorRole.Window, "surface/window"),
@@ -95,14 +106,67 @@ def apply_theme(window: QWidget, name: str) -> None:
             border: 1px solid {c["border/default"]}; border-radius: 6px;
             padding: 5px 8px; min-height: 20px; selection-background-color: {c["accent/action"]};
             selection-color: {c["accent/on-action"]}; }}
+        QSpinBox {{ padding: 5px {button_width + 8}px 5px 8px; min-height: 28px;
+            min-width: {5 * int(TOKENS["typography"]["body"])}px; }}
+        QSpinBox::up-button, QSpinBox::down-button {{
+            subcontrol-origin: border; width: {button_width}px;
+            background: {c["surface/raised"]}; border: 1px solid {c["border/default"]}; }}
+        QSpinBox::up-button {{ subcontrol-position: top right;
+            border-top-right-radius: 6px; }}
+        QSpinBox::down-button {{ subcontrol-position: bottom right;
+            border-top-width: 0; border-bottom-right-radius: 6px; }}
+        QSpinBox::up-button:hover:enabled, QSpinBox::down-button:hover:enabled {{
+            background: {c["surface/panel"]}; border-color: {c["accent/action"]}; }}
+        QSpinBox::up-button:pressed, QSpinBox::down-button:pressed {{
+            background: {c["surface/window"]}; border-color: {c["accent/action"]}; }}
+        QSpinBox::up-button:disabled, QSpinBox::down-button:disabled,
+        QSpinBox::up-button:off, QSpinBox::down-button:off {{
+            background: {c["surface/window"]}; border-color: {c["border/default"]}; }}
+        QSpinBox::up-arrow {{ image: url("{_control_asset(name, "up")}");
+            width: 14px; height: 10px; }}
+        QSpinBox::down-arrow {{ image: url("{_control_asset(name, "down")}");
+            width: 14px; height: 10px; }}
+        QSpinBox::up-arrow:disabled, QSpinBox::up-arrow:off {{
+            image: url("{_control_asset(name, "up", True)}"); }}
+        QSpinBox::down-arrow:disabled, QSpinBox::down-arrow:off {{
+            image: url("{_control_asset(name, "down", True)}"); }}
         QComboBox:disabled, QSpinBox:disabled, QLineEdit:disabled {{
             color: {c["text/secondary"]}; }}
+        QComboBox {{ padding: 5px {button_width + 8}px 5px 8px; min-height: 28px; }}
+        QComboBox::drop-down {{ subcontrol-origin: padding; subcontrol-position: top right;
+            width: {button_width}px; background: {c["surface/raised"]};
+            border-left: 1px solid {c["border/default"]};
+            border-top-right-radius: 6px; border-bottom-right-radius: 6px; }}
+        QComboBox::drop-down:hover:enabled, QComboBox::drop-down:on {{
+            background: {c["surface/panel"]}; border-left-color: {c["accent/action"]}; }}
+        QComboBox::drop-down:disabled {{ background: {c["surface/window"]}; }}
+        QComboBox::down-arrow {{ image: url("{_control_asset(name, "down")}");
+            width: 14px; height: 10px; }}
+        QComboBox::down-arrow:disabled {{ image: url("{_control_asset(name, "down", True)}"); }}
+        QComboBox QFrame {{ background: {c["surface/panel"]};
+            border: 1px solid {c["border/default"]}; }}
         QComboBox QAbstractItemView {{ background: {c["surface/panel"]};
             color: {c["text/primary"]}; selection-background-color: {c["accent/action"]};
             selection-color: {c["accent/on-action"]};
-            border: 1px solid {c["border/default"]}; }}
+            border: 1px solid {c["border/default"]}; outline: 0; }}
+        QComboBox QAbstractItemView::item {{ min-height: 22px; padding: 5px 8px; }}
+        QComboBox QAbstractItemView::item:selected, QComboBox QAbstractItemView::item:hover {{
+            background: {c["accent/action"]}; color: {c["accent/on-action"]}; }}
+        QComboBox QAbstractItemView::item:disabled {{ color: {c["text/secondary"]}; }}
         QCheckBox {{ spacing: 8px; padding: 3px 1px; border: 2px solid transparent; }}
+        /* This existing indicator has a separate buddy label, not inline text. */
+        QCheckBox#DeleteUnavailable {{ spacing: 0; }}
         QCheckBox:disabled {{ color: {c["text/secondary"]}; }}
+        QCheckBox::indicator {{ width: 20px; height: 20px; border-radius: 4px;
+            border: 2px solid {c["text/secondary"]}; background: {c["surface/window"]}; }}
+        QCheckBox::indicator:hover:enabled {{ border-color: {c["accent/action"]}; }}
+        QCheckBox::indicator:pressed:enabled {{ background: {c["surface/raised"]}; }}
+        QCheckBox::indicator:checked {{ background: {c["accent/action"]};
+            border-color: {c["accent/action"]}; image: url("{_control_asset(name, "check")}"); }}
+        QCheckBox::indicator:disabled {{ background: {c["surface/raised"]};
+            border: 2px dashed {c["text/secondary"]}; }}
+        QCheckBox::indicator:checked:disabled {{
+            image: url("{_control_asset(name, "check", True)}"); }}
         QSlider::groove:horizontal {{ background: {c["surface/raised"]};
             height: 6px; border-radius: 3px; }}
         QSlider::sub-page:horizontal {{ background: {c["accent/action"]}; border-radius: 3px; }}
@@ -136,3 +200,17 @@ def apply_theme(window: QWidget, name: str) -> None:
         QToolTip {{ background: {c["surface/panel"]}; color: {c["text/primary"]};
             border: 1px solid {c["border/default"]}; padding: 4px; }}
     """)
+    # Fusion's spin-box editor geometry does not apply the field's QSS left padding.
+    # Use the real editor API for a small token-owned inset, without changing values.
+    inset = int(TOKENS["spacing"][0])
+    for field in window.findChildren(QSpinBox):
+        field.lineEdit().setTextMargins(inset, 0, inset, 0)
+    # Combo popups are separate top-level windows; their native menu margins otherwise
+    # keep the application palette. Explicitly propagate this SAME theme, not a second skin.
+    popup_palette = QPalette(palette)
+    popup_palette.setColor(QPalette.ColorRole.Window, QColor(c["surface/panel"]))
+    for combo in window.findChildren(QComboBox):
+        popup = combo.view().window()
+        popup.setStyleSheet(window.styleSheet())
+        popup.setPalette(popup_palette)
+        popup.setAutoFillBackground(True)

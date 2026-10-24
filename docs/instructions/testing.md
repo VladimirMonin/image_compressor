@@ -4,7 +4,7 @@ title: "Image Compressor — тестирование"
 kind: instruction
 status: accepted
 created: "2026-10-23"
-updated: "2026-10-23"
+updated: "2026-10-24"
 areas: [testing, quality]
 summary: "Изолированные изображения, проверка настоящего API/CLI, сохранности и честный учёт фактически выполненных команд."
 read_when: "Перед написанием/запуском теста, изменением runner/fixture или выбором проверки."
@@ -69,3 +69,22 @@ Exit0 с пропуском обязательного случая его не 
 Работающие recipe/команды — [WINDOWS_EXE](../figcraft_gui_experiment/WINDOWS_EXE.md), авторские и независимые exact-byte результаты/пределы — [EXE verification](../figcraft_gui_experiment/05-windows-exe-verification.md). `ruff check --extension spec:python tools/windows_exe tests_windows_exe`; strict mypy — три `.py` helper из `tools/windows_exe`, `--python-executable .agent-work/windows-exe/build-venv/Scripts/python.exe --follow-imports=silent`. При elevated harness проверяется не его привилегия как будто это приложение, а actual suspended bootloader и видимый Qt child: TokenIsElevated=False/Medium8192. Допустим только собственный ограниченный token; нельзя брать foreign process token, отключать UAC/ACL/security или снимать gate. Для нового process-supervision harness нужен отдельный внешний watchdog с live native identities/handles: его собственный release flag не доказывает teardown. Успешные normal launches отделять от ожидаемого timeout-control; принудительный kill не является normal-close PASS и может оставить собственный `_MEI`.
 
 Независимая проверка принятого SHA:22 новых теста,4 прежних PySide selector и2 legacy packaging selector — exit0, без skips; Ruff и strict mypy3 helpers — exit0. Шесть текущих frozen PNG просмотрены отдельно, ресурсы/кодеки и bootloader+child/readbacks/штатный extraction teardown подтверждены на Windows11 x64/local NTFS. Прежние47/170 не запускались заново и остаются исходной source-границей. При последующем docs closeout повторять только affected final-byte package/docs check, не неизменённую EXE-галерею или весь baseline.
+
+## Адресная проверка мелких контролов PySide6
+
+При изменении `gui_pyside6_v2/theme.py`/control SVG и связанного отображения начинайте с `tests_pyside6_v2/test_controls_appearance.py` и относящихся geometry/i18n/Add-SVG regressions, не с полного47/170 или EXE rebuild. [Отдельный controls verification](../figcraft_gui_experiment/06-controls-verification.md) владеет исходным binding, фактическими результатами и оставшимися функциональными срезами. Только сохранённый отдельный PySide interpreter; до collection — свои fresh temp/cache/basetemp, `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1`, `QT_QPA_PLATFORM=offscreen`. Не collect/import PyQt вместе с ним.
+
+Исполненный selection (interpreter и fresh output paths назначает выполняющий):
+
+```text
+<PySide-Python> -B -m pytest -p pytest_timeout -p no:cacheprovider tests_pyside6_v2/test_controls_appearance.py tests_pyside6_v2/test_window.py -k "controls_appearance or geometry_language_theme_and_bounded_growth or all_catalog_keys_errors_and_unknown_size or engine_svg_is_valid_and_not_clipped" -q --basetemp <OWN_NEW_ROOT>/pytest
+<PySide-Python> -B -m ruff check gui_pyside6_v2/theme.py tests_pyside6_v2/test_controls_appearance.py tests_pyside6_v2/controls_gallery.py
+<PySide-Python> -B -m mypy --follow-imports=silent gui_pyside6_v2/theme.py
+<PySide-Python> -B -m tests_pyside6_v2.controls_gallery --output <OWN_NEW_ROOT>/captures
+```
+
+Gallery output должен быть новым потомком `.agent-work/ui-repair/`; это real source Widgets без conversion/result fixtures, не installed/frozen test. Проверять сами full hit rectangles и clicks по краю, keyboard/endpoints/disabled non-action, numeric room с вычетом text margins, реальные open popup/selection и checkbox raster/focus, resize gates/slider/tab/locales. Один поиск QSS rules или только contact sheet недостаточен: нужен просмотр индивидуальных текущих PNG и их source/hash mapping. Состояние отключённой формы явно помечать presentation-only, не выполненным busy/result исходом.
+
+Независимо выполнены32 selected cases,2 дополнительных native Windows-QPA cases, Ruff/mypy raw0 и просмотр10 source плюс6 native PNG. HiDPI-risk повтор8 из тех же cases не суммируется как новые tests. Native synthetic popup click учитывает штатный Qt double-click release guard после mouse-arrow open; bare-Qt witness отличает такую fixture-ошибку от дефекта продукта. Снимать только собственные окна, не чужой desktop; физические dialogs/drop/все DPI не объявляются проверенными.
+
+Все12 новых SVG должны попасть в последующую installed/frozen поставку; старый принятый EXE их не содержит и не был пересобран этим source-срезом. При controls docs-only closeout, если README/package inputs не менялись, достаточно affected corpus/diff и сохранности accepted source/test bytes; не повторять неизменённые GUI/core suites. Реальное source deletion и human-result output требуют своих функциональных gates, не принимаются из оформления disabled checkbox.
