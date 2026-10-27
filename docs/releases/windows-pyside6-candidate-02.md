@@ -16,7 +16,7 @@ verification_scope: "Ссылка на уже принятый exact-byte EXE AC
 
 Этот документ фиксирует **единственную каноническую линию** GUI и Windows-бинарника проекта, точные байты выбранного владельцем локального релиза и честную границу между принятым состоянием и текущим HEAD. Он не выдаёт новую техническую/визуальную приёмку, не объявляет публичный release/signing/installer, не переписывает исторические вердикты и не расширяет ни один принятый срез.
 
-Основание — уже принятые документы: [FigCraft/PySide6 отчёт](../figcraft_gui_experiment/REPORT.md), [exact-byte EXE verification](../figcraft_gui_experiment/05-windows-exe-verification.md), [control-fix verification](../figcraft_gui_experiment/06-controls-verification.md), [EXE guide](../figcraft_gui_experiment/WINDOWS_EXE.md), [прикладной контракт v1](../architecture/application-api.md). Статус самого документа — `proposed`; его собственная проверка ещё не выполнена независимо.
+Основание — уже принятые документы: [FigCraft/PySide6 отчёт](../figcraft_gui_experiment/REPORT.md), [exact-byte EXE verification](../figcraft_gui_experiment/05-windows-exe-verification.md), [control-fix verification](../figcraft_gui_experiment/06-controls-verification.md), [EXE guide](../figcraft_gui_experiment/WINDOWS_EXE.md), [прикладной контракт v1](../architecture/application-api.md). Статус документа — `accepted`: он независимо принят в docs/launcher-границе; runtime-границы — в §7.
 
 # 1. Каноническая линия
 
@@ -66,6 +66,7 @@ Runtime-часть `68b7dc5` — только `gui_pyside6_v2/theme.py` и 12 co
 
 - EXE `candidate-02` рисует прежний вид контролов; RU/EN/KK, компоновка, resize gates, quality-slider, конвертация и безопасность совпадают с принятым поведением.
 - Пересобрать бинарник ради этой дельты в этом срезе нельзя. Новый интегрированный EXE — отдельная задача: новый build-id, собственный build/qualification и **новый независимый exact-byte ACCEPT**; прежний вердикт на новые байты не переносится.
+- Последующий source-fix native title bar (ручная смена темы) **в `candidate-02` отсутствует**: source-исправление не меняет байты EXE, и пользователь через `run_image_compressor_v2.bat` продолжит видеть прежнюю рамку до нового build-id и нового независимого exact-byte ACCEPT ([native frame verification](../figcraft_gui_experiment/07-native-frame-verification.md)).
 
 # 5. Ref'ы и правило сохранения чужой работы
 

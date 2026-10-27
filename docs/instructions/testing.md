@@ -89,6 +89,21 @@ Gallery output должен быть новым потомком `.agent-work/ui
 
 Все12 новых SVG должны попасть в последующую installed/frozen поставку; старый принятый EXE их не содержит и не был пересобран этим source-срезом. При controls docs-only closeout, если README/package inputs не менялись, достаточно affected corpus/diff и сохранности accepted source/test bytes; не повторять неизменённые GUI/core suites. Реальное source deletion и human-result output требуют своих функциональных gates, не принимаются из оформления disabled checkbox.
 
+## Native Windows frame при ручной смене темы
+
+При изменении native title bar owner (`gui_pyside6_v2/theme.py`) начинайте с `tests_pyside6_v2/test_native_frame.py`, а не с полного47/gallery/EXE rebuild. [Отдельная verification](../figcraft_gui_experiment/07-native-frame-verification.md) владеет исходным binding, primary sources, raw exits и визуальным фактом.
+
+```text
+<PySide-Python> -B -m pytest -p pytest_timeout -p no:cacheprovider tests_pyside6_v2 -q --basetemp <OWN_NEW_ROOT>/pytest
+<PySide-Python> -B -m ruff check gui_pyside6_v2/theme.py tests_pyside6_v2/test_native_frame.py tests_pyside6_v2/native_frame_probe.py
+<PySide-Python> -B -m mypy --follow-imports=silent gui_pyside6_v2
+QT_QPA_PLATFORM=windows <PySide-Python> -B -m tests_pyside6_v2.native_frame_probe --output <OWN_NEW_ROOT>/native
+```
+
+До collection — свои fresh TEMP/TMP/TMPDIR/caches/basetemp, `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1`, `QT_QPA_PLATFORM=offscreen`; только сохранённая отдельная PySide-среда, никогда не collect/import PyQt6 в том же процессе. Offscreen suite не должен дёргать DWM: единственный барьер — `sys.platform` + `platformName() == "windows"`, и это проверяется тестом. Real-Windows probe требует явного `QT_QPA_PLATFORM=windows`, пишет собственный JSON-receipt с обоими направлениями HRESULT и стабильным HWND; его exit0 — не визуальный PASS. Обязателен собственный визуальный факт dark→light и light→dark и RU→EN→KK в Dark: только своё окно/процессы и штатное закрытие; чужие окна, рабочий стол, фокус и clipboard не снимать. На светлой системе отсутствие потемнения — BLOCKER, а не повод добавлять другие API.
+
+`candidate-02` этим срезом не исправляется: source fix требует нового build-id и нового независимого exact-byte ACCEPT; старый EXE не пересобирать и не подменять.
+
 ## Канонический локальный релиз и docs-only срез
 
 Для канонического бинарника `dist/windows-pyside6/20261023-candidate-02/ImageCompressorV2.exe` базовые проверки — hash-readback (`sha256sum` + размер) против [release record](../releases/windows-pyside6-candidate-02.md) и явный `git status`/пустой index; для документации — project-local docs checker с собственным `--corpus` и `git diff --check`. Docs-only срез не требует повторного прогона неизменённых source/GUI suites (`tests`, `tests_pyside6_v2`, `tests_windows_exe`) и не требует пересборки/повторной квалификации EXE: достаточные прежние результаты переиспользуются как историческая гарантия, а не как свежий прогон. Если менялся README/package input, выполняется affected `tests/test_packaging.py` (`3 passed` на HEAD; третий тест относится к непринятому deletion-WIP), а не весь baseline. Deletion-тесты в HEAD (`test_source_deletion`, `test_windows_deletion`, `deletion_race_harness`) относятся к непринятому WIP: их наличие или зелёный результат не делает удаление исходников принятой функцией.

@@ -2,16 +2,35 @@
 
 from __future__ import annotations
 
+import ctypes
 import json
+import sys
 from importlib.resources import files
 from typing import Any, cast
 
 from PySide6.QtCore import QByteArray, Qt
-from PySide6.QtGui import QColor, QFont, QIcon, QPainter, QPalette, QPixmap
+from PySide6.QtGui import (
+    QColor,
+    QFont,
+    QGuiApplication,
+    QIcon,
+    QPainter,
+    QPalette,
+    QPixmap,
+)
 from PySide6.QtSvg import QSvgRenderer
 from PySide6.QtWidgets import QComboBox, QSpinBox, QWidget
 
 TOKENS: dict[str, Any] = json.loads(files(__package__).joinpath("tokens.json").read_text("utf-8"))
+
+# DWMWA_USE_IMMERSIVE_DARK_MODE is 20 (BOOL); documented DWM attribute, no 19 fallback.
+_DWMWA_USE_IMMERSIVE_DARK_MODE = 20
+_SWP_NOSIZE = 0x0001
+_SWP_NOMOVE = 0x0002
+_SWP_NOZORDER = 0x0004
+_SWP_NOACTIVATE = 0x0010
+_SWP_FRAMECHANGED = 0x0020
+_SWP_NOOWNERZORDER = 0x0200
 
 
 def colors(name: str) -> dict[str, str]:
@@ -37,6 +56,76 @@ def _control_asset(name: str, glyph: str, disabled: bool = False) -> str:
     return str(files(__package__).joinpath(f"assets/control-{glyph}{state}-{name}.svg")).replace(
         "\\", "/"
     )
+
+
+def _native_frame_supported() -> bool:
+    """Real Windows QPA only: offscreen/xcb/cocoa never reach Win32."""
+    if sys.platform != "win32":
+        return False
+    if QGuiApplication.instance() is None:  # platformName() without an app is a default.
+        return False
+    return QGuiApplication.platformName() == "windows"
+
+
+def _set_dark_frame(hwnd: int, dark: bool) -> bool:
+    """BOOL DWMWA_USE_IMMERSIVE_DARK_MODE; True only on S_OK. Never raises."""
+    try:
+        dwmapi = ctypes.WinDLL("dwmapi")
+        call = dwmapi.DwmSetWindowAttribute
+        call.argtypes = (ctypes.c_void_p, ctypes.c_uint32, ctypes.c_void_p, ctypes.c_uint32)
+        call.restype = ctypes.c_long
+        value = ctypes.c_int(1 if dark else 0)
+        hr: int = call(
+            ctypes.c_void_p(hwnd),
+            _DWMWA_USE_IMMERSIVE_DARK_MODE,
+            ctypes.byref(value),
+            ctypes.sizeof(value),
+        )
+        return hr == 0
+    except (OSError, AttributeError, ctypes.ArgumentError):
+        return False
+
+
+def _redraw_frame(hwnd: int) -> bool:
+    """Nudge an already visible frame: WM_NCCALCSIZE, no move/size/z/activate."""
+    try:
+        user32 = ctypes.WinDLL("user32")
+        call = user32.SetWindowPos
+        call.argtypes = (
+            ctypes.c_void_p,
+            ctypes.c_void_p,
+            ctypes.c_int,
+            ctypes.c_int,
+            ctypes.c_int,
+            ctypes.c_int,
+            ctypes.c_uint32,
+        )
+        call.restype = ctypes.c_int
+        flags = (
+            _SWP_NOSIZE
+            | _SWP_NOMOVE
+            | _SWP_NOZORDER
+            | _SWP_NOACTIVATE
+            | _SWP_NOOWNERZORDER
+            | _SWP_FRAMECHANGED
+        )
+        return bool(call(ctypes.c_void_p(hwnd), None, 0, 0, 0, 0, flags))
+    except (OSError, AttributeError, ctypes.ArgumentError):
+        return False
+
+
+def _apply_native_frame(window: QWidget, name: str) -> bool:
+    """Last writer for this window's frame; fail-closed and only our own HWND."""
+    if name not in ("light", "dark") or not window.isWindow():
+        return False
+    if not _native_frame_supported():
+        return False
+    hwnd = int(window.winId())
+    if not hwnd or not _set_dark_frame(hwnd, name == "dark"):
+        return False
+    if window.isVisible():
+        _redraw_frame(hwnd)
+    return True
 
 
 def apply_theme(window: QWidget, name: str) -> None:
@@ -214,3 +303,5 @@ def apply_theme(window: QWidget, name: str) -> None:
         popup.setStyleSheet(window.styleSheet())
         popup.setPalette(popup_palette)
         popup.setAutoFillBackground(True)
+    # Last writer: palette/QSS above must already describe the requested theme.
+    _apply_native_frame(window, name)
