@@ -61,6 +61,11 @@ def _parser() -> _Parser:
     output.add_argument("--output", dest="output_path")
     output.add_argument("--output-dir", dest="output_directory")
     conversion.add_argument("--postfix", default="_compressed")
+    conversion.add_argument(
+        "--delete-original", action="store_true", default=False,
+        help=("Permanently delete originals after verified new output; not Recycle Bin, "
+              "no automatic recovery. Guarded Windows local fixed NTFS only."),
+    )
     conversion.add_argument("--json", action="store_true", help="JSON output (always enabled)")
     conversion.add_argument("--progress", action="store_true", help="Safe item counts to stderr")
     return parser
@@ -167,6 +172,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                     output_directory=args.output_directory,
                     output_path=args.output_path,
                     postfix=args.postfix,
+                    delete_original=args.delete_original,
                 )
                 with _signals(token):
                     # Normal diagnostics already include every terminal item; --progress

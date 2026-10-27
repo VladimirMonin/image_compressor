@@ -11,6 +11,7 @@ from time import monotonic
 from typing import Literal
 from uuid import uuid4
 
+from . import _windows_deletion as deletion
 from . import diagnostics, discovery, imaging
 from . import filesystem as fs
 from .models import (
@@ -75,11 +76,19 @@ def _counts(items: list[ItemResult], duplicates: int = 0, ignored: int = 0) -> C
         sum(i.artifact is not None for i in items),
         duplicates,
         ignored,
+        sum(i.source_disposition == "deleted" for i in items),
     )
 
 
 def _validate_destination(options: EffectiveOptions) -> None:
     try:
+        if options.delete_original:
+            for target in (options.output_directory, options.output_path):
+                if target is not None:
+                    try:
+                        deletion.validate_location(target)
+                    except fs.OperationError:
+                        return  # Per-item refusal in preflight, without unsafe traversal.
         if options.output_directory is not None:
             fs.directory_chain(options.output_directory)
         if options.output_path is not None:
@@ -116,6 +125,12 @@ def _preflight(
         parent: fs.DirectoryChain = ()
         if target is not None:
             try:
+                if options.delete_original:
+                    for selected in (options.output_directory, options.output_path):
+                        if selected is not None:
+                            deletion.validate_location(selected)  # Check before collapsing '..'.
+                    deletion.validate_location(entry.source)
+                    deletion.validate_location(target)
                 parent = fs.target_snapshot(target)
                 if fs.path_key(target) in sources or fs.target_identity(target) in identities:
                     info = error(ErrorCode.INPUT_OUTPUT_CONFLICT, "planning")
@@ -145,15 +160,43 @@ def _process(
     operation_id: str,
 ) -> ItemResult:
     staging: fs.Staging | None = None
+    guard: deletion.DeletionGuard | None = None
+    cleanup_attempted = False
+    clean = True
     artifact: Artifact | None = None
     info: ErrorInfo | None = None
+    disposition: Literal["retained", "deleted", "unknown"] = "retained"
     warnings: list[ErrorInfo] = []
     facts = imaging.ImageFacts()
     assert entry.fingerprint is not None
+
+    def cleanup() -> bool:
+        assert staging is not None
+        try:
+            cleaned = staging.cleanup()
+        except Exception:
+            cleaned = False
+        if not cleaned:
+            warnings.append(error(ErrorCode.TEMP_CLEANUP_FAILED, "cleanup"))
+            diagnostics.emit(diagnostics.project(
+                "cleanup_failed", operation_id=operation_id, stage="cleanup", index=index,
+                reason=ErrorCode.TEMP_CLEANUP_FAILED,
+            ))
+        return cleaned
+
     try:
         imaging.check_cancel(cancellation)
         fs.check_chain(parent, ErrorCode.DESTINATION_CHANGED)
-        with fs.open_source(entry.source, entry.fingerprint, entry.ancestors) as source:
+        if options.delete_original:
+            guard = deletion.DeletionGuard.acquire(
+                entry.source, entry.fingerprint, entry.ancestors, destination, parent
+            )
+        source_handle = (guard.source_stream() if guard is not None else
+                         fs.open_source(entry.source, entry.fingerprint, entry.ancestors))
+        with source_handle as source:
+            initial_digest = fs.digest_stream(source) if guard is not None else None
+            if guard is not None:
+                source.seek(0)
             staging = fs.Staging.create(destination.parent, parent)
             staging.initialize()
             prepared = imaging.encode(
@@ -166,27 +209,56 @@ def _process(
         staging.check()
         imaging.check_cancel(cancellation)  # Last cooperative checkpoint before atomic link.
         fs.publish_new(staging, destination)
-        # Record the effect immediately, before any fallible readback.
-        artifact = Artifact(
-            destination,
-            options.output_format,
-            prepared.width,
-            prepared.height,
-            size_bytes,
-            digest,
-            "unverified",
-        )
-        try:
-            if fs.target_identity(destination) != staging.file_identity:
-                raise fs.fail(ErrorCode.VERIFICATION_FAILED, "readback")
-            imaging.verify_image(destination, options.output_format, prepared)
-            if fs.digest_file(destination) != (size_bytes, digest):
-                raise fs.fail(ErrorCode.VERIFICATION_FAILED, "readback")
-            if fs.target_identity(destination) != staging.file_identity:
-                raise fs.fail(ErrorCode.VERIFICATION_FAILED, "readback")
-        except Exception:
-            raise fs.fail(ErrorCode.PUBLISHED_UNVERIFIED, "readback") from None
+        # Record the effect immediately, before any fallible cleanup/readback.
+        artifact = Artifact(destination, options.output_format, prepared.width, prepared.height,
+                            size_bytes, digest, "unverified")
+        if guard is not None:
+            cleanup_attempted = True  # Never retry cleanup after a changed/foreign staging.
+            clean = cleanup()  # Must precede final deny-delete lock: these are hardlinks.
+            try:
+                guard.lock_final(destination, staging.file_identity)
+                with guard.final_stream() as final_stream:
+                    imaging.verify_image(final_stream, options.output_format, prepared)
+                with guard.final_stream() as final_stream:
+                    if fs.digest_stream(final_stream) != (size_bytes, digest):
+                        raise fs.fail(ErrorCode.VERIFICATION_FAILED, "readback")
+            except (OSError, fs.OperationError):
+                raise fs.fail(ErrorCode.PUBLISHED_UNVERIFIED, "readback") from None
+        else:
+            try:
+                if fs.target_identity(destination) != staging.file_identity:
+                    raise fs.fail(ErrorCode.VERIFICATION_FAILED, "readback")
+                imaging.verify_image(destination, options.output_format, prepared)
+                if fs.digest_file(destination) != (size_bytes, digest):
+                    raise fs.fail(ErrorCode.VERIFICATION_FAILED, "readback")
+                if fs.target_identity(destination) != staging.file_identity:
+                    raise fs.fail(ErrorCode.VERIFICATION_FAILED, "readback")
+            except Exception:
+                raise fs.fail(ErrorCode.PUBLISHED_UNVERIFIED, "readback") from None
         artifact = replace(artifact, publication="verified")
+        if guard is not None:
+            try:
+                guard.flush_final()
+                fs.check_chain(parent, ErrorCode.DESTINATION_CHANGED)
+                guard.check_source()
+                with guard.source_stream() as source:
+                    if fs.digest_stream(source) != initial_digest:
+                        raise fs.fail(ErrorCode.SOURCE_CHANGED, "source_deletion")
+                # All source duplicates are closed before the only destructive call.
+                if cancellation.is_cancelled():
+                    warnings.append(error(ErrorCode.CANCELLED, "source_deletion"))
+                elif not clean:
+                    warnings.append(error(ErrorCode.SOURCE_DELETION_SKIPPED, "source_deletion"))
+                else:
+                    guard.accept_disposition()
+                    disposition = "unknown"
+                    guard.close_source()  # Keep final/namespace locked through confirmation.
+                    if guard.confirm_deleted():
+                        disposition = "deleted"
+            except fs.OperationError as exc:
+                warnings.append(replace(exc.info, stage="source_deletion"))
+            except OSError:
+                warnings.append(error(ErrorCode.SOURCE_DELETION_FAILED, "source_deletion"))
     except fs.OperationError as exc:
         info = exc.info
     except PermissionError:
@@ -196,22 +268,20 @@ def _process(
     except Exception:
         info = error(ErrorCode.INTERNAL_ERROR, "prepare")
     finally:
-        if staging is not None:
+        if staging is not None and not cleanup_attempted:
+            cleanup()
+        if guard is not None:
+            if guard.disposition_accepted and disposition != "deleted":
+                disposition = "unknown"
+                warnings.append(error(ErrorCode.SOURCE_DELETION_UNCONFIRMED, "source_deletion"))
             try:
-                clean = staging.cleanup()
+                guard.close()
             except Exception:
-                clean = False
-            if not clean:
-                warnings.append(error(ErrorCode.TEMP_CLEANUP_FAILED, "cleanup"))
-                diagnostics.emit(
-                    diagnostics.project(
-                        "cleanup_failed",
-                        operation_id=operation_id,
-                        stage="cleanup",
-                        index=index,
-                        reason=ErrorCode.TEMP_CLEANUP_FAILED,
-                    )
-                )
+                # Not swallowed: surface fatal lifetime failure with the known artifact/outcome.
+                info = error(ErrorCode.INTERNAL_ERROR, "source_deletion")
+    if guard is not None and artifact is not None and artifact.publication == "verified" and info:
+        warnings.append(info)
+        info = None  # Conversion success is independent of deletion/close success.
     status: ItemStatus = (
         "succeeded"
         if info is None
@@ -229,7 +299,32 @@ def _process(
         artifact,
         info,
         tuple(warnings),
+        disposition,
     )
+
+
+def _build_manifest(
+    options: EffectiveOptions, token: CancellationToken, observer: _Observer,
+    items: list[ItemResult],
+) -> discovery.Manifest:
+    inputs = options.inputs
+    refused: dict[str, discovery.Entry] = {}
+    if options.delete_original:
+        safe: list[Path] = []
+        for path in inputs:
+            try:
+                deletion.validate_location(path)
+                safe.append(path)
+            except fs.OperationError as exc:
+                refused.setdefault(fs.path_key(path), discovery.Entry(path, error=exc.info))
+        inputs = tuple(safe)
+    manifest = discovery.build_manifest(
+        inputs, recursive=options.recursive, exclude_directory=options.output_directory,
+        cancellation=token, on_entry=lambda: observer.send("discovering", items, None),
+    )
+    if refused:
+        manifest = replace(manifest, entries=(*manifest.entries, *refused.values()))
+    return manifest
 
 
 def convert(
@@ -251,7 +346,10 @@ def convert(
         reason = (
             result.errors[0].code
             if result.errors
-            else next((item.error.code for item in result.items if item.error), None)
+            else next(
+                (item.error.code for item in result.items if item.error),
+                next((warning.code for item in result.items for warning in item.warnings), None),
+            )
         )
         diagnostics.emit(
             diagnostics.project(
@@ -264,6 +362,7 @@ def convert(
                 failed=result.counts.failed,
                 cancelled=result.counts.cancelled,
                 published=result.counts.published,
+                deleted=result.counts.deleted,
                 duration_ms=max(0, int((monotonic() - started) * 1000)),
             )
         )
@@ -276,6 +375,9 @@ def convert(
         if on_progress is not None and not callable(on_progress):
             observer.callback = None
             raise ValidationError(error(ErrorCode.INVALID_REQUEST, "validation", "on_progress"))
+        if options.delete_original and not deletion.available():
+            raise ValidationError(error(ErrorCode.DESTRUCTIVE_MODE_UNSUPPORTED,
+                                        "validation", "delete_original"))
         _validate_destination(options)
         capability = imaging.get_capabilities().for_format(options.output_format.value)
         if not capability.encoder_available:
@@ -292,13 +394,8 @@ def convert(
     token = cancellation or CancellationToken()
     manifest: discovery.Manifest | None = None
     try:
-        manifest = discovery.build_manifest(
-            options.inputs,
-            recursive=options.recursive,
-            exclude_directory=options.output_directory,
-            cancellation=token,
-            on_entry=lambda: observer.send("discovering", items, None),
-        )
+        manifest = _build_manifest(options, token, observer, items)
+        lexical_options = options  # Destructive admission must not hide a reparse/dot ancestor.
         options = replace(
             options,
             inputs=tuple(fs.normalized(p) for p in options.inputs),
@@ -342,7 +439,9 @@ def convert(
                     counts=_counts(items, manifest.duplicates, manifest.ignored),
                 )
             )
-        targets, planned_errors, parents = _preflight(manifest.entries, options)
+        targets, planned_errors, parents = _preflight(
+            manifest.entries, lexical_options if options.delete_original else options
+        )
         stopped = False
         for index, (entry, destination, planned_error, parent) in enumerate(
             zip(manifest.entries, targets, planned_errors, parents)
@@ -372,7 +471,9 @@ def convert(
                 item = _process(
                     index, entry, destination, parent, options, capability, token, operation_id
                 )
-                if item.status == "cancelled":
+                if item.status == "cancelled" or any(
+                    warning.code == ErrorCode.CANCELLED for warning in item.warnings
+                ):
                     stopped = True
             items.append(item)
             diagnostics.emit(
@@ -381,14 +482,23 @@ def convert(
                     operation_id=operation_id,
                     index=index,
                     outcome=item.status,
-                    reason=item.error.code if item.error else None,
-                    stage=item.error.stage if item.error else "readback",
+                    reason=item.error.code if item.error else
+                           (item.warnings[0].code if item.warnings else None),
+                    stage=item.error.stage if item.error else
+                          (item.warnings[0].stage if item.warnings else "readback"),
+                    source_disposition=item.source_disposition,
+                    deleted=int(item.source_disposition == "deleted"),
                     output_format=options.output_format,
                     quality=options.quality,
                     size_bytes=item.artifact.size_bytes if item.artifact else None,
                 )
             )
             observer.send("item_finished", items, len(manifest.entries), index, item)
+            if options.delete_original and any(
+                problem.code == ErrorCode.INTERNAL_ERROR
+                for problem in (*item.warnings, *((item.error,) if item.error else ()))
+            ):
+                raise RuntimeError("Fatal guarded lifetime failure.")
         counts = _counts(items, manifest.duplicates, manifest.ignored)
         status: BatchStatus
         if stopped:

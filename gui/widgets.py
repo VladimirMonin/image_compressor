@@ -302,7 +302,11 @@ class FileOptionsWidget(QWidget):
         layout = QVBoxLayout()
 
         # Чекбокс удаления оригинальных файлов
-        self.delete_original_checkbox = QCheckBox("🗑️ Удалять оригинальные файлы")
+        self.delete_original_checkbox = QCheckBox("🗑️ Безвозвратно удалять оригинальные файлы")
+        self.delete_original_checkbox.setToolTip(
+            "После проверки нового файла. Без Корзины и автоматического восстановления; "
+            "защищённый режим Windows local fixed NTFS. Каждый запуск требует подтверждения."
+        )
         self.delete_original_checkbox.setChecked(False)  # По умолчанию НЕ удаляем
         layout.addWidget(self.delete_original_checkbox)
 

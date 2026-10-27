@@ -49,7 +49,7 @@ def test_real_single_preserves_source(image_factory, fmt, suffix):
         ({"postfix": "x?"}, "INVALID_POSTFIX"),
         ({"postfix": "x\u0085"}, "INVALID_POSTFIX"),
         ({"recursive": 1}, "INVALID_REQUEST"),
-        ({"delete_original": True}, "DESTRUCTIVE_MODE_UNSUPPORTED"),
+        # Explicit True has native positive/refusal coverage in test_source_deletion.py.
         ({"delete_original": 0}, "INVALID_REQUEST"),
     ],
 )

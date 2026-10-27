@@ -1,4 +1,4 @@
-"""Local create-only filesystem boundary; no overwrite, source deletion or unsafe fallback."""
+"""Create-only publication and tracked staging; guarded source deletion has a private owner."""
 
 from __future__ import annotations
 
@@ -266,14 +266,18 @@ class Staging:
             return False
 
 
-def digest_file(path: Path) -> tuple[int, str]:
+def digest_stream(handle: BinaryIO) -> tuple[int, str]:
     size = 0
     digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        while block := handle.read(1024 * 1024):
-            size += len(block)
-            digest.update(block)
+    while block := handle.read(1024 * 1024):
+        size += len(block)
+        digest.update(block)
     return size, digest.hexdigest()
+
+
+def digest_file(path: Path) -> tuple[int, str]:
+    with path.open("rb") as handle:
+        return digest_stream(handle)
 
 
 def publish_new(staging: Staging, destination: Path) -> None:

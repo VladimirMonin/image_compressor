@@ -33,6 +33,7 @@ class Options:
     max_width: int = 1920
     max_height: int = 1080
     postfix: str = "_compressed"
+    delete_original: bool = False
 
 
 class Controller(QObject):
@@ -130,7 +131,7 @@ class Controller(QObject):
             max_height=options.max_height if options.resize else None,
             postfix=options.postfix,
             recursive=False,
-            delete_original=False,
+            delete_original=options.delete_original,
         )
         self.log_line.emit(f"event=conversion_started total={len(self.paths)}")
         self._launch(
@@ -242,13 +243,18 @@ class Controller(QObject):
             self.log_line.emit(
                 f"event=conversion_finished outcome={payload.status} total={c.total} "
                 f"succeeded={c.succeeded} failed={c.failed} cancelled={c.cancelled} "
-                f"published={c.published} duplicates={c.duplicates} ignored={c.ignored}"
+                f"published={c.published} deleted={c.deleted} "
+                f"duplicates={c.duplicates} ignored={c.ignored}"
             )
             for info in (*payload.errors, *payload.warnings):
                 self.log_line.emit(
                     f"event=batch_notice reason={info.code.value} stage={info.stage}"
                 )
             for item in payload.items:
+                self.log_line.emit(
+                    f"event=item_finished index={item.index} "
+                    f"source_disposition={item.source_disposition}"
+                )
                 for info in (*item.warnings, *((item.error,) if item.error else ())):
                     self.log_line.emit(
                         f"event=item_notice index={item.index} reason={info.code.value}"

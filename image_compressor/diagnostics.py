@@ -33,6 +33,8 @@ def project(
     failed: int | None = None,
     cancelled: int | None = None,
     published: int | None = None,
+    deleted: int | None = None,
+    source_disposition: Literal["retained", "deleted", "unknown"] | None = None,
     size_bytes: int | None = None,
     duration_ms: int | None = None,
 ) -> str:
@@ -51,6 +53,8 @@ def project(
         "failed": failed,
         "cancelled": cancelled,
         "published": published,
+        "deleted": deleted,
+        "source_disposition": source_disposition,
         "size_bytes": size_bytes,
         "duration_ms": duration_ms,
     }

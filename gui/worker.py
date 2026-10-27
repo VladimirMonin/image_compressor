@@ -15,8 +15,8 @@ from image_compressor import (
 from image_compressor.diagnostics import project
 
 DESTRUCTIVE_MODE_MESSAGE = (
-    "Удаление/замена оригиналов недоступны в безопасном режиме. "
-    "Снимите флажок “Удалять оригинальные файлы”."
+    "Удаление требует защищённого доступа к локальному fixed NTFS на Windows. "
+    "Без этого доступно преобразование с сохранением оригиналов."
 )
 
 
@@ -61,8 +61,12 @@ class CompressionWorker(QThread):
                     "item_finished",
                     index=event.item.index,
                     outcome=event.item.status,
-                    stage=event.item.error.stage if event.item.error else "readback",
-                    reason=event.item.error.code if event.item.error else None,
+                    stage=event.item.error.stage if event.item.error else
+                          (event.item.warnings[0].stage if event.item.warnings else "readback"),
+                    reason=event.item.error.code if event.item.error else
+                           (event.item.warnings[0].code if event.item.warnings else None),
+                    source_disposition=event.item.source_disposition,
+                    deleted=int(event.item.source_disposition == "deleted"),
                 )
             )
             if event.item.status == "succeeded":
@@ -105,10 +109,19 @@ class CompressionWorker(QThread):
                 failed=counts.failed,
                 cancelled=counts.cancelled,
                 published=counts.published,
+                deleted=counts.deleted,
             )
         )
         self.result_ready.emit(self.result)
-        errors = counts.failed + len(self.result.errors)
+        deletion_issues = sum(
+            item.status == "succeeded" and any(
+                info.stage == "source_deletion"
+                and info.code not in (ErrorCode.CANCELLED, ErrorCode.INTERNAL_ERROR)
+                for info in item.warnings
+            )
+            for item in self.result.items
+        )
+        errors = counts.failed + len(self.result.errors) + deletion_issues
         if self.result.status == "rejected":
             errors = max(1, errors)
         self.finished_processing.emit(counts.succeeded, errors)

@@ -177,7 +177,7 @@ class SettingsPanel(QFrame):
         self.delete_original = QCheckBox()
         self.delete_original.setObjectName("DeleteUnavailable")
         self.delete_original.setChecked(False)
-        self.delete_original.setEnabled(False)
+        self.delete_original.setEnabled(True)
         self.delete_original.setFixedWidth(32)
         self.delete_label = caption()
         self.delete_label.setBuddy(self.delete_original)
@@ -203,11 +203,12 @@ class SettingsPanel(QFrame):
             self.max_width.value(),
             self.max_height.value(),
             self.postfix.text(),  # Exact empty/whitespace remains the API's responsibility.
+            self.delete_original.isChecked(),
         )
 
     def set_busy(self, busy: bool) -> None:
         self.form.setEnabled(not busy)
-        self.delete_original.setEnabled(False)
+        self.delete_original.setEnabled(not busy)
 
     def set_capabilities(self, capabilities: Capabilities, t: Translator) -> None:
         self._capabilities = capabilities

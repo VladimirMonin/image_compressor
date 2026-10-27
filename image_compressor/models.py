@@ -72,6 +72,9 @@ class ErrorCode(str, Enum):
     PUBLICATION_FAILED = "PUBLICATION_FAILED"
     PUBLISHED_UNVERIFIED = "PUBLISHED_UNVERIFIED"
     TEMP_CLEANUP_FAILED = "TEMP_CLEANUP_FAILED"
+    SOURCE_DELETION_FAILED = "SOURCE_DELETION_FAILED"
+    SOURCE_DELETION_SKIPPED = "SOURCE_DELETION_SKIPPED"
+    SOURCE_DELETION_UNCONFIRMED = "SOURCE_DELETION_UNCONFIRMED"
     CANCELLED = "CANCELLED"
     INTERNAL_ERROR = "INTERNAL_ERROR"
     OBSERVER_FAILED = "OBSERVER_FAILED"
@@ -93,6 +96,7 @@ Stage = Literal[
     "publication",
     "readback",
     "cleanup",
+    "source_deletion",
     "observer",
     "cli",
 ]
@@ -127,7 +131,7 @@ def error(code: ErrorCode, stage: Stage, field: Field | None = None) -> ErrorInf
     # Only enum-derived fixed messages; never interpolate OS/codec exceptions or paths.
     message = code.value.replace("_", " ").capitalize() + "."
     if code == ErrorCode.DESTRUCTIVE_MODE_UNSUPPORTED:
-        message = "Deleting or replacing originals is not supported; disable delete_original."
+        message = "Source deletion requires guarded Windows local fixed NTFS support."
     elif code == ErrorCode.CLI_USAGE:
         message = "Invalid command line; use --help."
     return ErrorInfo(code, message, stage, field)
@@ -237,8 +241,6 @@ def validate_request(request: object, cwd: Path) -> EffectiveOptions:
     for name in ("delete_original", "recursive"):
         if type(getattr(request, name)) is not bool:
             raise invalid(ErrorCode.INVALID_REQUEST, name, type_error=True)
-    if request.delete_original:
-        raise invalid(ErrorCode.DESTRUCTIVE_MODE_UNSUPPORTED, "delete_original")
     fmt = validate_format(request.output_format)
     quality = validate_quality(request.quality)
     width, height = validate_dimensions(request.max_width, request.max_height)
@@ -267,7 +269,8 @@ def validate_request(request: object, cwd: Path) -> EffectiveOptions:
         if len(inputs) != 1 or EXTENSION_FORMATS.get(destination.suffix.lower()) != fmt.value:
             raise invalid(ErrorCode.INVALID_DESTINATION, "output_path")
     return EffectiveOptions(
-        inputs, fmt, quality, width, height, request.recursive, directory, destination, postfix
+        inputs, fmt, quality, width, height, request.recursive, directory, destination, postfix,
+        request.delete_original,
     )
 
 
@@ -308,7 +311,7 @@ class ItemResult:
     artifact: Artifact | None = None
     error: ErrorInfo | None = None
     warnings: tuple[ErrorInfo, ...] = ()
-    source_disposition: Literal["retained"] = "retained"
+    source_disposition: Literal["retained", "deleted", "unknown"] = "retained"
 
 
 @dataclass(frozen=True)
@@ -320,6 +323,7 @@ class Counts:
     published: int = 0
     duplicates: int = 0
     ignored: int = 0
+    deleted: int = 0
 
 
 @dataclass(frozen=True)

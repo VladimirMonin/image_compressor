@@ -41,6 +41,7 @@ class ImageCompressorGUI(QMainWindow):
         self._pending_result = None
         self.last_result = None
         self._close_pending = False
+        self._queue_generation = 0
         self.init_ui()
 
     def init_ui(self):
@@ -156,6 +157,7 @@ class ImageCompressorGUI(QMainWindow):
 
     def handle_dropped_files(self, files):
         """Общий discovery владеет порядком и дедупликацией выбора."""
+        self._queue_generation += 1
         result = discover_inputs([*self.files_to_process, *files], recursive=True)
         self.files_to_process = [str(path) for path in result.paths]
         for issue in result.issues:
@@ -171,7 +173,7 @@ class ImageCompressorGUI(QMainWindow):
 
     def start_compression(self):
         """Новый запуск ждёт реального QThread.finished предыдущего."""
-        if self.worker is not None:
+        if self.worker is not None or self._close_pending:
             return
         if not self.files_to_process:
             QMessageBox.warning(self, "Предупреждение", "Сначала выберите файлы для обработки!")
@@ -182,12 +184,8 @@ class ImageCompressorGUI(QMainWindow):
         postfix = self.file_options_widget.get_postfix()
         max_width = self.resize_widget.get_max_width()
         max_height = self.resize_widget.get_max_height()
-        self.start_button.setEnabled(False)
-        self.stop_button.setEnabled(True)
-        self.clear_button.setEnabled(False)
-        self.progress_bar.setValue(0)
-        self.log_text.clear()
-        if self.resize_widget.is_resize_enabled():
+        resize = self.resize_widget.is_resize_enabled()
+        if resize:
             if not max_width or not max_height:
                 QMessageBox.warning(
                     self, "Ошибка валидации", "Необходимо указать оба значения: ширину и высоту!"
@@ -200,9 +198,42 @@ class ImageCompressorGUI(QMainWindow):
                 )
                 self._restore_controls()
                 return
+        paths = tuple(self.files_to_process)
+        snapshot = (paths, quality, format_type, delete_original, postfix,
+                    max_width, max_height, resize, self._queue_generation)
+        if delete_original:
+            answer = QMessageBox.question(
+                self, "Удалить оригиналы?",
+                f"Выбрано файлов: {len(paths)}. Формат: {format_type}; качество: {quality}; "
+                f"размер: {max_width}×{max_height}; постфикс: {postfix}.\n\n"
+                "Оригиналы будут безвозвратно удалены после проверки новых файлов. "
+                "Корзины и автоматического восстановления нет. Преобразование может терять "
+                "качество, уменьшать размер и удаляет метаданные. При ошибках часть оригиналов "
+                "может остаться. Продолжить?",
+                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+                QMessageBox.StandardButton.No,
+            )
+            current = (
+                tuple(self.files_to_process), self.quality_widget.get_value(),
+                self.format_widget.get_selected_format(),
+                self.file_options_widget.get_delete_original(),
+                self.file_options_widget.get_postfix(), self.resize_widget.get_max_width(),
+                self.resize_widget.get_max_height(), self.resize_widget.is_resize_enabled(),
+                self._queue_generation,
+            )
+            if (answer != QMessageBox.StandardButton.Yes or self.worker is not None
+                    or self._close_pending or current != snapshot):
+                self._restore_controls()
+                return
+        self.start_button.setEnabled(False)
+        self.stop_button.setEnabled(True)
+        self.clear_button.setEnabled(False)
+        self.file_options_widget.delete_original_checkbox.setEnabled(False)
+        self.progress_bar.setValue(0)
+        self.log_text.clear()
         self._pending_result = None
         self.worker = CompressionWorker(
-            self.files_to_process, quality, format_type, delete_original, postfix,
+            list(paths), quality, format_type, delete_original, postfix,
             max_width, max_height,
         )
         self.worker.progress_updated.connect(self.progress_bar.setValue)
@@ -228,6 +259,7 @@ class ImageCompressorGUI(QMainWindow):
         self.start_button.setEnabled(bool(self.files_to_process) and not busy)
         self.clear_button.setEnabled(bool(self.files_to_process) and not busy)
         self.stop_button.setEnabled(busy)
+        self.file_options_widget.delete_original_checkbox.setEnabled(not busy)
 
     def _thread_finished(self):
         worker = self.worker
@@ -248,7 +280,23 @@ class ImageCompressorGUI(QMainWindow):
         counts = result.counts
         message = (f"Итог: {result.status}\nУспешно: {counts.succeeded}; "
                    f"ошибок: {counts.failed + len(result.errors)}; "
-                   f"отменено: {counts.cancelled}; опубликовано: {counts.published}")
+                   f"отменено: {counts.cancelled}; опубликовано: {counts.published}; "
+                   f"удалено оригиналов: {counts.deleted}")
+        for item in result.items:
+            outcome = {
+                "retained": "Оригинал не удалён.",
+                "deleted": "Оригинал удалён.",
+                "unknown": ("Завершение удаления не подтверждено. Проверьте оригинал и результат; "
+                            "автоматического повтора нет."),
+            }[item.source_disposition]
+            ready = ("Новый файл готов. " if item.artifact
+                     and item.artifact.publication == "verified" else "")
+            reasons = ", ".join(info.code.value for info in item.warnings)
+            self.log_text.append(f"Файл {item.index + 1}: {ready}{outcome} {reasons}".rstrip())
+        if result.options and result.options.delete_original:
+            retained = sum(i.source_disposition == "retained" for i in result.items)
+            unknown = sum(i.source_disposition == "unknown" for i in result.items)
+            message += f"\nОригиналы: не удалено {retained}; неизвестно {unknown}."
         if any(info.code == ErrorCode.DESTRUCTIVE_MODE_UNSUPPORTED for info in result.errors):
             message = DESTRUCTIVE_MODE_MESSAGE
         self.log_text.append(message)
@@ -267,6 +315,7 @@ class ImageCompressorGUI(QMainWindow):
         """Очистка очереди файлов."""
         if self.worker is not None:
             return
+        self._queue_generation += 1
         self.files_to_process = []
         self.start_button.setEnabled(False)
         self.clear_button.setEnabled(False)

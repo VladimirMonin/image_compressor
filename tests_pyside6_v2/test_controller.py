@@ -442,7 +442,7 @@ def test_technical_sink_nonempty_and_no_private_data(window, app, image_factory,
     assert "Traceback" not in log and str(source.parent) not in log
 
 
-def test_unavailable_encoder_and_delete_visible(window, app, image_factory):
+def test_unavailable_encoder_and_delete_visible(window, app, image_factory, monkeypatch):
     c = add(app, window, [image_factory()])
     c.capabilities = replace(
         c.capabilities,
@@ -461,8 +461,12 @@ def test_unavailable_encoder_and_delete_visible(window, app, image_factory):
     assert not window.start_button.isEnabled()
     assert c.worker is None
     control = window.settings.delete_original
-    assert control.isVisible() and not control.isEnabled() and not control.isChecked()
+    # Idle opt-in is now available; unsupported native support still refuses before effects.
+    assert control.isVisible() and control.isEnabled() and not control.isChecked()
     assert window.settings.safety_explanation.isVisible()
+    from image_compressor import _windows_deletion as native
+
+    monkeypatch.setattr(native, "available", lambda: False)
     rejected = api.convert(api.ConversionRequest(c.paths, delete_original=True))
     assert (
         rejected.status == "rejected"
@@ -501,6 +505,9 @@ def test_coalesced_progress_keeps_latest_while_next_codec_waits(
         window.start_button.click()
         pump(app, entered.is_set)
         QTest.qWait(100)
+        # A fixed 100ms is not a timer-delivery guarantee under concurrent check load.
+        pump(app, lambda: window.progress.maximum() == 2 and window.progress.value() == 1,
+             timeout=5)
         assert window.progress.maximum() == 2 and window.progress.value() == 1
         assert c.progress.total == 2 and c.progress.processed == 1
         assert c.model.rows[0].status == "succeeded"

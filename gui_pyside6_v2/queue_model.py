@@ -52,6 +52,9 @@ class QueueModel(QAbstractTableModel):
             status = (
                 "unverified"
                 if item.artifact and item.artifact.publication == "unverified"
+                else "partial"
+                if item.status == "succeeded"
+                and (item.warnings or item.source_disposition == "unknown")
                 else item.status
             )
             self.rows[number] = replace(self.rows[number], status=status, item=item)
@@ -103,6 +106,7 @@ class QueueModel(QAbstractTableModel):
         if role == Qt.ItemDataRole.ToolTipRole:
             lines = [str(row.path), self.translator(row.status)]
             if row.item:
+                lines.append(self.translator("source_" + row.item.source_disposition))
                 if row.item.destination:
                     lines.append(str(row.item.destination))
                 if row.item.error:
@@ -124,7 +128,7 @@ class QueueModel(QAbstractTableModel):
                 else "state/error"
                 if row.status == "failed"
                 else "state/warning"
-                if row.status in ("unverified", "cancelled")
+                if row.status in ("unverified", "cancelled", "partial")
                 else "text/secondary"
             )
             return QColor(palette[key])

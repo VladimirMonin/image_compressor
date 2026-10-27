@@ -14,6 +14,7 @@ from PySide6.QtWidgets import (
     QHeaderView,
     QLabel,
     QMainWindow,
+    QMessageBox,
     QPlainTextEdit,
     QProgressBar,
     QPushButton,
@@ -209,7 +210,8 @@ class MainWindow(QMainWindow):
         QWidget.setTabOrder(self.settings.max_width, self.settings.max_height)
         QWidget.setTabOrder(self.settings.max_height, self.settings.postfix)
         QWidget.setTabOrder(self.settings.postfix, self.settings.recursive)
-        QWidget.setTabOrder(self.settings.recursive, self.clear_button)
+        QWidget.setTabOrder(self.settings.recursive, self.settings.delete_original)
+        QWidget.setTabOrder(self.settings.delete_original, self.clear_button)
         QWidget.setTabOrder(self.clear_button, self.stop_button)
         QWidget.setTabOrder(self.stop_button, self.start_button)
         apply_theme(self, self.theme)
@@ -242,9 +244,39 @@ class MainWindow(QMainWindow):
     def start(self) -> None:
         if self.controller.capabilities is None:
             self.controller.initialize()
-        elif self.settings.selected_available():
-            self.controller.start(self.settings.options())
-            self.tabs.setCurrentIndex(0)
+        elif self.settings.selected_available() and self.controller.can_start:
+            c = self.controller
+            paths, options, generation = c.paths, self.settings.options(), c.generation
+            if options.delete_original:
+                dialog = QMessageBox(self)
+                dialog.setIcon(QMessageBox.Icon.Warning)
+                dialog.setWindowTitle(self.t("delete_confirmation_title"))
+                dialog.setText(self.t(
+                        "delete_confirmation", count=len(paths), format=options.output_format,
+                        quality=options.quality, postfix=options.postfix,
+                        bounds=(f"{options.max_width}×{options.max_height}"
+                                if options.resize else self.t("no_resize")),
+                ))
+                dialog.setStandardButtons(
+                    QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+                )
+                dialog.setDefaultButton(QMessageBox.StandardButton.No)
+                dialog.button(QMessageBox.StandardButton.Yes).setText(self.t("confirm_yes"))
+                dialog.button(QMessageBox.StandardButton.No).setText(self.t("confirm_no"))
+                # Same token/palette owner, including the new top-level surface.
+                apply_theme(dialog, self.theme)
+                dialog.setAutoFillBackground(True)
+                try:
+                    answer = dialog.exec()
+                finally:
+                    dialog.deleteLater()
+                if answer != QMessageBox.StandardButton.Yes:
+                    return
+                if (not c.can_start or c.generation != generation or c.paths != paths
+                        or self.settings.options() != options):
+                    return  # A nested dialog event loop cannot authorize a changed request.
+            if c.start(options):
+                self.tabs.setCurrentIndex(0)
 
     @Slot()
     def _change_theme(self) -> None:
@@ -317,6 +349,7 @@ class MainWindow(QMainWindow):
                         f"{a.path} · {a.publication} · {a.width}×{a.height} · "
                         f"{t.size(a.size_bytes)}"
                     )
+                lines.append(t("source_" + item.source_disposition))
                 if item.error:
                     lines.append(t.error(item.error.code))
                 lines.extend(t.error(info.code) for info in item.warnings)
@@ -376,7 +409,14 @@ class MainWindow(QMainWindow):
                     if c.result.status in ("failed", "rejected")
                     else "warning"
                 )
-                status += " · " + t("retained")
+                if c.result.options and c.result.options.delete_original:
+                    status += " · " + t(
+                        "deletion_summary", deleted=c.result.counts.deleted,
+                        retained=sum(i.source_disposition == "retained" for i in c.result.items),
+                        unknown=sum(i.source_disposition == "unknown" for i in c.result.items),
+                    )
+                else:
+                    status += " · " + t("retained")
         self.status_label.setText(status)
         if self.status_label.property("tone") != tone:
             self.status_label.setProperty("tone", tone)
@@ -391,6 +431,7 @@ class MainWindow(QMainWindow):
                     failed=counts.failed,
                     cancelled=counts.cancelled,
                     published=counts.published,
+                    deleted=counts.deleted,
                 )
             )
             self.progress.setRange(0, max(1, counts.total))

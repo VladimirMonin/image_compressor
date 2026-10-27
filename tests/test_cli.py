@@ -1,5 +1,6 @@
 import json
 import os
+import stat
 import subprocess
 import sys
 from pathlib import Path
@@ -108,7 +109,7 @@ def test_cli_existing_output_and_all_bad(image_factory, tmp_path):
         (["--quality", "-1"], "INVALID_QUALITY"),
         (["--quality", "PRIVATE_BAD_NUMBER"], "CLI_USAGE"),
         (["--format", "PNG"], "INVALID_FORMAT"),
-        (["--delete-original"], "CLI_USAGE"),
+        # --delete-original is now explicit opt-in; overwrite remains forbidden below.
         (["--overwrite"], "CLI_USAGE"),
         (["--postfix", "PRIVATE_BAD_POSTFIX/"], "INVALID_POSTFIX"),
     ],
@@ -203,3 +204,94 @@ def test_cli_png_source_precision(tmp_path, depth, color_type):
         with assert_image(destination, size=(12, 10)) as image:
             assert alpha_extrema(image) == ((128, 128) if color_type == 6 else (255, 255))
     assert source.read_bytes() == before and not list(tmp_path.glob(".ic-*"))
+
+
+@pytest.mark.parametrize("delete", [False, True])
+def test_cli_explicit_native_deletion_and_false_json_progress(image_factory, delete):
+    source = image_factory("PRIVATE_PATH/PRIVATE_SOURCE.png")
+    before = source.read_bytes()
+    process = run_cli("convert", source, "--progress", "--postfix", "PRIVATE_POSTFIX",
+                      *(["--delete-original"] if delete else []))
+    result = response(process, 0)["result"]
+    assert result["options"]["delete_original"] is delete
+    assert result["counts"]["deleted"] == int(delete)
+    assert result["items"][0]["source_disposition"] == ("deleted" if delete else "retained")
+    assert result["counts"]["succeeded"] == result["counts"]["published"] == 1
+    with assert_image(Path(result["items"][0]["destination"])):
+        pass
+    assert source.exists() is (not delete)
+    if not delete:
+        assert source.read_bytes() == before
+    assert b"stage=observer" in process.stderr and b"PRIVATE_" not in process.stderr
+    assert f"deleted={int(delete)}".encode() in process.stderr
+
+
+def test_cli_native_readonly_refusal_is_not_unsupported_or_silent_false(image_factory):
+    source = image_factory()
+    before = source.read_bytes()
+    source.chmod(stat.S_IREAD)
+    try:
+        payload = response(run_cli("convert", source, "--delete-original"), 4)
+        item = payload["result"]["items"][0]
+        assert item["error"]["code"] == "SOURCE_DELETION_FAILED"
+        assert item["source_disposition"] == "retained" and item["artifact"] is None
+        counts = payload["result"]["counts"]
+        assert counts["published"] == counts["deleted"] == 0
+        assert source.read_bytes() == before and not source.with_suffix(".webp").exists()
+    finally:
+        source.chmod(stat.S_IREAD | stat.S_IWRITE)
+
+
+@pytest.mark.parametrize("mode,code", [("flush", 3), ("unknown", 3), ("close", 5), ("delivery", 5)])
+def test_cli_native_useful_output_fault_and_delivery_outcomes(image_factory, tmp_path, mode, code):
+    source = image_factory("PRIVATE_SOURCE.png")
+    before = source.read_bytes()
+    script = r'''
+import sys
+from image_compressor import cli
+from image_compressor import _windows_deletion as native
+mode = sys.argv.pop(1)
+if mode == 'flush':
+    native._api().dll.FlushFileBuffers = lambda raw: 0
+elif mode == 'unknown':
+    native._confirm_deleted = lambda *args: False
+elif mode == 'close':
+    original = native.DeletionGuard.close_source
+    def failed(self):
+        original(self)
+        raise RuntimeError('PRIVATE_LIFETIME_EXCEPTION')
+    native.DeletionGuard.close_source = failed
+elif mode == 'delivery':
+    class ClosedOutput:
+        def write(self, text): raise BrokenPipeError('PRIVATE_DELIVERY_EXCEPTION')
+        def flush(self): pass
+        def close(self): pass
+    sys.stdout = ClosedOutput()
+code = cli.main(sys.argv[1:])
+if mode == 'delivery': sys.stdout = sys.__stdout__
+raise SystemExit(code)
+'''
+    process = subprocess.run([sys.executable, "-B", "-c", script, mode, "convert", str(source),
+                              "--delete-original", "--progress"],
+                             cwd=REPO, capture_output=True, timeout=30)
+    (tmp_path / "native-cli.stdout").write_bytes(process.stdout)
+    (tmp_path / "native-cli.stderr").write_bytes(process.stderr)
+    assert process.returncode == code and b"PRIVATE_" not in process.stderr
+    with assert_image(source.with_suffix(".webp")):
+        pass
+    if mode == "delivery":
+        assert process.stdout == b"" and not source.exists()
+        assert b"reason=DELIVERY_FAILED" in process.stderr
+    else:
+        payload = response(process, code)["result"]
+        assert payload["counts"]["succeeded"] == payload["counts"]["published"] == 1
+        assert payload["counts"]["deleted"] == 0
+        item = payload["items"][0]
+        assert item["artifact"]["publication"] == "verified" and item["status"] == "succeeded"
+        assert item["source_disposition"] == ("retained" if mode == "flush" else "unknown")
+        if mode == "flush":
+            assert source.read_bytes() == before
+        else:
+            assert not source.exists()
+        if mode == "close":
+            assert payload["errors"][0]["code"] == "INTERNAL_ERROR"

@@ -223,7 +223,7 @@ def encode(
         return PreparedImage(*size, transparent)
 
 
-def verify_image(path: Path, fmt: OutputFormat, prepared: PreparedImage) -> None:
+def verify_image(path: Path | BinaryIO, fmt: OutputFormat, prepared: PreparedImage) -> None:
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
         warnings.simplefilter("error", Image.DecompressionBombWarning)

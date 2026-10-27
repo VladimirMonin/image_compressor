@@ -8,9 +8,9 @@ from image_compressor import ErrorCode
 
 TEXT: dict[str, tuple[str, str, str]] = {
     "subtitle": (
-        "Новые файлы. Исходники сохраняются.",
-        "New files. Originals stay safe.",
-        "Жаңа файлдар. Түпнұсқалар сақталады.",
+        "Новые файлы. Оригиналы сохраняются по умолчанию.",
+        "New files. Originals retained by default.",
+        "Жаңа файлдар. Әдепкіде түпнұсқалар сақталады.",
     ),
     "add": ("Добавить файлы", "Add files", "Файлдарды қосу"),
     "folder": ("Выбрать папку", "Choose folder", "Қалтаны таңдау"),
@@ -49,14 +49,14 @@ TEXT: dict[str, tuple[str, str, str]] = {
         "Келесі қосылатын қалтаға қолданылады; кезек қайта қаралмайды.",
     ),
     "delete": (
-        "Удалять оригиналы — недоступно",
-        "Delete originals — unavailable",
-        "Түпнұсқаларды жою — қолжетімсіз",
+        "Безвозвратно удалять оригиналы",
+        "Permanently delete originals",
+        "Түпнұсқаларды біржола жою",
     ),
     "safe": (
-        "Безопасный API всегда сохраняет исходники.",
-        "The safe API always retains originals.",
-        "Қауіпсіз API түпнұсқаларды әрқашан сақтайды.",
+        "Без Корзины. По умолчанию выключено.",
+        "No Recycle Bin. Off by default.",
+        "Себетсіз жою. Әдепкіде өшірулі.",
     ),
     "start": ("Начать", "Start", "Бастау"),
     "stop": ("Остановить", "Stop", "Тоқтату"),
@@ -114,10 +114,11 @@ TEXT: dict[str, tuple[str, str, str]] = {
     ),
     "counts": (
         "Успешно: {succeeded} · Ошибок: {failed} · "
-        "Остановлено: {cancelled} · Опубликовано: {published}",
+        "Остановлено: {cancelled} · Опубликовано: {published} · Удалено: {deleted}",
         "Succeeded: {succeeded} · Failed: {failed} · "
-        "Cancelled: {cancelled} · Published: {published}",
-        "Сәтті: {succeeded} · Қате: {failed} · Тоқтатылған: {cancelled} · Жарияланған: {published}",
+        "Cancelled: {cancelled} · Published: {published} · Deleted: {deleted}",
+        "Сәтті: {succeeded} · Қате: {failed} · Тоқтатылған: {cancelled} · "
+        "Жарияланған: {published} · Жойылған: {deleted}",
     ),
     "progress": (
         "Завершено: {processed} / {total}",
@@ -128,6 +129,56 @@ TEXT: dict[str, tuple[str, str, str]] = {
         "Готовые файлы остаются. Исходники сохранены.",
         "Published files remain. Originals are retained.",
         "Жарияланған файлдар қалады. Түпнұсқалар сақталды.",
+    ),
+    "source_retained": ("Оригинал не удалён.", "Original not deleted.", "Түпнұсқа жойылмады."),
+    "source_deleted": ("Оригинал удалён.", "Original deleted.", "Түпнұсқа жойылды."),
+    "source_unknown": (
+        "Завершение удаления не подтверждено. Проверьте оригинал и результат; автоповтора нет.",
+        "Deletion completion unconfirmed. Inspect source and output; no automatic retry.",
+        "Жоюдың аяқталуы расталмады. Түпнұсқа мен нәтижені тексеріңіз; автоматты қайталау жоқ.",
+    ),
+    "deletion_summary": (
+        "Оригиналы: удалено {deleted}, не удалено {retained}, неизвестно {unknown}",
+        "Originals: deleted {deleted}, not deleted {retained}, unknown {unknown}",
+        "Түпнұсқалар: жойылған {deleted}, жойылмаған {retained}, белгісіз {unknown}",
+    ),
+    "delete_confirmation_title": (
+        "Удалить оригиналы?", "Delete originals?", "Түпнұсқаларды жою керек пе?",
+    ),
+    "confirm_yes": ("Да", "Yes", "Иә"),
+    "confirm_no": ("Нет", "No", "Жоқ"),
+    "no_resize": ("без уменьшения", "no resizing", "кішірейтусіз"),
+    "delete_confirmation": (
+        "Выбрано файлов: {count}. Формат: {format}; качество: {quality}; размер: {bounds}; "
+        "постфикс: {postfix}.\n\nОригиналы будут безвозвратно удалены после проверки новых файлов. "
+        "Корзины и автоматического восстановления нет. Результат может терять качество, "
+        "уменьшать размер и удаляет метаданные. При ошибках часть оригиналов может остаться. "
+        "Продолжить?",
+        "Selected files: {count}. Format: {format}; quality: {quality}; size: {bounds}; "
+        "postfix: {postfix}.\n\nOriginals will be permanently deleted "
+        "after new outputs are verified. "
+        "No Recycle Bin or automatic recovery. Conversion may lose quality, reduce dimensions "
+        "and removes metadata. Errors may leave some originals. Continue?",
+        "Таңдалған файлдар: {count}. Пішім: {format}; сапа: {quality}; өлшем: {bounds}; "
+        "постфикс: {postfix}.\n\nЖаңа файлдар тексерілгеннен кейін түпнұсқалар біржола жойылады. "
+        "Себет те, автоматты қалпына келтіру де жоқ. Нәтиже сапаны жоғалтып, өлшемді кішірейтуі "
+        "мүмкін және метадеректерді жояды. Қате болса, кейбір түпнұсқалар қалуы мүмкін. "
+        "Жалғастыру?",
+    ),
+    "delete_unsupported": (
+        "Удаление требует защищённого доступа к локальному fixed NTFS на Windows.",
+        "Deletion requires guarded access to local fixed NTFS on Windows.",
+        "Жою Windows жүйесіндегі жергілікті fixed NTFS-ке қорғалған қолжетімділікті талап етеді.",
+    ),
+    "delete_failed": (
+        "Оригинал не удалён: отказ доступа или защитной проверки.",
+        "Original not deleted: access or safety check refused.",
+        "Түпнұсқа жойылмады: қолжетімділік не қауіпсіздік тексеруі қабылданбады.",
+    ),
+    "delete_skipped": (
+        "Удаление пропущено; автоматического повтора нет.",
+        "Deletion skipped; no automatic retry.",
+        "Жою өткізіліп жіберілді; автоматты қайталау жоқ.",
     ),
     "no_details": (
         "Результаты и ошибки появятся здесь. Пути показаны только локально.",
@@ -209,7 +260,10 @@ ERROR_KEYS = {
     ErrorCode.OBSERVER_FAILED: "observer_failed",
     ErrorCode.INTERNAL_ERROR: "internal_error",
     ErrorCode.CANCELLED: "cancel_note",
-    ErrorCode.DESTRUCTIVE_MODE_UNSUPPORTED: "safe",
+    ErrorCode.DESTRUCTIVE_MODE_UNSUPPORTED: "delete_unsupported",
+    ErrorCode.SOURCE_DELETION_FAILED: "delete_failed",
+    ErrorCode.SOURCE_DELETION_SKIPPED: "delete_skipped",
+    ErrorCode.SOURCE_DELETION_UNCONFIRMED: "source_unknown",
 }
 
 

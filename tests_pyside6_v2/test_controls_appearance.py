@@ -110,7 +110,7 @@ def test_checkbox_indicator_and_label_input(window, app, theme):
     assert not box.isChecked() and not window.settings.max_width.isEnabled()
     assert not window.settings.max_height.isEnabled()
     assert not window.settings.delete_original.isChecked()
-    assert not window.settings.delete_original.isEnabled()
+    assert window.settings.delete_original.isEnabled()  # Newly authorized opt-in; idle only.
     assert (
         window.settings.delete_original.sizeHint().width()
         <= window.settings.delete_original.width()
@@ -258,7 +258,7 @@ def test_checkbox_rendered_enabled_disabled_checked_focus(window, app, theme):
     assert disabled_unchecked.count(QColor(c["surface/raised"])) > len(disabled_unchecked) * 0.6
     window.settings.set_busy(False)
     assert box.isEnabled() and not box.isChecked()
-    assert not window.settings.delete_original.isEnabled()
+    assert window.settings.delete_original.isEnabled()  # Busy ended; no automatic opt-in.
 
 
 @pytest.mark.parametrize("theme", ("light", "dark"))

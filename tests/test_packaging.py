@@ -4,6 +4,7 @@ import importlib.metadata
 import json
 import os
 import shutil
+import stat
 import subprocess
 import sys
 import zipfile
@@ -306,3 +307,55 @@ def test_installed_image_policies(installed):
             assert result["items"][0]["error"]["code"] == "IMAGE_MODE_UNSUPPORTED"
             assert result["counts"]["published"] == 0 and not target.exists()
     assert not list(outside.glob(".ic-*"))
+
+
+@pytest.mark.timeout(240)
+def test_installed_opt_in_deletion_false_refusal_and_native_readbacks(installed, image_factory):
+    root, python, console, outside, wheel = installed
+    with zipfile.ZipFile(wheel) as archive:
+        assert "image_compressor/_windows_deletion.py" in archive.namelist()
+    identity = run(
+        [python, "-I", "-B", "-c",
+         "import importlib.util,importlib.metadata,json,sys; "
+         "import image_compressor._windows_deletion as n; "
+         "assert n._API is None; "
+         "assert importlib.util.find_spec('PyQt6') is None; "
+         "assert importlib.util.find_spec('PySide6') is None; "
+         "print(json.dumps({'module':n.__file__,'python':sys.version,"
+         "'pillow':importlib.metadata.version('Pillow')}))"],
+        outside, root / "native-installed-identity.log", timeout=30,
+    )
+    assert str(root / "headless-venv") in json.loads(identity.stdout)["module"]
+    for delete in (False, True):
+        source = image_factory(f"installed Кир қаз/source-{delete}.png")
+        before = source.read_bytes()
+        target = outside / f"résultat-{delete}.webp"
+        process = run([console, "convert", source, "--output", target, "--progress",
+                       *(["--delete-original"] if delete else [])],
+                      outside, root / f"native-{delete}.log", timeout=30)
+        payload = json.loads(process.stdout)
+        result = payload["result"]
+        assert payload["schema_version"] == 1 and result["options"]["delete_original"] is delete
+        assert result["counts"]["deleted"] == int(delete)
+        assert result["items"][0]["source_disposition"] == ("deleted" if delete else "retained")
+        assert result["items"][0]["artifact"]["publication"] == "verified"
+        assert source.exists() is (not delete)
+        if not delete:
+            assert source.read_bytes() == before
+        with assert_image(target):
+            pass
+        assert b"event=conversion_finished" in process.stderr
+    source = image_factory("installed readonly.png")
+    before = source.read_bytes()
+    source.chmod(stat.S_IREAD)
+    try:
+        process = run([console, "convert", source, "--delete-original"], outside,
+                      root / "native-refusal.log", timeout=30, expected_exit=4)
+        result = json.loads(process.stdout)["result"]
+        assert result["items"][0]["error"]["code"] == "SOURCE_DELETION_FAILED"
+        assert result["items"][0]["source_disposition"] == "retained"
+        assert result["counts"]["deleted"] == result["counts"]["published"] == 0
+        assert source.read_bytes() == before
+    finally:
+        source.chmod(stat.S_IREAD | stat.S_IWRITE)
+    assert not list(source.parent.glob(".ic-*")) and not list(outside.glob(".ic-*"))
