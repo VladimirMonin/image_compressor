@@ -136,14 +136,29 @@ def run(raw_output: str) -> int:
         if app.platformName() != "windows":
             raise RuntimeError("WINDOWS_QPA_REQUIRED")
         data_root = files("gui_pyside6_v2")
+        asset_root = data_root.joinpath("assets")
+        asset_names = sorted(path.name for path in asset_root.iterdir()
+                             if path.name.endswith(".svg"))
+        if len(asset_names) != 13 or "add.svg" not in asset_names:
+            raise RuntimeError("SVG_SET_INCOMPLETE")
+        resource_names = ["tokens.json"] + [f"assets/{name}" for name in asset_names]
         receipt["resources"] = {
             name: {"path": str(data_root.joinpath(name)),
                    "sha256": hashlib.sha256(data_root.joinpath(name).read_bytes()).hexdigest()}
-            for name in ("tokens.json", "assets/add.svg")
+            for name in resource_names
         }
-        svg = QSvgRenderer(QByteArray(data_root.joinpath("assets/add.svg").read_bytes()))
-        if not svg.isValid():
-            raise RuntimeError("SVG_INVALID")
+        for name in asset_names:
+            svg = QSvgRenderer(QByteArray(asset_root.joinpath(name).read_bytes()))
+            if not svg.isValid():
+                raise RuntimeError("SVG_INVALID")
+        forbidden_exact = {"gui", "classes", "gui_main", "image_compressor._windows_deletion"}
+        forbidden_loaded = sorted(
+            name for name in sys.modules
+            if name in forbidden_exact or name.startswith(("gui.", "classes.", "gui_main."))
+        )
+        if forbidden_loaded:
+            raise RuntimeError("FORBIDDEN_MODULES_LOADED")
+        receipt["forbidden_modules_absent"] = True
         inputs = root / "inputs"
         inputs.mkdir()
         source = inputs / "synthetic_ӘҒҚҢӨҰҮҺІ.png"

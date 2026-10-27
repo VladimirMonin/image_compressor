@@ -13,7 +13,7 @@ source_revision: "r2"
 
 # Готовый EXE
 
-Готовый **PySide6 GUI v2 в самостоятельном Windows EXE получил независимый технический и визуальный ACCEPT**. Это отдельная упаковка, не замена прежнего PyQt GUI. Локальный файл: `dist/windows-pyside6/20261023-candidate-02/ImageCompressorV2.exe` (56 977 108 bytes). Точный SHA-256, авторские/независимые проверки и пределы принятия — в [EXE verification](05-windows-exe-verification.md). История прежнего source/wheel ACCEPT — в [REPORT](REPORT.md); он сам по себе не принимал бинарник. Oracle [план](04-windows-exe-plan.md) сохранён без переименования его исследования в runtime PASS.
+Готовый **PySide6 GUI v2 в самостоятельном Windows EXE**: предыдущий `dist/windows-pyside6/20261023-candidate-02/ImageCompressorV2.exe` (56 977 108 bytes) получил независимый технический и визуальный ACCEPT и теперь `superseded` (артефакт в Recycle Bin); текущая курированная сборка `20261028-candidate-03` независимо принята exact-byte 2026-10-28 — точные байты/overlay/границы в [release record](../releases/windows-pyside6-20261028-candidate-03.md). Legacy PyQt6 GUI и его build/launcher'ы удалены из рабочей копии 2026-10-23→2026-10-28 (история в Git). Точный SHA-256, авторские/независимые проверки и пределы принятия прежнего бинарника — в [EXE verification](05-windows-exe-verification.md). История прежнего source/wheel ACCEPT — в [REPORT](REPORT.md); он сам по себе не принимал бинарник. Oracle [план](04-windows-exe-plan.md) сохранён без переименования его исследования в runtime PASS.
 
 1. Откройте указанный в verification `dist/windows-pyside6/<build-id>/ImageCompressorV2.exe` двойным щелчком. Пользователю готового EXE **не требуется устанавливать Python, Qt или кодеки**.
 2. One-file EXE можно скопировать один в каталог с пробелами/Unicode. Соседние BUILD-INFO/README/notices нужны для provenance/лицензий, не для запуска. Не путать с возможным onedir fallback: у него обязательный `_internal` и portable ZIP, один EXE из него не переносим.
@@ -24,7 +24,7 @@ source_revision: "r2"
 
 # Собрать из исходников
 
-Требуется **CPython 3.14.2 x64 на Windows** у сборщика, не у пользователя EXE. Не запускайте `build_exe.bat`: он относится к старому PyQt entry и удаляет прежний artifact. Не пересоздавайте `.venv` или принятую PySide среду; для этой задачи выделена только `.agent-work/windows-exe/build-venv`. Все команды ниже — PowerShell из корня проекта.
+Требуется **CPython 3.14.2 x64 на Windows** у сборщика, не у пользователя EXE. `build_exe.bat` удалён вместе с legacy PyQt6-маршрутом. Не пересоздавайте `.venv` или принятую PySide среду; для этой задачи выделена только `.agent-work/windows-exe/build-venv`. Все команды ниже — PowerShell из корня проекта.
 
 ```powershell
 $Root = (Get-Location).Path
@@ -51,6 +51,30 @@ $BuildId = Get-Date -Format 'yyyyMMdd-HHmmss-fff'
 Остановитесь при любом ненулевом exit; команды не должны продолжаться как будто сборка успешна. Повтор установки допустим только в новой build-среде; для другого dependency набора нужны новые фиксация и qualification, не молчаливый upgrade. Сохраняется hash каждого использованного wheel. Wrapper сам ничего не устанавливает.
 
 `build.py` работает и из другого cwd с абсолютным путём к script. Он проверяет платформу/версию/pins/no-PyQt, snapshot-ит только runtime sources и recipe, использует official hooks и RECORD-owned HEIF DLL, создаёт свежие `.agent-work/windows-exe/builds/<build-id>/` и `dist/windows-pyside6/<build-id>/`. Занятый build-id отвергается, старые outputs не чистятся. Нет UPX/strip, глобальных QT/PATH settings или копирования всего Qt/site-packages/design/tests. `BUILD-INFO.json` содержит exact input/wheel hashes, argv, Python/dependency versions, исходный HEAD+delta и EXE hash. Recipe воспроизводим; bit-for-bit идентичность двух пересборок не обещана. Принятый EXE сохраняется без пересборки: его BUILD-INFO описывает исходный snapshot, а не более поздний docs-коммит. После приёмки меняются только разрешённые документы; runtime source/data, recipe/spec/requirements не меняются. README входит в provenance snapshot, но не в runtime payload EXE; его более поздняя редакция отдельно проверяется affected wheel/package test и не приписывается прежнему build.
+
+Актуальный spec кладёт в frozen-поставку `tokens.json` и **все** `gui_pyside6_v2/assets/*.svg`; `verify_archive()` fail-closed требует каждый ассет и `python314.dll`, а `denied` точно отсекает legacy/deletion-имена (`gui/`, `classes`, `gui_main`, `image_compressor._windows_deletion`), не трогая `gui_pyside6_v2/`. Frozen driver в том же прогоне проверяет `QSvgRenderer.isValid()` для каждого SVG и отсутствие legacy/deletion-модулей в `sys.modules`.
+
+# Курированная сборка `68b7dc5` + overlay
+
+Новый EXE собирается **не из HEAD**: HEAD содержит принятый native-frame `theme.py`, но также непринятый deletion-WIP. Курированный источник — detached git-worktree на `68b7dc5` (pre-deletion, controls+packaging) + точечный overlay: `gui_pyside6_v2/theme.py` из HEAD, `pyproject.toml`/`README.md` из рабочего дерева, `tools/windows_exe/*` из исправленного packaging. `image_compressor/**` берётся из `68b7dc5` — `_windows_deletion.py` в input-set не входит. Worktree/junctions — обратимая staging-операция без ветки, reset или истории.
+
+```powershell
+$Root = 'C:\PY\image_compressor'
+$BuildId = '20261028-candidate-03'   # фиксируется ДО запуска; занятый id не переиспользовать
+$Stage = Join-Path $Root ".agent-work/windows-exe/staging/$BuildId/root"
+New-Item -ItemType Directory -Force -Path (Split-Path $Stage) | Out-Null
+git -C $Root worktree add --detach $Stage 68b7dc5
+New-Item -ItemType Directory -Force -Path (Join-Path $Stage 'dist') | Out-Null
+New-Item -ItemType Junction -Path (Join-Path $Stage 'dist/windows-pyside6') -Target (Join-Path $Root 'dist/windows-pyside6')
+New-Item -ItemType Junction -Path (Join-Path $Stage '.agent-work') -Target (Join-Path $Root '.agent-work')
+Copy-Item -Force (Join-Path $Root 'gui_pyside6_v2/theme.py') (Join-Path $Stage 'gui_pyside6_v2/theme.py')
+Copy-Item -Force (Join-Path $Root 'pyproject.toml') $Stage
+Copy-Item -Force (Join-Path $Root 'README.md') $Stage
+Copy-Item -Force -Recurse (Join-Path $Root 'tools/windows_exe/*') (Join-Path $Stage 'tools/windows_exe')
+& "$Root/.agent-work/windows-exe/build-venv/Scripts/python.exe" -I -B "$Stage/tools/windows_exe/build.py" --build-id $BuildId
+```
+
+`BUILD-INFO.source_head` обязан быть `68b7dc5…`; `source_delta` — ровно overlay. `executable`/`build_work` записываются в staging-виде, а canonical пути — `dist/windows-pyside6/<build-id>/` и `.agent-work/windows-exe/builds/<build-id>/` через junction (тот же файл: совпадают bytes/hash). README/pyproject входят в input-set, поэтому все их правки выполняются **до** сборки и после неё не меняются. При отказе worktree/junction, падении сборки, неверном `source_head`, legacy/deletion-входе или красном gate — остановиться, сохранить evidence, не пересобирать на месте. Curated-source receipt (`base commit`, worktree, `git status --porcelain`, хеши overlay, EXE hash/bytes) сохраняется в `.agent-work/windows-exe/builds/<build-id>/curated-source.json`.
 
 Внешний `notices/` и встроенный `licenses/` сохраняют тексты применимых зависимостей, включая CPython, Qt/PySide/shiboken, Pillow, HEIF/AVIF providers и PyInstaller bootloader exception. Это не отдельная юридическая сертификация публикации бинарника.
 

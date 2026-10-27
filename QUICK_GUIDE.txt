@@ -1,21 +1,20 @@
 IMAGE COMPRESSOR — безопасный быстрый старт
 
-Только создание новых проверенных файлов. На принятой границе `68b7dc5` и в готовом
+Только создание новых проверенных файлов. На базе `68b7dc5`/курированной сборки и в готовом
 EXE оригиналы и прежние результаты не удаляются и не заменяются; в текущем HEAD
 есть непринятый WIP удаления (см. п.4). При занятом имени — ошибка, а не overwrite.
 
 GUI (канонический — PySide6 v2; готовый EXE — без Python):
 1. Проще всего без Python/Qt: запустите run_image_compressor_v2.bat или откройте
-dist\windows-pyside6\20261023-candidate-02\ImageCompressorV2.exe (Windows x64).
+EXE из dist\windows-pyside6\ (точный путь и SHA — в release record; Windows x64).
 Из исходников: отдельная среда PySide6 v2 по README.md, затем
   <pyside-python> -m gui_pyside6_v2
-Старый gui_main.py на PyQt6 — legacy, не рекомендуемый путь.
 2. Выберите файлы или папки; GUI раскрывает папки рекурсивно.
 3. Выберите WebP/JPEG/HEIF/AVIF и качество (GUI default WebP/80).
-4. Удаление оригиналов на принятой границе и в готовом EXE недоступно
+4. Удаление оригиналов в собранном EXE и на базе `68b7dc5` недоступно
    (disabled/unchecked): delete_original=True отвергается до эффектов.
    В текущем HEAD есть непринятый WIP удаления; это не принятая функция
-   (см. docs/releases/windows-pyside6-candidate-02.md).
+   и он не входит в EXE (см. docs/releases/windows-pyside6-20261028-candidate-03.md).
 5. При resize укажите обе положительные стороны. Увеличения/crop нет.
 6. Нажмите «Начать сжатие» и прочитайте настоящий итог.
 
@@ -38,7 +37,6 @@ CLI (неинтерактивный, после headless install из README.md)
 Без --recursive CLI обходит только непосредственные файлы каталога.
 capabilities/convert: один UTF-8 JSON в stdout, safe diagnostics отдельно в stderr.
 Exits: 0 success; 2 rejected/usage; 3 partial; 4 failed; 5 internal/delivery; 130 cancel.
-python classes.py convert ... вызывает тот же CLI, больше не задаёт вопросов.
 
 Входы: JPEG, PNG, WebP, HEIF/HEIC, AVIF. PNG только вход, не выход.
 Доступность optional codecs проверяется фактически через capabilities.
@@ -48,8 +46,8 @@ Alpha JPEG композируется на белый; EXIF/XMP/ICC/comments н�
 Публикация требует hard links (проверена local NTFS). Нет unsafe fallback,
 crash-durability или гарантии меньшего файла. После потери ответа сначала
 проверьте известные назначения, не повторяйте вслепую с overwrite.
-Старый dist\ImageCompressorGUI.exe не обновлён этой работой; публичный release,
+Legacy PyQt6 GUI/facade удалены из рабочей копии (история в Git); публичный release,
 подпись, installer и другие платформы/DPI не квалифицированы.
-Канонический локальный релиз: docs/releases/windows-pyside6-candidate-02.md.
+Курированный локальный релиз: docs/releases/windows-pyside6-20261028-candidate-03.md.
 Действующие детали: README.md и docs/architecture/application-api.md.
 Фактические авторские проверки: docs/verification/command-first-refactoring.md.

@@ -13,7 +13,7 @@ source_revision: "r4"
 
 # Отдельный запуск
 
-`gui_pyside6_v2/` — **канонический GUI продукта**; `gui_main.py` — сохранённое legacy, не рекомендуемый путь. Python distribution остаётся `image-compressor`; bare install требует только Pillow. Новый optional extra — `gui-pyside6` с PySide6 **6.12+ / <7**. Квалифицированная автором и независимым Reviewer среда: Windows 11/local NTFS, Python 3.14.2, PySide6/Qt 6.12.0. Технический и визуальный ACCEPT — в [REPORT](REPORT.md); другие ОС/версии, все DPI и физические OS-dialog/drop не квалифицированы.
+`gui_pyside6_v2/` — **канонический GUI продукта**; legacy PyQt6 GUI и compatibility facade удалены из рабочей копии 2026-10-28 (история в Git), не рекомендуемый путь больше не поставляется. Python distribution остаётся `image-compressor`; bare install требует только Pillow. Новый optional extra — `gui-pyside6` с PySide6 **6.12+ / <7**. Квалифицированная автором и независимым Reviewer среда: Windows 11/local NTFS, Python 3.14.2, PySide6/Qt 6.12.0. Технический и визуальный ACCEPT — в [REPORT](REPORT.md); другие ОС/версии, все DPI и физические OS-dialog/drop не квалифицированы.
 
 PowerShell, корень проекта; среда **отдельная от старой `.venv`**:
 
@@ -25,25 +25,21 @@ python -m venv $EnvDir
 & "$EnvDir\Scripts\python.exe" -m gui_pyside6_v2
 ```
 
-`codecs` необязателен для JPEG/WebP; наличие optional provider не заменяет probe. Для разработки добавьте `dev` в extra. Не устанавливайте `gui`/PyQt6 в новую среду ради этой оболочки. Не загружайте PyQt6 и PySide6 в один процесс. Отсутствующий PySide даёт короткую инструкцию установки и exit2 без traceback.
+`codecs` необязателен для JPEG/WebP; наличие optional provider не заменяет probe. Для разработки добавьте `dev` в extra. Legacy extra `gui`/PyQt6 удалён из `pyproject.toml`; не загружайте PyQt6 и PySide6 в один процесс. Отсутствующий PySide даёт короткую инструкцию установки и exit2 без traceback.
 
 Обычная non-editable установка wheel тоже поддержана: `python -m pip install "image_compressor-1.0.0-py3-none-any.whl[gui-pyside6]"`, затем тот же `python -m gui_pyside6_v2` из любого рабочего каталога. Имя wheel здесь — имя полученного candidate artifact, не опубликованный релиз. Автор и независимый Reviewer отдельно проверили installed-wheel import из `site-packages`, настоящий module entry/event loop и outputs **вне source cwd**, не только editable import. Итог и точная граница — в [REPORT](REPORT.md).
 
-Старый PyQt6-запуск остаётся прежним (legacy), выполняется **другим процессом**:
-
-```powershell
-.\.venv\Scripts\python.exe gui_main.py
-```
+Старый PyQt6-запуск и его launcher'ы retired вместе с source (история в Git); в рабочей копии нет `gui_main.py`.
 
 # Без Python: отдельный Windows EXE
 
-Готовый `dist/windows-pyside6/20261023-candidate-02/ImageCompressorV2.exe` получил отдельный **независимый технический и визуальный ACCEPT**. Это единственный принятый локальный бинарник и каноническая линия; точные байты, происхождение и границы — [release record](../releases/windows-pyside6-candidate-02.md). Его можно открыть без установки Python/Qt/кодеков; инструкция и пределы — [WINDOWS_EXE](WINDOWS_EXE.md), точный SHA и свежие frozen проверки — [EXE verification](05-windows-exe-verification.md). Это Windows11 x64/local NTFS standalone-host с собственным non-elevated Medium child, не новый аккаунт/чистая unrelated machine и не все платформы/DPI. Прежний source/wheel ACCEPT не подменяется новым решением; общий GUI/API и ограничения ниже не меняются. Не используйте старый `build_exe.bat` для нового GUI.
+Курированная сборка `20261028-candidate-03` собрана из базы `68b7dc5` + принятого native-frame `theme.py` + исправленного packaging и **независимо принята exact-byte** 2026-10-28. Точные байты, overlay и границы — [release record](../releases/windows-pyside6-20261028-candidate-03.md). Ранее принятый `candidate-02` переведён в `superseded`, его артефакты перемещены в Recycle Bin. Его можно открыть без установки Python/Qt/кодеков; инструкция и пределы — [WINDOWS_EXE](WINDOWS_EXE.md), историческая exact-byte проверка прежнего бинарника — [05-windows-exe-verification](05-windows-exe-verification.md). Это Windows11 x64/local NTFS standalone-host с собственным non-elevated Medium child, не новый аккаунт/чистая unrelated machine и не все платформы/DPI. Прежний source/wheel ACCEPT не подменяется новым решением; общий GUI/API и ограничения ниже не меняются. Старый `build_exe.bat` удалён как legacy.
 
 ## Исправленные контролы — пока только source-срез
 
 Стрелки числовых полей/списков и unchecked/checked/disabled/focus флажки исправлены в существующем владельце темы и получили отдельный [технический и визуальный ACCEPT](06-controls-verification.md). Полные области стрелок действительно кликабельны, числа имеют внутренний отступ, открытые списки согласованы с Light/Dark. RU/EN/KK, компоновка, resize gates и quality-slider сохраняются. Проверены32 адресных cases и2 дополнительных native source cases;8 HiDPI cases — повтор подмножества, не новые уникальные tests.
 
-**EXE `20261023-candidate-02` не менялся и этих исправлений не содержит.** Новый интегрированный EXE ещё предстоит собрать и отдельно принять с12 новыми control SVG. Текущее изменение оформления также не включает рабочее удаление исходников или новый человеческий журнал/результаты. Эти функциональные срезы остаются отдельными; disabled deletion ниже по-прежнему не работающий switch. Installed/frozen proof прежней версии не переносится автоматически на новые assets.
+**Курированный EXE `20261028-candidate-03` включает эти исправления:** база `68b7dc5` уже содержит control-fix, а исправленный spec кладёт все 13 `assets/*.svg` в frozen-поставку (проверяется fail-closed recipe и frozen driver). Прежний `candidate-02` этих исправлений не содержал и остаётся fallback до ACCEPT нового EXE. Текущее изменение оформления не включает рабочее удаление исходников или новый человеческий журнал/результаты. Deletion-WIP в HEAD не входит в собранный EXE: disabled deletion там по-прежнему не работающий switch. Installed/frozen proof прежней версии не переносится автоматически на новые assets.
 
 # Что делать в окне
 
@@ -56,7 +52,7 @@ python -m venv $EnvDir
 7. Итог отличает succeeded/failed/partial/rejected/cancelled; published считается отдельно. Опубликованный, но не проверенный файл не зелёный success. Локальные пути/артефакты/коды доступны в «Подробностях» и tooltips строк. После ошибки проверьте результаты перед повтором.
 8. «Очистить очередь» очищает только UI — не source/output. Повторный Start — новая операция; прошлые outputs могут дать OUTPUT_EXISTS.
 
-**На принятой границе `68b7dc5` и в `candidate-02` удаление исходников недоступно.** Видимый disabled/unchecked control и постоянное объяснение не являются реализованным switch. Вызов backend там получает delete_original=False, и API True отвергается до эффектов. В текущем HEAD есть непринятый WIP удаления: он не входит ни в принятую границу, ни в EXE и не должен использоваться как рабочая функция ([release record](../releases/windows-pyside6-candidate-02.md)). Это явный gap исходного ТЗ, не скрытое удаление.
+**В собранном EXE и на базе `68b7dc5` удаление исходников недоступно.** Видимый disabled/unchecked control и постоянное объяснение не являются реализованным switch. Вызов backend там получает delete_original=False, и API True отвергается до эффектов. В текущем HEAD есть непринятый WIP удаления: он не входит ни в курированную базу/EXE, ни в принятую границу и не должен использоваться как рабочая функция ([release record](../releases/windows-pyside6-20261028-candidate-03.md)). Это явный gap исходного ТЗ, не скрытое удаление.
 
 Минимальный useful размер — **900×640 logical px**, обычный — 1120×760. На minimum таблица и форма прокручиваются; footer и safety explanation остаются видны. Имя файла намеренно elide, полный путь — в tooltip. Log read-only, максимум500 blocks, без путей/постфикса/raw exceptions; локальный result pane — отдельный разрешённый канал. Постоянного журнала, telemetry или CLI-subprocess backend нет.
 

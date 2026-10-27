@@ -47,8 +47,10 @@ def test_pins_and_static_recipe_boundary():
     ast.parse(spec)
     for required in ("console=False", "upx=False", "strip=False", "optimize=0",
                      "runtime_tmpdir=None", "disable_windowed_traceback=True",
-                     '"_pillow_heif"', '"pillow_avif._avif"', "tokens.json", "assets/add.svg"):
+                     '"_pillow_heif"', '"pillow_avif._avif"', "tokens.json",
+                     "gui_pyside6_v2/assets"):
         assert required in spec
+    assert 'glob("*.svg")' in spec
     assert "collect_all" not in spec and "gui_main.py" not in spec
     driver = (RECIPE / "ic_frozen_check.py").read_text(encoding="utf-8")
     imports = [node for node in ast.walk(ast.parse(driver))

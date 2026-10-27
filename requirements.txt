@@ -1,3 +1,3 @@
 # Run from the project root: python -m pip install -r requirements.txt
-# Full legacy GUI/build installation; pyproject.toml owns dependency versions.
-.[gui,codecs,build]
+# Canonical install: PySide6 GUI + optional codecs + PyInstaller (legacy PyQt extra is retired).
+.[gui-pyside6,codecs,build]

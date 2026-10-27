@@ -23,7 +23,8 @@ a = Analysis(
     binaries=helper.native_binaries("pillow-heif") + helper.native_binaries("pillow-avif-plugin"),
     datas=[
         (str(ROOT / "gui_pyside6_v2/tokens.json"), "gui_pyside6_v2"),
-        (str(ROOT / "gui_pyside6_v2/assets/add.svg"), "gui_pyside6_v2/assets"),
+        *[(str(path), "gui_pyside6_v2/assets") for path in
+          sorted((ROOT / "gui_pyside6_v2/assets").glob("*.svg"))],
         (str(Path(sys.base_prefix) / "LICENSE.txt"), "licenses/CPython"),
     ] + helper.license_inputs(),
     hiddenimports=[
@@ -38,6 +39,7 @@ a = Analysis(
         "PySide6.QtQml", "PySide6.QtQuick", "PySide6.QtWebEngineCore",
         "PySide6.QtWebEngineWidgets", "PySide6.QtTest", "PySide6.QtPdf",
         "pytest", "tests", "tests_pyside6_v2", "tests_windows_exe", "gui",
+        "classes", "gui_main", "image_compressor._windows_deletion",
     ],
     noarchive=False,
     optimize=0,

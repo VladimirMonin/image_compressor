@@ -2,7 +2,7 @@
 id: ic-release-windows-pyside6-candidate-02
 title: "Канонический локальный релиз: PySide6 GUI v2 · Windows x64 · 20261023-candidate-02"
 kind: snapshot
-status: accepted
+status: superseded
 created: "2026-10-28"
 updated: "2026-10-28"
 areas: [gui, packaging, release, windows]
@@ -12,11 +12,13 @@ code_ref: "83c209972b731805a8b3dd97e5aba7cae48dd8ad"
 verification_scope: "Ссылка на уже принятый exact-byte EXE ACCEPT и исторические source ACCEPT; новая квалификация платформ/подписи/release не заявляется."
 ---
 
+> **Superseded:** заменён курированной сборкой [20261028-candidate-03](windows-pyside6-20261028-candidate-03.md); точные байты, вердикты и хеши ниже сохранены, артефакт `candidate-02` перемещён в Recycle Bin 2026-10-28 после независимого ACCEPT нового EXE.
+
 # Назначение
 
 Этот документ фиксирует **единственную каноническую линию** GUI и Windows-бинарника проекта, точные байты выбранного владельцем локального релиза и честную границу между принятым состоянием и текущим HEAD. Он не выдаёт новую техническую/визуальную приёмку, не объявляет публичный release/signing/installer, не переписывает исторические вердикты и не расширяет ни один принятый срез.
 
-Основание — уже принятые документы: [FigCraft/PySide6 отчёт](../figcraft_gui_experiment/REPORT.md), [exact-byte EXE verification](../figcraft_gui_experiment/05-windows-exe-verification.md), [control-fix verification](../figcraft_gui_experiment/06-controls-verification.md), [EXE guide](../figcraft_gui_experiment/WINDOWS_EXE.md), [прикладной контракт v1](../architecture/application-api.md). Статус документа — `accepted`: он независимо принят в docs/launcher-границе; runtime-границы — в §7.
+Основание — уже принятые документы: [FigCraft/PySide6 отчёт](../figcraft_gui_experiment/REPORT.md), [exact-byte EXE verification](../figcraft_gui_experiment/05-windows-exe-verification.md), [control-fix verification](../figcraft_gui_experiment/06-controls-verification.md), [EXE guide](../figcraft_gui_experiment/WINDOWS_EXE.md), [прикладной контракт v1](../architecture/application-api.md). Статус документа — `superseded`: он был независимо принят в docs/launcher-границе (2026-10-28) и затем заменён курированной сборкой `20261028-candidate-03`; вердикты и хеши ниже сохранены, runtime-границы — в §7.
 
 # 1. Каноническая линия
 

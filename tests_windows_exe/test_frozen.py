@@ -19,6 +19,8 @@ from pathlib import Path
 
 import pytest
 
+REPO = Path(__file__).resolve().parents[1]
+
 
 def digest(path):
     hasher = hashlib.sha256()
@@ -626,6 +628,25 @@ def test_real_frozen_gui_codecs_resources_and_teardown(artifact, tmp_path):
             key = "gui_pyside6_v2/" + name
             assert data["sha256"] == run.info["inputs"][key]
             assert Path(data["path"]).is_relative_to(bundle)
+        expected_assets = sorted(
+            path.relative_to(REPO / "gui_pyside6_v2").as_posix()
+            for path in (REPO / "gui_pyside6_v2/assets").glob("*.svg")
+        )
+        assert len(expected_assets) == 13
+        assert sorted(receipt["resources"]) == sorted(["tokens.json", *expected_assets])
+        for name in expected_assets:
+            repo_asset = (REPO / "gui_pyside6_v2" / name).read_bytes()
+            # Same git blob may be checked out as LF or CRLF; the frozen build snapshots
+            # the staged (autocrlf) representation, so accept both byte representations.
+            expected = {
+                hashlib.sha256(repo_asset).hexdigest(),
+                hashlib.sha256(repo_asset.replace(b"\r\n", b"\n").replace(
+                    b"\n", b"\r\n")).hexdigest(),
+            }
+            assert receipt["resources"][name]["sha256"] in expected, name
+        assert receipt["forbidden_modules_absent"] is True
+        assert not any(name in receipt["modules"] for name in ("gui", "classes", "gui_main"))
+        assert not any("windows_deletion" in name for name in receipt["modules"])
         caps = {item["format"]: item for item in receipt["capabilities"]["formats"]}
         for fmt in ("JPEG", "WEBP", "HEIF", "AVIF"):
             assert caps[fmt]["encoder_available"] and caps[fmt]["roundtrip_verified"]

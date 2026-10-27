@@ -4,7 +4,7 @@ title: "Явное удаление исходников: общий API и су
 kind: plan
 status: proposed
 created: "2026-10-24"
-updated: "2026-10-24"
+updated: "2026-10-28"
 areas: [command-first, data-safety, windows, compatibility]
 summary: "Конечный контракт opt-in удаления через удерживаемый Windows handle после проверенной create-only публикации; отдельный исход удаления без нового сервера или recovery-системы."
 owner: "Автор реализации Image Compressor"
@@ -38,8 +38,8 @@ verification_scope: "Read-only исследование общих владел�
 | [imaging.py](../../image_compressor/imaging.py):168–260 | Encode уже принимает BinaryIO; единственный полный image verifier пока принимает Path. Разрешить verifier-у также явно переданный BinaryIO, не делать второй verifier. Source precision/alpha/metadata policy не менять. |
 | [discovery.py](../../image_compressor/discovery.py):73–224 | Frozen manifest до записей, physical first-wins dedup, запрет reparse/links, output-child exclusion сохраняются. Не удалять каталоги/дубликаты отдельным проходом. |
 | [cli.py](../../image_compressor/cli.py):45–66,147–188; [serialization.py](../../image_compressor/serialization.py) | Добавить один opt-in flag → то же поле запроса. Code-first serializer уже обходит fields разрешённых frozen DTO: новой схемы/serializer-ветки/DTO не нужно. |
-| [gui/worker.py](../../gui/worker.py):70–117; [gui/main_window.py](../../gui/main_window.py):172–257 | Worker уже передаёт True, окно сейчас объясняет отказ. Нужны предупреждение до старта и реальный итог, не собственный deleter. |
-| [classes.py](../../classes.py):42–110 | Facade никогда не имел delete-параметра; продолжает default False без изменения старых signatures. `classes.py …` наследует новый flag через существующий CLI forwarding. |
+| `gui/worker.py`:70–117; `gui/main_window.py`:172–257 (legacy PyQt6 GUI удалён из рабочей копии 2026-10-28, история в Git) | Worker уже передавал True, окно объясняло отказ. Для legacy-маршрута нужны были предупреждение до старта и реальный итог, не собственный deleter; после retirement актуален только canonical `gui_pyside6_v2/`. |
+| `classes.py`:42–110 (facade удалён в legacy-retirement 2026-10-28, история в Git) | Facade никогда не имел delete-параметра и сохранял default False. С удалением facade наследование flag через его CLI forwarding больше не поставляется; актуален только прямой API/CLI. |
 | [controller.py](../../gui_pyside6_v2/controller.py):28–35,125–134; [window.py](../../gui_pyside6_v2/window.py):241–247,289–325,363–398 | Options/immutable request должны переносить выбранный bool вместо hardcoded False. Нельзя оставлять безусловное «Исходники сохранены» при удалении. |
 | [queue_model.py](../../gui_pyside6_v2/queue_model.py):48–57,103–117; [localization.py](../../gui_pyside6_v2/localization.py) | Item warnings и source_disposition уже доступны UI; добавить только точное состояние/пояснение удаления, не новую модель очереди. |
 

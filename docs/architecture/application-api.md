@@ -4,7 +4,7 @@ title: "Image Compressor — прикладной контракт v1"
 kind: contract
 status: accepted
 created: "2026-10-23"
-updated: "2026-10-23"
+updated: "2026-10-28"
 areas: [architecture, command-first, conversion, data-safety]
 summary: "Независимо принятый синхронный API, create-only публикация, JSON CLI и совместимые потребители с явными пределами."
 code_ref: "770784935c52eaa3add6a9a1ec50b5154c9f1e3c + accepted source/test inventory SHA-256 9ef5bbf6c4af8af07f3c2744212f103b6666a94568841c2fcc99aa64d541dccd"
@@ -25,9 +25,8 @@ verification_scope: "Авторские проверки и независимы
 | [Imaging](../../image_compressor/imaging.py) | Lazy codecs под lock, capability cache процесса, Pillow/resize/полное декодирование; service |
 | [Filesystem](../../image_compressor/filesystem.py) | Identity, имена, staging, атомарный create-only link, только своя очистка; service |
 | [Diagnostics](../../image_compressor/diagnostics.py) | Закрытая техническая проекция; logging sinks host-а и CLI, Qt log signals |
-| [CLI](../../image_compressor/cli.py) | argparse, сигналы, UTF-8 JSON/exit/delivery; console script, `python -m image_compressor`, `classes.py ...` |
-| [Legacy class](../../classes.py) | Старые методы/свойства → тот же `convert` |
-| [Worker](../../gui/worker.py), [handlers](../../gui/main_window.py) | Один `convert` в QThread; typed result и реальное окончание thread; существующие views не перепроектированы |
+| [CLI](../../image_compressor/cli.py) | argparse, сигналы, UTF-8 JSON/exit/delivery; console script, `python -m image_compressor` |
+| Legacy PyQt6 GUI и compatibility facade | Удалены из рабочей копии в legacy-retirement 2026-10-28 (история сохранена в Git). Canonical GUI — [gui_pyside6_v2](../../gui_pyside6_v2/window.py); старые worker/handlers/class больше не поставляются. |
 
 # Операции
 
@@ -138,4 +137,4 @@ Worker сохраняет старые сигналы, добавляет result
 
 Закрытые события conversion_started/item_finished/conversion_finished/cleanup_failed, безопасные codes/stages/canonical format/quality/counts/bytes/duration_ms и случайный operation id. Именованный logger не настраивает root/постоянный файл/телеметрию. Реальные host formatters/handlers используются с изоляцией raw handleError fallback; CLI временно добавляет свой stderr sink и восстанавливает host-настройки. Технические данные не включают paths, argv, arbitrary postfix, exception/traceback или DTO целиком. Политика — [наблюдаемость](../foundation/observability-policy.md).
 
-Гарантия privacy этой дельты относится к новым API/CLI/facade и изменённым worker/main-window emitters. Неизменённые `gui/widgets.py` resize getters и `gui_main.py` import-error ветка имеют старый debug/raw вывод; **весь GUI не privacy-certified**. Нет visual qualification, EXE/release, native Windows console-signal delivery, другой ОС/Python runtime проверки или MCP. Фактический suite проходит настоящие owners/readback, fault injection только на обозначенных краях; installed wheel без Qt — отдельная проверка, не editable-only PASS. Независимый Reviewer подтвердил достаточность для этой ограниченной поставки; точное решение и сохранённая история — в [verification](../verification/command-first-refactoring.md).
+Гарантия privacy этой дельты относится к новым API/CLI и emitters canonical `gui_pyside6_v2/`. Legacy PyQt6 GUI и compatibility facade удалены из рабочей копии 2026-10-28 (история — в Git), их старый debug/raw вывод больше не поставляется; **весь GUI не privacy-certified**. Нет visual qualification, EXE/release, native Windows console-signal delivery, другой ОС/Python runtime проверки или MCP. Фактический suite проходит настоящие owners/readback, fault injection только на обозначенных краях; installed wheel без Qt — отдельная проверка, не editable-only PASS. Независимый Reviewer подтвердил достаточность для этой ограниченной поставки; точное решение и сохранённая история — в [verification](../verification/command-first-refactoring.md).
