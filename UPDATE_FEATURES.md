@@ -1,3 +1,5 @@
+> **Исторический материал (до command-first).** Актуальный GUI/EXE — [docs/releases/windows-pyside6-candidate-02.md](docs/releases/windows-pyside6-candidate-02.md); `dist/ImageCompressorGUI.exe` и `build_exe.bat` — legacy, не использовать для нового GUI.
+
 # 🎉 Обновленная версия GUI компрессора изображений
 
 > **Исторический текст ниже не описывает текущий command-first-кандидат.** Удаление/замена оригиналов теперь явно отвергаются до файловых эффектов; снимите флажок “Удалять оригинальные файлы”. Только create-only, no-overwrite, staging verification и final readback. Старый EXE этой работой не обновлялся. Действующие команды/ограничения: [README](README.md), [API-контракт](docs/architecture/application-api.md), [авторская проверка](docs/verification/command-first-refactoring.md).

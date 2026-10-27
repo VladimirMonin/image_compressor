@@ -4,7 +4,7 @@ title: "Запуск отдельного PySide6 GUI v2"
 kind: guide
 status: accepted
 created: "2026-10-23"
-updated: "2026-10-24"
+updated: "2026-10-28"
 areas: [gui, pyside6, usage]
 summary: "Изолированная optional установка, запуск, synthetic проверки и безопасная семантика экспериментального интерфейса."
 language: ru
@@ -13,7 +13,7 @@ source_revision: "r4"
 
 # Отдельный запуск
 
-Новый GUI **не заменяет** `gui_main.py`. Python distribution остаётся `image-compressor`; bare install требует только Pillow. Новый optional extra — `gui-pyside6` с PySide6 **6.12+ / <7**. Квалифицированная автором и независимым Reviewer среда: Windows 11/local NTFS, Python 3.14.2, PySide6/Qt 6.12.0. Технический и визуальный ACCEPT — в [REPORT](REPORT.md); другие ОС/версии, все DPI и физические OS-dialog/drop не квалифицированы.
+`gui_pyside6_v2/` — **канонический GUI продукта**; `gui_main.py` — сохранённое legacy, не рекомендуемый путь. Python distribution остаётся `image-compressor`; bare install требует только Pillow. Новый optional extra — `gui-pyside6` с PySide6 **6.12+ / <7**. Квалифицированная автором и независимым Reviewer среда: Windows 11/local NTFS, Python 3.14.2, PySide6/Qt 6.12.0. Технический и визуальный ACCEPT — в [REPORT](REPORT.md); другие ОС/версии, все DPI и физические OS-dialog/drop не квалифицированы.
 
 PowerShell, корень проекта; среда **отдельная от старой `.venv`**:
 
@@ -29,7 +29,7 @@ python -m venv $EnvDir
 
 Обычная non-editable установка wheel тоже поддержана: `python -m pip install "image_compressor-1.0.0-py3-none-any.whl[gui-pyside6]"`, затем тот же `python -m gui_pyside6_v2` из любого рабочего каталога. Имя wheel здесь — имя полученного candidate artifact, не опубликованный релиз. Автор и независимый Reviewer отдельно проверили installed-wheel import из `site-packages`, настоящий module entry/event loop и outputs **вне source cwd**, не только editable import. Итог и точная граница — в [REPORT](REPORT.md).
 
-Старый запуск остаётся прежним и выполняется **другим процессом**:
+Старый PyQt6-запуск остаётся прежним (legacy), выполняется **другим процессом**:
 
 ```powershell
 .\.venv\Scripts\python.exe gui_main.py
@@ -37,7 +37,7 @@ python -m venv $EnvDir
 
 # Без Python: отдельный Windows EXE
 
-Готовый `dist/windows-pyside6/20261023-candidate-02/ImageCompressorV2.exe` получил отдельный **независимый технический и визуальный ACCEPT**. Его можно открыть без установки Python/Qt/кодеков; инструкция и пределы — [WINDOWS_EXE](WINDOWS_EXE.md), точный SHA и свежие frozen проверки — [EXE verification](05-windows-exe-verification.md). Это Windows11 x64/local NTFS standalone-host с собственным non-elevated Medium child, не новый аккаунт/чистая unrelated machine и не все платформы/DPI. Прежний source/wheel ACCEPT не подменяется новым решением; общий GUI/API и ограничения ниже не меняются. Не используйте старый `build_exe.bat` для нового GUI.
+Готовый `dist/windows-pyside6/20261023-candidate-02/ImageCompressorV2.exe` получил отдельный **независимый технический и визуальный ACCEPT**. Это единственный принятый локальный бинарник и каноническая линия; точные байты, происхождение и границы — [release record](../releases/windows-pyside6-candidate-02.md). Его можно открыть без установки Python/Qt/кодеков; инструкция и пределы — [WINDOWS_EXE](WINDOWS_EXE.md), точный SHA и свежие frozen проверки — [EXE verification](05-windows-exe-verification.md). Это Windows11 x64/local NTFS standalone-host с собственным non-elevated Medium child, не новый аккаунт/чистая unrelated machine и не все платформы/DPI. Прежний source/wheel ACCEPT не подменяется новым решением; общий GUI/API и ограничения ниже не меняются. Не используйте старый `build_exe.bat` для нового GUI.
 
 ## Исправленные контролы — пока только source-срез
 
@@ -56,7 +56,7 @@ python -m venv $EnvDir
 7. Итог отличает succeeded/failed/partial/rejected/cancelled; published считается отдельно. Опубликованный, но не проверенный файл не зелёный success. Локальные пути/артефакты/коды доступны в «Подробностях» и tooltips строк. После ошибки проверьте результаты перед повтором.
 8. «Очистить очередь» очищает только UI — не source/output. Повторный Start — новая операция; прошлые outputs могут дать OUTPUT_EXISTS.
 
-**Удаление исходников недоступно.** Видимый disabled/unchecked control и постоянное объяснение не являются реализованным switch. Вызов backend всегда получает delete_original=False; API True по-прежнему отвергает до эффектов. Это явный gap исходного ТЗ, не скрытое удаление и не «временно работающий флаг».
+**На принятой границе `68b7dc5` и в `candidate-02` удаление исходников недоступно.** Видимый disabled/unchecked control и постоянное объяснение не являются реализованным switch. Вызов backend там получает delete_original=False, и API True отвергается до эффектов. В текущем HEAD есть непринятый WIP удаления: он не входит ни в принятую границу, ни в EXE и не должен использоваться как рабочая функция ([release record](../releases/windows-pyside6-candidate-02.md)). Это явный gap исходного ТЗ, не скрытое удаление.
 
 Минимальный useful размер — **900×640 logical px**, обычный — 1120×760. На minimum таблица и форма прокручиваются; footer и safety explanation остаются видны. Имя файла намеренно elide, полный путь — в tooltip. Log read-only, максимум500 blocks, без путей/постфикса/raw exceptions; локальный result pane — отдельный разрешённый канал. Постоянного журнала, telemetry или CLI-subprocess backend нет.
 

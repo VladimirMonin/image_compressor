@@ -4,7 +4,7 @@ title: "Image Compressor — тестирование"
 kind: instruction
 status: accepted
 created: "2026-10-23"
-updated: "2026-10-24"
+updated: "2026-10-28"
 areas: [testing, quality]
 summary: "Изолированные изображения, проверка настоящего API/CLI, сохранности и честный учёт фактически выполненных команд."
 read_when: "Перед написанием/запуском теста, изменением runner/fixture или выбором проверки."
@@ -88,3 +88,7 @@ Gallery output должен быть новым потомком `.agent-work/ui
 Независимо выполнены32 selected cases,2 дополнительных native Windows-QPA cases, Ruff/mypy raw0 и просмотр10 source плюс6 native PNG. HiDPI-risk повтор8 из тех же cases не суммируется как новые tests. Native synthetic popup click учитывает штатный Qt double-click release guard после mouse-arrow open; bare-Qt witness отличает такую fixture-ошибку от дефекта продукта. Снимать только собственные окна, не чужой desktop; физические dialogs/drop/все DPI не объявляются проверенными.
 
 Все12 новых SVG должны попасть в последующую installed/frozen поставку; старый принятый EXE их не содержит и не был пересобран этим source-срезом. При controls docs-only closeout, если README/package inputs не менялись, достаточно affected corpus/diff и сохранности accepted source/test bytes; не повторять неизменённые GUI/core suites. Реальное source deletion и human-result output требуют своих функциональных gates, не принимаются из оформления disabled checkbox.
+
+## Канонический локальный релиз и docs-only срез
+
+Для канонического бинарника `dist/windows-pyside6/20261023-candidate-02/ImageCompressorV2.exe` базовые проверки — hash-readback (`sha256sum` + размер) против [release record](../releases/windows-pyside6-candidate-02.md) и явный `git status`/пустой index; для документации — project-local docs checker с собственным `--corpus` и `git diff --check`. Docs-only срез не требует повторного прогона неизменённых source/GUI suites (`tests`, `tests_pyside6_v2`, `tests_windows_exe`) и не требует пересборки/повторной квалификации EXE: достаточные прежние результаты переиспользуются как историческая гарантия, а не как свежий прогон. Если менялся README/package input, выполняется affected `tests/test_packaging.py` (`3 passed` на HEAD; третий тест относится к непринятому deletion-WIP), а не весь baseline. Deletion-тесты в HEAD (`test_source_deletion`, `test_windows_deletion`, `deletion_race_harness`) относятся к непринятому WIP: их наличие или зелёный результат не делает удаление исходников принятой функцией.

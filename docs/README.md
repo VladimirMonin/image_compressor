@@ -4,7 +4,7 @@ title: "Image Compressor — документация"
 kind: navigation
 status: accepted
 created: "2026-10-23"
-updated: "2026-10-24"
+updated: "2026-10-28"
 areas: [engineering, architecture]
 summary: "Вход в проектные правила, принятый прикладной API и историю независимой проверки command-first-среза."
 ---
@@ -28,6 +28,7 @@ summary: "Вход в проектные правила, принятый при
 - [План Oracle](plans/command-first-refactoring.md): исходная/целевая архитектура, четыре связных среза и критерии. План не служит каноном уже реализованного поведения.
 - [Прикладной контракт v1 и карта owners](architecture/application-api.md): принятые API/CLI, create-only publication, image policy, совместимость и пределы.
 - [Verification и независимый ACCEPT](verification/command-first-refactoring.md): авторская история, R1/R2 и их закрытие, отдельные Reviewer executions и точные NOT RUN. Проверка closeout документации/упаковки отмечается отдельно от независимого решения.
+- [Канонический локальный релиз GUI/EXE](releases/windows-pyside6-candidate-02.md): единственная каноническая линия, точные байты `candidate-02`, происхождение и степень доказанности, состояние ref'ов, непринятый deletion-WIP и NOT RUN-границы. Выбор сделан владельцем; новый release/платформенная квалификация не заявляется.
 
 Технический command-first-срез принят после ремонта обоих findings; действующий порядок docs → selective commit → branch-only push у accepting Reviewer — в [development](instructions/development.md). Статусы документов отражают их собственное назначение, не заменяют runtime evidence и не утверждают весь vendored справочник как архитектуру продукта. Локальное состояние/сырые сессии не публикуются; краткая история — в [LOG.md](../LOG.md).
 
@@ -39,4 +40,4 @@ summary: "Вход в проектные правила, принятый при
 
 Отдельный [standalone Windows EXE follow-up](figcraft_gui_experiment/04-windows-exe-plan.md) завершён: **независимый exact-byte технический и визуальный ACCEPT**. [Инструкция запуска/сборки](figcraft_gui_experiment/WINDOWS_EXE.md) и [EXE artifact/SHA/verification](figcraft_gui_experiment/05-windows-exe-verification.md) различают авторские и новые независимые проверки, reduced-rights standalone-host и непроверенную чистую машину/другой аккаунт. Прежние source/wheel ACCEPT и Oracle discovery не переписаны. Build venv/recipe/output изолированы; binary publication не разрешена.
 
-Последующий [source-срез мелких контролов PySide6](figcraft_gui_experiment/06-controls-verification.md) независимо принят технически и визуально: стрелочные области/числа, открытые списки и checkbox states Light/Dark. [RUNNING](figcraft_gui_experiment/RUNNING.md) отличает новые source-исправления от прежнего неизменённого EXE; [testing](instructions/testing.md) содержит адресную выборку. Реальное opt-in удаление, человеческий журнал/детали и новый интегрированный EXE остаются отдельными незавершёнными функциональными срезами. Прежние manifest/приёмки не переименованы в доказательство этих будущих возможностей.
+Последующий [source-срез мелких контролов PySide6](figcraft_gui_experiment/06-controls-verification.md) независимо принят технически и визуально: стрелочные области/числа, открытые списки и checkbox states Light/Dark. [RUNNING](figcraft_gui_experiment/RUNNING.md) отличает новые source-исправления от прежнего неизменённого EXE; [testing](instructions/testing.md) содержит адресную выборку. Реальное opt-in удаление, человеческий журнал/детали и новый интегрированный EXE остаются отдельными незавершёнными функциональными срезами: WIP в HEAD не принят и не является рабочей функцией. Прежние manifest/приёмки не переименованы в доказательство этих будущих возможностей. Канон GUI/EXE и точная граница HEAD против принятой source-границы — в [release record](releases/windows-pyside6-candidate-02.md).

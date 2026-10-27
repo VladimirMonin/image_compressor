@@ -1,8 +1,8 @@
 # Image Compressor
 
-Локальное преобразование изображений через Python API, неинтерактивный CLI, существующий GUI на PyQt6 и отдельный opt-in экспериментальный GUI на PySide6. Единый исполнитель последовательно обрабатывает пакет и возвращает проверяемый поэлементный итог.
+Локальное преобразование изображений через Python API, неинтерактивный CLI и GUI. Канонический GUI продукта — `gui_pyside6_v2/` (PySide6 Widgets v2); историческая PyQt6-оболочка `gui/`/`gui_main.py` сохранена как legacy. Единый исполнитель последовательно обрабатывает пакет и возвращает проверяемый поэлементный итог. Точная каноническая линия, байты бинарника и границы — в [release record](docs/releases/windows-pyside6-candidate-02.md).
 
-**Сохранность:** только создание нового файла, без overwrite и удаления исходника. Результат сначала кодируется/проверяется в staging, затем атомарно публикуется новым hard link и повторно читается. Неподдерживаемая файловая система получает явный отказ, не небезопасный fallback.
+**Сохранность:** на принятой границе `68b7dc5` и в `candidate-02` — только создание нового файла, без overwrite и удаления исходника; в текущем HEAD есть непринятый deletion-WIP, который не является принятой функцией ([release record](docs/releases/windows-pyside6-candidate-02.md)). Результат сначала кодируется/проверяется в staging, затем атомарно публикуется новым hard link и повторно читается. Неподдерживаемая файловая система получает явный отказ, не небезопасный fallback.
 
 Command-first-срез независимо принят (**ACCEPT**) после ремонта R1/R2: Reviewer повторил 170 тестов без skips и исходные image-policy discriminators через API и установленный CLI без Qt. Это не новый EXE-релиз; точная граница и история проверок — ниже по ссылкам. [Контракт API v1](docs/architecture/application-api.md) · [фактические проверки и ограничения](docs/verification/command-first-refactoring.md) · [карта документации](docs/README.md).
 
@@ -23,10 +23,14 @@ Bare install требует только Pillow, **не Qt**. Если сред�
 ```powershell
 # Optional HEIF/AVIF providers; фактическую доступность покажет capabilities
 .\.venv\Scripts\python.exe -m pip install ".[codecs]"
-# Существующий GUI и optional codecs
+# LEGACY-маршрут: исторический GUI на PyQt6 (не рекомендуемый путь)
 .\.venv\Scripts\python.exe -m pip install ".[gui,codecs]"
 .\.venv\Scripts\python.exe gui_main.py
-# Разработка (editable + проверки + GUI/codecs)
+# Канонический GUI — PySide6 v2 в отдельной среде (не в одной с PyQt6)
+python -m venv .agent-work\figcraft-gui-experiment\pyside6-venv
+.\.agent-work\figcraft-gui-experiment\pyside6-venv\Scripts\python.exe -m pip install ".[gui-pyside6,codecs]"
+.\.agent-work\figcraft-gui-experiment\pyside6-venv\Scripts\python.exe -m gui_pyside6_v2
+# Разработка legacy-маршрута (editable + проверки + GUI/codecs)
 .\.venv\Scripts\python.exe -m pip install -e ".[dev,gui,codecs]"
 ```
 
@@ -91,17 +95,17 @@ result = convert(ConversionRequest(
 
 Сохранён `from classes import ImageCompressor`: defaults **HEIF/50** (в отличие от нового API WEBP/80), свойства и методы. Методы возвращают None только при полном успехе, сохраняют last_result; иначе поднимают `CompressionError` с code/result. Directory/input методы рекурсивны; старое снятие внешних двойных кавычек осталось только в process_input. `python classes.py convert ...` теперь вызывает тот же CLI; прежних интерактивных вопросов больше нет.
 
-## Существующий GUI
+## Legacy GUI · PyQt6
 
-Оформление/виджеты не перепроектированы. Worker вызывает тот же API один раз, показывает настоящий результат и ждёт QThread.finished перед новым запуском/закрытием окна. Stop не блокирует UI через wait/terminate и не выдумывает нулевой итог.
+Это **исторический** путь, не рекомендуемый; канонический GUI — PySide6 v2 ниже. Оформление/виджеты не перепроектированы. Worker вызывает тот же API один раз, показывает настоящий результат и ждёт QThread.finished перед новым запуском/закрытием окна. Stop не блокирует UI через wait/terminate и не выдумывает нулевой итог.
 
-**Снимите флажок “Удалять оригинальные файлы”.** Удаление/замена в безопасном режиме недоступны: `delete_original=True` явно отвергается **до эффектов**, в том числе старым worker, с понятным сообщением. Флаг не игнорируется; CLI delete/overwrite flags отсутствуют. Возврат destructive режима — отдельная задача, не скрытое обещание.
+**Снимите флажок “Удалять оригинальные файлы”.** На принятой границе `68b7dc5` и в `candidate-02` удаление/замена в безопасном режиме недоступны: `delete_original=True` явно отвергается **до эффектов**, в том числе старым worker, с понятным сообщением. Флаг не игнорируется; CLI delete/overwrite flags отсутствуют. В текущем HEAD есть непринятый WIP удаления — он не является принятой функцией и не меняет эту гарантию; подробности и судьба среза — в [release record](docs/releases/windows-pyside6-candidate-02.md).
 
 Старые resize-getters `gui/widgets.py` и import-error ветка `gui_main.py` оставлены неизменными по границе задачи и имеют debug/raw вывод. Проверенная privacy-цепочка — новые API/CLI/facade и изменённые worker/main-window emitters, **не весь старый GUI**. Qt/controller tests не являются визуальной приёмкой.
 
-## Отдельный экспериментальный GUI · PySide6
+## Канонический GUI · PySide6 v2
 
-Новый desktop-дизайн создан в настоящем редактируемом FigCraft; реализация — `gui_pyside6_v2/`, без изменений ядра и прежнего окна. Две темы, RU/EN/KK, пофайловая очередь, file/folder/drop, качество/resize/postfix, настоящий batch API, stop/отложенное close и bounded log. **Удаление оригиналов явно недоступно**, а не реализовано декоративным переключателем.
+Desktop-дизайн создан в настоящем редактируемом FigCraft; реализация — `gui_pyside6_v2/`, без изменений ядра и прежнего окна. Две темы, RU/EN/KK, пофайловая очередь, file/folder/drop, качество/resize/postfix, настоящий batch API, stop/отложенное close и bounded log. **На принятой границе `68b7dc5` и в `candidate-02` удаление оригиналов недоступно** — видимый disabled/unchecked control; в HEAD есть непринятый WIP удаления, который не является принятой функцией ([release record](docs/releases/windows-pyside6-candidate-02.md)).
 
 Используйте отдельную среду (не заменяйте старую `.venv`):
 
@@ -115,7 +119,7 @@ python -m venv .agent-work\figcraft-gui-experiment\pyside6-venv
 
 ### Самостоятельный Windows EXE · PySide6 v2
 
-Готовый **Windows x64 one-file EXE независимо принят — технический и визуальный ACCEPT**. Для запуска откройте двойным щелчком `dist\windows-pyside6\20261023-candidate-02\ImageCompressorV2.exe`; устанавливать Python/Qt/кодеки не требуется. [Запуск и сборка](docs/figcraft_gui_experiment/WINDOWS_EXE.md) · [точный SHA-256 и отдельная EXE-проверка](docs/figcraft_gui_experiment/05-windows-exe-verification.md). Проверены настоящий no-argument native запуск и операции/readbacks того же SHA при исключённом внешнем Python/Qt lookup; прежний source/wheel ACCEPT остаётся отдельным фактом. Проверка выполнена на текущем Windows11 x64/local NTFS host с собственным reduced-rights Medium child, не на новом аккаунте/чистой машине и не для всех DPI. One-file использует writable TEMP. Артефакт локальный, неподписанный, без installer/публикации; системную защиту не отключать. Удаление исходников и overwrite по-прежнему недоступны.
+Готовый **Windows x64 one-file EXE независимо принят — технический и визуальный ACCEPT**. Для запуска откройте двойным щелчком `dist\windows-pyside6\20261023-candidate-02\ImageCompressorV2.exe`; устанавливать Python/Qt/кодеки не требуется. [Запуск и сборка](docs/figcraft_gui_experiment/WINDOWS_EXE.md) · [точный SHA-256 и отдельная EXE-проверка](docs/figcraft_gui_experiment/05-windows-exe-verification.md). Проверены настоящий no-argument native запуск и операции/readbacks того же SHA при исключённом внешнем Python/Qt lookup; прежний source/wheel ACCEPT остаётся отдельным фактом. Проверка выполнена на текущем Windows11 x64/local NTFS host с собственным reduced-rights Medium child, не на новом аккаунте/чистой машине и не для всех DPI. One-file использует writable TEMP. Артефакт локальный, неподписанный, без installer/публикации; системную защиту не отключать. Удаление исходников и overwrite в этом принятом EXE недоступны. Каноническая линия, точные байты и известная дельта — в [release record](docs/releases/windows-pyside6-candidate-02.md).
 
 ## Политика данных и пределы
 
@@ -133,6 +137,6 @@ Atomic no-replace hard link проверен на local NTFS. Нет unsafe fall
 
 Точные pytest/Ruff/mypy/docs commands, версии, raw exits, реальные компоненты и fault seams — [инструкция тестирования](docs/instructions/testing.md) и [verification](docs/verification/command-first-refactoring.md). Все изображения synthetic. Suite включает установку настоящего wheel вне repo в venv **без Qt**, API/CLI readback, no-clobber race, отмену/следующую операцию и QThread. Независимый Reviewer подтвердил технический результат; последующие docs/package checks closeout — author verification той же роли, не новая независимая приёмка.
 
-[BUILD_QUICK](BUILD_QUICK.md), [BUILD_README](BUILD_README.md), [UPDATE_FEATURES](UPDATE_FEATURES.md), RELEASE_NOTES и PROJECT_STATUS — исторические/сборочные материалы, не evidence новой версии. Старые EXE/build outputs не обновлялись и не выдают этот рефакторинг за выпущенный бинарник. Исторический command-first ACCEPT не включал новый GUI/visual qualification. Новый opt-in эксперимент и его собственные проверки описаны отдельно выше. Разрешённый последующий Windows EXE имеет собственные recipe/artifact/verification по ссылкам выше; его статус не переписывает историческую границу. Публичный release и другие платформы не квалифицированы.
+[BUILD_QUICK](BUILD_QUICK.md), [BUILD_README](BUILD_README.md), [UPDATE_FEATURES](UPDATE_FEATURES.md), RELEASE_NOTES и PROJECT_STATUS — исторические/сборочные материалы, не evidence новой версии. Старые EXE/build outputs не обновлялись и не выдают этот рефакторинг за выпущенный бинарник. Исторический command-first ACCEPT не включал новый GUI/visual qualification. Новый opt-in эксперимент и его собственные проверки описаны отдельно выше. Разрешённый последующий Windows EXE имеет собственные recipe/artifact/verification по ссылкам выше; его статус не переписывает историческую границу. Единственная каноническая линия GUI/EXE, состояние веток и границы — в [release record](docs/releases/windows-pyside6-candidate-02.md). Публичный release и другие платформы не квалифицированы.
 
 Автор исходного проекта: Vladimir Monin. Версия distribution сохранена: 1.0.0; публичный release не создаётся; отдельный локальный Windows EXE относится только к новому packaging follow-up. Source-срез и необходимая документация сохраняются вместе на `refactor/command-first`; доставка feature branch не означает merge/tag/release.

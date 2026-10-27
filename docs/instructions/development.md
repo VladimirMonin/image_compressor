@@ -4,7 +4,7 @@ title: "Image Compressor — разработка и передача"
 kind: instruction
 status: accepted
 created: "2026-10-23"
-updated: "2026-10-23"
+updated: "2026-10-28"
 areas: [development, workflow, git]
 summary: "Сначала контракт и план Oracle, затем связная реализация и одна независимая проверка без расширения задачи."
 read_when: "Начинается или завершается изменение кода, архитектуры или проектных инструкций."
@@ -42,5 +42,11 @@ Reviewer — единственный index writer этой стадии. До �
 Доставка разрешена только в существующий `origin` проекта на `refs/heads/refactor/command-first`. Проверить remote и весь outgoing range, включая уже существовавший base commit; не выдавать его за новый. Установить применимые CI gates из действующих правил/реальных branch rules, отсутствие checks не называть green CI. Отправлять frozen полный SHA явным refspec: `git -c push.followTags=false push origin ACCEPTED_SHA:refs/heads/refactor/command-first`, затем exact ref/SHA readback через `git ls-remote` (при bounded failure — существующий authenticated gh API). Не повторять push лишь из-за недоступного readback. Пользоваться существующей native auth, не читать credentials и не менять persistent helpers/config. Push-only blocker не отменяет принятую реализацию/локальный commit.
 
 Не применять `reset`, `clean`, `stash`, `restore`, массовый `add`, обход hooks или переписывание истории. Force/merge/tag/release/visibility changes и новый remote/репозиторий не разрешены. На новой source/test неисправности остановить сохранение неподходящего кандидата и вернуть finding тому же Coder; второго review-контура не создавать.
+
+## Каноническая линия и принятый бинарник
+
+Каноническая ветка одна — `refactor/command-first`: только она содержит все принятые срезы. `develop`/`docs/project-foundation` — база подготовки (предки канона), `main` — старая расходящаяся линия; все ref'ы сохраняются как есть. Чужие ветки не мержить, не переименовывать, не удалять и не пушить; merge/tag/release/force и операции с ref'ами — только по прямому отдельному разрешению владельца. Фактическое состояние ref'ов, хеши и границы — в [release record](../releases/windows-pyside6-candidate-02.md).
+
+Принятый `dist/windows-pyside6/20261023-candidate-02/ImageCompressorV2.exe` не пересобирать и не подменять: его байты и SHA — предмет уже выданного exact-byte ACCEPT. Новый бинарник — это новый build-id, собственный изолированный build по [EXE guide](../figcraft_gui_experiment/WINDOWS_EXE.md) и **новый независимый exact-byte ACCEPT**; прежний вердикт на новые байты не переносится. Старые среды, `dist/`, `build/` и evidence сохраняются: удаление и «уборка» без прямого разрешения не выполняются. Непринятый deletion-WIP в HEAD не является принятой функцией и не расширяет контракт v1.
 
 Долговечные новые документы используют [metadata пакета](../../tools/project-foundation/references/metadata.md), native AGENTS/профили/сырые сессии — собственный формат. Относительные ссылки считаются от конечного документа. Не создавать два редактируемых канона одного правила; пакетные шаблоны не заменяют проектную адаптацию. Статус документа и выполненность функции различаются.

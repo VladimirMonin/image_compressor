@@ -1,3 +1,5 @@
+> **Исторический материал (до command-first).** Актуальный GUI/EXE — [docs/releases/windows-pyside6-candidate-02.md](docs/releases/windows-pyside6-candidate-02.md); `dist/ImageCompressorGUI.exe` и `build_exe.bat` — legacy, не использовать для нового GUI.
+
 # Image Compressor v1.0.0 - Release Notes
 
 ## 🎉 Что нового
