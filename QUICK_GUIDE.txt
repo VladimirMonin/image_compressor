@@ -11,10 +11,11 @@ EXE из dist\windows-pyside6\ (точный путь и SHA — в release reco
   <pyside-python> -m gui_pyside6_v2
 2. Выберите файлы или папки; GUI раскрывает папки рекурсивно.
 3. Выберите WebP/JPEG/HEIF/AVIF и качество (GUI default WebP/80).
-4. Удаление оригиналов в собранном EXE и на базе `68b7dc5` недоступно
-   (disabled/unchecked): delete_original=True отвергается до эффектов.
-   В текущем HEAD есть непринятый WIP удаления; это не принятая функция
-   и он не входит в EXE (см. docs/releases/windows-pyside6-20261028-candidate-03.md).
+4. Удаление оригиналов — opt-in: галочка default OFF и кликабельна.
+   Включение = согласие; после успешного сжатия и проверки новый файл остаётся,
+   а выбранный оригинал удаляется безвозвратно (без Корзины/undo).
+   При ошибке/отмене/неизвестном исходе оригинал не выдаётся за удалённый.
+   Принятый candidate-05 содержит opt-in удаление; candidate-03/04 — superseded и в Recycle Bin.
 5. При resize укажите обе положительные стороны. Увеличения/crop нет.
 6. Нажмите «Начать сжатие» и прочитайте настоящий итог.
 
@@ -48,6 +49,7 @@ crash-durability или гарантии меньшего файла. После
 проверьте известные назначения, не повторяйте вслепую с overwrite.
 Legacy PyQt6 GUI/facade удалены из рабочей копии (история в Git); публичный release,
 подпись, installer и другие платформы/DPI не квалифицированы.
-Курированный локальный релиз: docs/releases/windows-pyside6-20261028-candidate-03.md.
+GUI-журнал: «Журнал операции» — только summary; все technical event=/пути/SHA — во вкладке «Подробности» (selection/Ctrl+C).
+Принятый: docs/releases/windows-pyside6-20261028-candidate-05.md; candidate-03/04 superseded.
 Действующие детали: README.md и docs/architecture/application-api.md.
 Фактические авторские проверки: docs/verification/command-first-refactoring.md.

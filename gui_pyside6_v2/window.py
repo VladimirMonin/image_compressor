@@ -14,7 +14,6 @@ from PySide6.QtWidgets import (
     QHeaderView,
     QLabel,
     QMainWindow,
-    QMessageBox,
     QPlainTextEdit,
     QProgressBar,
     QPushButton,
@@ -24,6 +23,8 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
+
+from image_compressor import ItemResult
 
 from .controller import Controller
 from .localization import Translator
@@ -41,6 +42,7 @@ class MainWindow(QMainWindow):
         self.theme = "light"
         self.t = Translator(self.language)
         self.controller = Controller(self)
+        self._raw_events: list[str] = []
         self.shell = QWidget()
         self.shell.setObjectName("Shell")
         self.setCentralWidget(self.shell)
@@ -147,15 +149,32 @@ class MainWindow(QMainWindow):
         self.tabs = QTabWidget()
         self.tabs.setObjectName("OperationTabs")
         self.tabs.setFixedHeight(132)
-        self.log = QPlainTextEdit()
-        self.log.setObjectName("TechnicalLog")
-        self.log.setReadOnly(True)
-        self.log.setMaximumBlockCount(500)
-        self.log.setLineWrapMode(QPlainTextEdit.LineWrapMode.NoWrap)
+        journal = QWidget()
+        journal.setObjectName("Journal")
+        journal_layout = QVBoxLayout(journal)
+        journal_layout.setContentsMargins(0, 0, 0, 0)
+        journal_layout.setSpacing(2)
+        self.journal_summary = QPlainTextEdit()
+        self.journal_summary.setObjectName("OperationSummary")
+        self.journal_summary.setReadOnly(True)
+        self.journal_summary.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
+        self.journal_summary.setTextInteractionFlags(
+            Qt.TextInteractionFlag.TextSelectableByMouse
+            | Qt.TextInteractionFlag.TextSelectableByKeyboard
+        )
+        self.journal_summary.setMaximumBlockCount(120)
+        self.journal_summary.setLineWrapMode(QPlainTextEdit.LineWrapMode.WidgetWidth)
+        journal_layout.addWidget(self.journal_summary, 1)
         self.details = QPlainTextEdit()
         self.details.setObjectName("LocalResults")
         self.details.setReadOnly(True)
-        self.tabs.addTab(self.log, "")
+        self.details.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
+        self.details.setTextInteractionFlags(
+            Qt.TextInteractionFlag.TextSelectableByMouse
+            | Qt.TextInteractionFlag.TextSelectableByKeyboard
+        )
+        self.details.setLineWrapMode(QPlainTextEdit.LineWrapMode.NoWrap)
+        self.tabs.addTab(journal, "")
         self.tabs.addTab(self.details, "")
         left.addWidget(self.tabs)
         body.addLayout(left, 1)
@@ -196,7 +215,7 @@ class MainWindow(QMainWindow):
         footer.addWidget(self.progress)
         shell.addWidget(self.footer)
         self.controller.changed.connect(self._refresh)
-        self.controller.log_line.connect(self.log.appendPlainText)
+        self.controller.log_line.connect(self._append_raw_event)
         self.controller.close_ready.connect(self.close)
         QWidget.setTabOrder(self.theme_combo, self.locale_combo)
         QWidget.setTabOrder(self.locale_combo, self.add_button)
@@ -216,7 +235,7 @@ class MainWindow(QMainWindow):
         QWidget.setTabOrder(self.stop_button, self.start_button)
         apply_theme(self, self.theme)
         self.retranslate()
-        self.log.appendPlainText("event=ready")
+        self._append_raw_event("event=ready")
         QTimer.singleShot(0, self.controller.initialize)
 
     @Slot()
@@ -245,37 +264,8 @@ class MainWindow(QMainWindow):
         if self.controller.capabilities is None:
             self.controller.initialize()
         elif self.settings.selected_available() and self.controller.can_start:
-            c = self.controller
-            paths, options, generation = c.paths, self.settings.options(), c.generation
-            if options.delete_original:
-                dialog = QMessageBox(self)
-                dialog.setIcon(QMessageBox.Icon.Warning)
-                dialog.setWindowTitle(self.t("delete_confirmation_title"))
-                dialog.setText(self.t(
-                        "delete_confirmation", count=len(paths), format=options.output_format,
-                        quality=options.quality, postfix=options.postfix,
-                        bounds=(f"{options.max_width}×{options.max_height}"
-                                if options.resize else self.t("no_resize")),
-                ))
-                dialog.setStandardButtons(
-                    QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
-                )
-                dialog.setDefaultButton(QMessageBox.StandardButton.No)
-                dialog.button(QMessageBox.StandardButton.Yes).setText(self.t("confirm_yes"))
-                dialog.button(QMessageBox.StandardButton.No).setText(self.t("confirm_no"))
-                # Same token/palette owner, including the new top-level surface.
-                apply_theme(dialog, self.theme)
-                dialog.setAutoFillBackground(True)
-                try:
-                    answer = dialog.exec()
-                finally:
-                    dialog.deleteLater()
-                if answer != QMessageBox.StandardButton.Yes:
-                    return
-                if (not c.can_start or c.generation != generation or c.paths != paths
-                        or self.settings.options() != options):
-                    return  # A nested dialog event loop cannot authorize a changed request.
-            if c.start(options):
+            options = self.settings.options()
+            if self.controller.start(options):
                 self.tabs.setCurrentIndex(0)
 
     @Slot()
@@ -318,6 +308,97 @@ class MainWindow(QMainWindow):
         self.controller.model.retranslate(t, self.theme)
         self._refresh()
 
+    @Slot(str)
+    def _append_raw_event(self, line: str) -> None:
+        self._raw_events.append(line)
+        del self._raw_events[:-500]
+        detail = self._detail_text()
+        if self.details.toPlainText() != detail:
+            self.details.setPlainText(detail)
+
+    def _params_text(self) -> str:
+        request = self.controller.request_snapshot
+        if request is None:
+            return ""
+        bounds = (
+            f"{request.max_width}×{request.max_height}"
+            if request.max_width and request.max_height
+            else self.t("no_resize")
+        )
+        mode = (
+            self.t("journal_source_mode_delete")
+            if request.delete_original
+            else self.t("journal_source_mode_keep")
+        )
+        return self.t(
+            "journal_params",
+            format=request.output_format,
+            quality=request.quality,
+            bounds=bounds,
+            postfix=request.postfix,
+            mode=mode,
+        )
+
+    def _size_line(self, item: ItemResult) -> str:
+        artifact = item.artifact
+        if artifact is None:
+            return self.t("journal_no_size")
+        if artifact.publication != "verified":
+            return self.t("journal_unverified")
+        source_size = item.source_size_bytes
+        if not source_size or source_size <= 0:
+            return self.t("journal_no_size")
+        delta = source_size - artifact.size_bytes
+        percent = round(abs(delta) * 100 / source_size)
+        if delta > 0:
+            summary = self.t("journal_saved", size=self.t.size(delta), percent=percent)
+        elif delta < 0:
+            summary = self.t("journal_larger", size=self.t.size(-delta), percent=percent)
+        else:
+            summary = self.t("journal_same")
+        return summary + " · " + self.t("journal_verified")
+
+    def _journal_text(self) -> str:
+        c, t = self.controller, self.t
+        lines: list[str] = []
+        if c.busy:
+            status = t(c.state)
+            if c.progress is not None and c.progress.total is not None:
+                status += f" · {c.progress.processed}/{c.progress.total}"
+            lines.append(status)
+        elif c.failure:
+            lines.append(t.error(c.failure))
+        elif c.result:
+            result = c.result
+            counts = result.counts
+            header = f"{t(result.status)} · {counts.succeeded}/{counts.total}"
+            if result.options and result.options.delete_original:
+                header += " · " + t(
+                    "deletion_summary",
+                    deleted=counts.deleted,
+                    retained=sum(i.source_disposition == "retained" for i in result.items),
+                    unknown=sum(i.source_disposition == "unknown" for i in result.items),
+                )
+            lines.append(header)
+            for item in result.items[:50]:
+                artifact = item.artifact
+                output = artifact.path.name if artifact is not None else "—"
+                source_format = item.source_format or "—"
+                output_format = artifact.format.value if artifact is not None else "—"
+                lines.append(
+                    f"{item.source.name} → {output} · "
+                    f"{source_format}→{output_format} · {t(item.status)}"
+                )
+                lines.append(self._size_line(item))
+                if result.options and result.options.delete_original:
+                    lines.append(t("source_" + item.source_disposition))
+                if item.error:
+                    lines.append(t.error(item.error.code))
+            if len(result.items) > 50:
+                lines.append(t("more", count=len(result.items) - 50))
+        else:
+            lines.append(t("no_details"))
+        return "\n".join(lines)
     def _detail_text(self) -> str:
         c, t = self.controller, self.t
         lines: list[str] = []
@@ -340,6 +421,13 @@ class MainWindow(QMainWindow):
         if c.result:
             result = c.result
             lines.append(t(result.status))
+            params = self._params_text()
+            if params:
+                lines.append(params)
+            if c.elapsed_seconds is not None:
+                lines.append(
+                    t("journal_elapsed", seconds=t.locale.toString(c.elapsed_seconds, "f", 1))
+                )
             lines.extend(t.error(info.code) for info in (*result.errors, *result.warnings))
             for item in result.items[:50]:
                 lines.append(f"{item.source.name} — {t(item.status)}")
@@ -349,12 +437,16 @@ class MainWindow(QMainWindow):
                         f"{a.path} · {a.publication} · {a.width}×{a.height} · "
                         f"{t.size(a.size_bytes)}"
                     )
+                    lines.append(t("journal_sha", sha=a.sha256))
                 lines.append(t("source_" + item.source_disposition))
                 if item.error:
                     lines.append(t.error(item.error.code))
                 lines.extend(t.error(info.code) for info in item.warnings)
             if len(result.items) > 50:
                 lines.append(t("more", count=len(result.items) - 50))
+        if self._raw_events:
+            lines.append(t("technical_events"))
+            lines.extend(self._raw_events[-500:])
         return "\n".join(lines) if lines else t("no_details")
 
     @Slot()
@@ -451,6 +543,9 @@ class MainWindow(QMainWindow):
             self.progress.setRange(0, 100)
             self.progress.setValue(0)
             self.counts_label.setText("")
+        summary = self._journal_text()
+        if self.journal_summary.toPlainText() != summary:
+            self.journal_summary.setPlainText(summary)
         detail = self._detail_text()
         if self.details.toPlainText() != detail:
             self.details.setPlainText(detail)

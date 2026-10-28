@@ -52,6 +52,8 @@ def test_pins_and_static_recipe_boundary():
         assert required in spec
     assert 'glob("*.svg")' in spec
     assert "collect_all" not in spec and "gui_main.py" not in spec
+    assert "image_compressor._windows_deletion" not in spec
+    assert "REQUIRED_DELETION_MODULE_MISSING" in (RECIPE / "build.py").read_text(encoding="utf-8")
     driver = (RECIPE / "ic_frozen_check.py").read_text(encoding="utf-8")
     imports = [node for node in ast.walk(ast.parse(driver))
                if isinstance(node, (ast.Import, ast.ImportFrom))]

@@ -54,9 +54,64 @@ TEXT: dict[str, tuple[str, str, str]] = {
         "Түпнұсқаларды біржола жою",
     ),
     "safe": (
+        "После успешного сжатия выбранные оригиналы удаляются безвозвратно. "
         "Без Корзины. По умолчанию выключено.",
+        "After successful compression the selected originals are permanently deleted. "
         "No Recycle Bin. Off by default.",
-        "Себетсіз жою. Әдепкіде өшірулі.",
+        "Сәтті сығылғаннан кейін таңдалған түпнұсқалар біржола жойылады. "
+        "Себет жоқ. Әдепкіде өшірулі.",
+    ),
+    "technical_events": (
+        "Технические события",
+        "Technical events",
+        "Техникалық оқиғалар",
+    ),
+    "journal_saved": (
+        "Меньше на {size} ({percent}%)",
+        "Smaller by {size} ({percent}%)",
+        "Кішірек: {size} ({percent}%)",
+    ),
+    "journal_larger": (
+        "Больше на {size} ({percent}%)",
+        "Larger by {size} ({percent}%)",
+        "Үлкенірек: {size} ({percent}%)",
+    ),
+    "journal_same": ("Размер не изменился", "Size unchanged", "Өлшем өзгерген жоқ"),
+    "journal_no_size": (
+        "Размер результата неизвестен",
+        "Result size unknown",
+        "Нәтиже өлшемі белгісіз",
+    ),
+    "journal_verified": ("Новый файл проверен", "New file verified", "Жаңа файл тексерілді"),
+    "journal_unverified": (
+        "Новый файл не подтверждён",
+        "New file unconfirmed",
+        "Жаңа файл расталмады",
+    ),
+    "journal_elapsed": (
+        "Длительность операции: {seconds} с",
+        "Operation duration: {seconds} s",
+        "Операция ұзақтығы: {seconds} с",
+    ),
+    "journal_params": (
+        "Кодек: {format}; качество: {quality}; {bounds}; постфикс: {postfix}; {mode}",
+        "Codec: {format}; quality: {quality}; {bounds}; postfix: {postfix}; {mode}",
+        "Кодек: {format}; сапа: {quality}; {bounds}; постфикс: {postfix}; {mode}",
+    ),
+    "journal_sha": (
+        "SHA-256 результата: {sha}",
+        "Result SHA-256: {sha}",
+        "Нәтиже SHA-256: {sha}",
+    ),
+    "journal_source_mode_keep": (
+        "исходники сохраняются",
+        "originals retained",
+        "түпнұсқалар сақталады",
+    ),
+    "journal_source_mode_delete": (
+        "исходники удаляются после проверки",
+        "originals deleted after verification",
+        "түпнұсқалар тексеруден кейін жойылады",
     ),
     "start": ("Начать", "Start", "Бастау"),
     "stop": ("Остановить", "Stop", "Тоқтату"),
@@ -141,29 +196,6 @@ TEXT: dict[str, tuple[str, str, str]] = {
         "Оригиналы: удалено {deleted}, не удалено {retained}, неизвестно {unknown}",
         "Originals: deleted {deleted}, not deleted {retained}, unknown {unknown}",
         "Түпнұсқалар: жойылған {deleted}, жойылмаған {retained}, белгісіз {unknown}",
-    ),
-    "delete_confirmation_title": (
-        "Удалить оригиналы?", "Delete originals?", "Түпнұсқаларды жою керек пе?",
-    ),
-    "confirm_yes": ("Да", "Yes", "Иә"),
-    "confirm_no": ("Нет", "No", "Жоқ"),
-    "no_resize": ("без уменьшения", "no resizing", "кішірейтусіз"),
-    "delete_confirmation": (
-        "Выбрано файлов: {count}. Формат: {format}; качество: {quality}; размер: {bounds}; "
-        "постфикс: {postfix}.\n\nОригиналы будут безвозвратно удалены после проверки новых файлов. "
-        "Корзины и автоматического восстановления нет. Результат может терять качество, "
-        "уменьшать размер и удаляет метаданные. При ошибках часть оригиналов может остаться. "
-        "Продолжить?",
-        "Selected files: {count}. Format: {format}; quality: {quality}; size: {bounds}; "
-        "postfix: {postfix}.\n\nOriginals will be permanently deleted "
-        "after new outputs are verified. "
-        "No Recycle Bin or automatic recovery. Conversion may lose quality, reduce dimensions "
-        "and removes metadata. Errors may leave some originals. Continue?",
-        "Таңдалған файлдар: {count}. Пішім: {format}; сапа: {quality}; өлшем: {bounds}; "
-        "постфикс: {postfix}.\n\nЖаңа файлдар тексерілгеннен кейін түпнұсқалар біржола жойылады. "
-        "Себет те, автоматты қалпына келтіру де жоқ. Нәтиже сапаны жоғалтып, өлшемді кішірейтуі "
-        "мүмкін және метадеректерді жояды. Қате болса, кейбір түпнұсқалар қалуы мүмкін. "
-        "Жалғастыру?",
     ),
     "delete_unsupported": (
         "Удаление требует защищённого доступа к локальному fixed NTFS на Windows.",

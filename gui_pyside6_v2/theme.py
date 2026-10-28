@@ -243,8 +243,6 @@ def apply_theme(window: QWidget, name: str) -> None:
             background: {c["accent/action"]}; color: {c["accent/on-action"]}; }}
         QComboBox QAbstractItemView::item:disabled {{ color: {c["text/secondary"]}; }}
         QCheckBox {{ spacing: 8px; padding: 3px 1px; border: 2px solid transparent; }}
-        /* This existing indicator has a separate buddy label, not inline text. */
-        QCheckBox#DeleteUnavailable {{ spacing: 0; }}
         QCheckBox:disabled {{ color: {c["text/secondary"]}; }}
         QCheckBox::indicator {{ width: 20px; height: 20px; border-radius: 4px;
             border: 2px solid {c["text/secondary"]}; background: {c["surface/window"]}; }}

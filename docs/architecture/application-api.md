@@ -52,7 +52,7 @@ convert(request: ConversionRequest, *, cancellation=None,
 | `output_directory` | None — рядом с источником; иначе существующий обычный каталог, flat layout, без создания дерева |
 | `output_path` | None; точная цель для одного явно выбранного файла, не каталога; parent существует, suffix соответствует формату; несовместимо с output_directory |
 | `postfix` | `_compressed`; может быть пустым, не trim; запрещены Unicode control chars, `/`, `\`, Windows `<>:"|?*`, trailing dot/space |
-| `delete_original` | Строго bool, False; True → `DESTRUCTIVE_MODE_UNSUPPORTED` **до discovery/файловых эффектов** |
+| `delete_original` | Строго bool, False (default OFF); True → безвозвратное удаление исходника **только после verified final output** на supported Windows local fixed NTFS; unsupported → явная ошибка до эффектов этого элемента, без тихого False; Корзины/undo нет |
 
 Неверные общие параметры/назначение, недоступный выбранный encoder или пустой завершённый discovery → rejected, без staging/публикации. Ошибка отдельного входа после валидации не скрывает другие независимые результаты.
 
@@ -94,7 +94,7 @@ convert(request: ConversionRequest, *, cancellation=None,
 
 # Результаты, управление и ошибки
 
-`BatchResult`: status, effective options (либо null при отказе до нормализации), discovery_complete, items/errors/warnings/counts. `ItemResult`: стабильный 0-based index, absolute source/destination либо null, status, известные source format/width/height/bytes, artifact/error/warnings, `source_disposition="retained"` («приложение не удаляло/не заменяло», не утверждение о чужих процессах).
+`BatchResult`: status, effective options (либо null при отказе до нормализации), discovery_complete, items/errors/warnings/counts. `ItemResult`: стабильный 0-based index, absolute source/destination либо null, status, известные source format/width/height/bytes, artifact/error/warnings, `source_disposition` (`retained`/`deleted`/`unknown`) и `counts.deleted` (только подтверждённые удаления). `retained` — приложение не удаляло/не заменяло, не утверждение о чужих процессах; ошибка/отмена до destructive point оставляет исходник и не выдаётся за `deleted`.
 
 Artifact: path, canonical format, width/height px, size_bytes, SHA-256 **подготовленных** байтов, publication `verified|unverified`. При unverified это не гарантия текущего содержимого final. Неизвестное — null, настоящий ноль — 0, пустая коллекция — `[]` в JSON. Пути только в предусмотренных result/options полях, не в error message. `ErrorInfo`: стабильный [ErrorCode](../../image_compressor/models.py), фиксированный safe message, stage, optional field закрытого набора. Raw exceptions/EXIF/cause не сериализуются.
 
@@ -116,7 +116,7 @@ ProgressEvent — immutable discovering/item_started/item_finished/finished с i
 
 # CLI и совместимость
 
-`image-compressor = image_compressor.cli:main`, эквивалент `python -m image_compressor`; `python classes.py ...` теперь forwarding CLI, без интерактивных вопросов. Синтаксис и примеры — [README](../../README.md). Capabilities/convert всегда выдают один UTF-8 JSON object + newline: schema_version=1, command, status, result, errors. `--json` — no-op явного выбора этого режима. Help/version — текст/0. Некорректный синтаксис не отражает raw argv, выдаёт CLI_USAGE/2 и подсказку --help. `--` отделяет пути с ведущим дефисом. Нет delete/overwrite flags.
+`image-compressor = image_compressor.cli:main`, эквивалент `python -m image_compressor`; legacy facade/`classes.py` retired. Синтаксис и примеры — [README](../../README.md). Capabilities/convert всегда выдают один UTF-8 JSON object + newline: schema_version=1, command, status, result, errors. `--json` — no-op явного выбора этого режима. Help/version — текст/0. Некорректный синтаксис не отражает raw argv, выдаёт CLI_USAGE/2 и подсказку --help. `--` отделяет пути с ведущим дефисом. Есть явный opt-in `--delete-original` (default off) с тем же guarded deletion; overwrite flags отсутствуют.
 
 | Exit | Значение |
 |---|---|
@@ -131,7 +131,7 @@ CLI ставит SIGINT/SIGBREAK handlers на время convert, только 
 
 Legacy `ImageCompressor`: import/constructor defaults HEIF/50, свойства/методы/таблицы сохранены; None при полном успехе, last_result и CompressionError(result)/code при ином исходе. Constructor/setters используют общий validator (TypeError для типа, ValueError для значения); codecs окончательно проверяет convert. Старое снятие внешних двойных кавычек остаётся только в process_input. WebP входит в supported inputs; silent missing/overwrite больше не сохраняются.
 
-Worker сохраняет старые сигналы, добавляет result_ready(object)/result; terminal signals ровно один раз. delete_original передаётся **без подмены False** и даёт явный отказ/ненулевой legacy error count. Существующий checkbox не удалён; GUI объясняет необходимость снять его. Stop не вызывает wait/terminate и не фабрикует `(0,0)`: reference/start gating/отложенное close живут до QThread.finished. Настоящий итог отображается один раз; следующая операция — новый worker/token.
+Worker сохраняет старые сигналы, добавляет result_ready(object)/result; terminal signals ровно один раз. delete_original передаётся в immutable request как выбранный bool; рабочая галочка default OFF, включение = согласие на безвозвратное удаление после verified output. Unsupported backend даёт явный отказ, а не тихий False. Stop не вызывает wait/terminate и не фабрикует `(0,0)`: reference/start gating/отложенное close живут до QThread.finished. Настоящий итог отображается один раз; следующая операция — новый worker/token.
 
 # Диагностика и проверка границы
 

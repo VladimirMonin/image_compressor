@@ -228,7 +228,7 @@ def archive_names(executable: Path) -> list[str]:
     return sorted(str(name).replace("\\", "/") for name in reader.toc)
 
 
-def verify_archive(names: Sequence[str], root: Path) -> None:
+def verify_archive(names: Sequence[str], root: Path, work: Path) -> None:
     assets = sorted(path.name for path in (root / "gui_pyside6_v2/assets").glob("*.svg"))
     if not assets:
         raise BuildError("REQUIRED_FROZEN_RESOURCE_MISSING")
@@ -238,8 +238,12 @@ def verify_archive(names: Sequence[str], root: Path) -> None:
     if any(name not in names for name in required):
         raise BuildError("REQUIRED_FROZEN_RESOURCE_MISSING")
     lowered = [name.lower() for name in names]
-    if "image_compressor/_windows_deletion.py" in lowered:
-        raise BuildError("DELETION_WIP_BUNDLED")
+    pure = {
+        entry["destination"]
+        for entry in json.loads((work / "analysis.json").read_text(encoding="utf-8"))["pure"]
+    }
+    if "image_compressor._windows_deletion" not in pure:
+        raise BuildError("REQUIRED_DELETION_MODULE_MISSING")
     legacy_exact = ("classes", "classes.py", "gui_main", "gui_main.py")
     legacy_prefixes = ("gui/", "classes/", "gui_main/")
     if any(name in legacy_exact or name.startswith(legacy_prefixes) for name in lowered):
@@ -316,11 +320,11 @@ def build(root: Path, build_id: str, *, mode: str, fallback_reason: str | None) 
                            else "ImageCompressorV2/ImageCompressorV2.exe")
     names = archive_names(executable)
     if mode == "onefile":
-        verify_archive(names, root)
+        verify_archive(names, root, work)
     else:
         names += [path.relative_to(executable.parent / "_internal").as_posix()
                   for path in (executable.parent / "_internal").rglob("*") if path.is_file()]
-        verify_archive(names, root)
+        verify_archive(names, root, work)
     write_json(work / "archive-inventory.json", names)
     reader = importlib.import_module("PyInstaller.archive.readers").CArchiveReader(str(executable))
     payload_hashes = {name: hashlib.sha256(reader.extract(name)).hexdigest()

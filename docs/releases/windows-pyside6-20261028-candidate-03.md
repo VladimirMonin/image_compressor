@@ -2,7 +2,7 @@
 id: ic-release-windows-pyside6-candidate-03
 title: "Курированная сборка: PySide6 GUI v2 · Windows x64 · 20261028-candidate-03"
 kind: snapshot
-status: accepted
+status: superseded
 created: "2026-10-28"
 updated: "2026-10-28"
 areas: [gui, packaging, release, windows]
@@ -14,7 +14,7 @@ verification_scope: "Авторские проверки: core 223 passed, PySid
 
 # Итог
 
-Курированная сборка `20261028-candidate-03` собрана из **pre-deletion базы `68b7dc5`** с точечным overlay: принятый native-frame `gui_pyside6_v2/theme.py` (`0d902dbc…4c0d`), frozen `pyproject.toml`/`README.md` и исправленный packaging (`tools/windows_exe/*`). Deletion-WIP `718c578` и legacy PyQt6/facade в EXE **не входят**. Статус — `accepted`: независимый exact-byte ACCEPT выдан на этих байтах; `candidate-02` переведён в `superseded`, его артефакты и старые build/caches перемещены в Recycle Bin (§ Delivery).
+Курированная сборка `20261028-candidate-03` собрана из **pre-deletion базы `68b7dc5`** с точечным overlay: принятый native-frame `gui_pyside6_v2/theme.py` (`0d902dbc…4c0d`), frozen `pyproject.toml`/`README.md` и исправленный packaging (`tools/windows_exe/*`). Deletion-WIP `718c578` и legacy PyQt6/facade в EXE **не входят**. Статус — `superseded`: был независимо принят exact-byte 2026-10-28, затем заменён курированной сборкой `20261028-candidate-05`; артефакт `candidate-03` перемещён в Recycle Bin 2026-10-28 после ACCEPT нового EXE. Вердикты и хеши ниже сохранены.
 
 # Artifact
 

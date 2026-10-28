@@ -198,7 +198,7 @@ def test_cleanup_and_observer_warning_not_lost(window, app, image_factory, monke
     assert result.warnings[0].code == api.ErrorCode.OBSERVER_FAILED
     assert "TEMP_CLEANUP_FAILED" in window.details.toPlainText()
     assert "OBSERVER_FAILED" in window.details.toPlainText()
-    assert "PRIVATE_OBSERVER_EXCEPTION" not in window.log.toPlainText()
+    assert "PRIVATE_OBSERVER_EXCEPTION" not in window.details.toPlainText()
     assert_readback(result.items[0])
 
 
@@ -226,12 +226,12 @@ def test_stop_responsive_real_encode_and_next_run(window, app, image_factory, mo
         worker = c.worker
         pump(app, entered.is_set)
         snapshot = c.request_snapshot
-        prior_log = window.log.toPlainText()
+        prior_events = tuple(window._raw_events)
         window.theme_combo.setCurrentIndex(1)
         window.locale_combo.setCurrentIndex(2)
         assert c.worker is worker and c.request_snapshot is snapshot and c.paths == (source,)
         assert window.settings.quality.value() == 80
-        assert window.log.toPlainText() == prior_log and c.busy
+        assert tuple(window._raw_events) == prior_events and c.busy
         start_ticks = len(heartbeat)
         safety = Timer(1, released.set)
         safety.start()
@@ -424,7 +424,7 @@ def test_technical_sink_nonempty_and_no_private_data(window, app, image_factory,
     assert result.status == "succeeded"
     assert "PRIVATE_FILENAME_SENTINEL" in c.model.rows[0].path.name
     assert "PRIVATE_POSTFIX_SENTINEL" in window.details.toPlainText()
-    log = window.log.toPlainText()
+    log = chr(10).join(window._raw_events)
     assert "event=conversion_finished" in log and "published=1" in log
     assert "PRIVATE_" not in log
     window.clear_button.click()
@@ -437,7 +437,7 @@ def test_technical_sink_nonempty_and_no_private_data(window, app, image_factory,
     monkeypatch.setattr(imaging, "encode", broken)
     result = convert(app, window)
     assert result.items[0].error.code == api.ErrorCode.INTERNAL_ERROR
-    log = window.log.toPlainText()
+    log = chr(10).join(window._raw_events)
     assert "reason=INTERNAL_ERROR" in log and "PRIVATE_" not in log
     assert "Traceback" not in log and str(source.parent) not in log
 

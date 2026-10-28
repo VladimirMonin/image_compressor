@@ -646,33 +646,44 @@ def test_real_frozen_gui_codecs_resources_and_teardown(artifact, tmp_path):
             assert receipt["resources"][name]["sha256"] in expected, name
         assert receipt["forbidden_modules_absent"] is True
         assert not any(name in receipt["modules"] for name in ("gui", "classes", "gui_main"))
-        assert not any("windows_deletion" in name for name in receipt["modules"])
+        assert receipt["deletion_module_loaded"] is True
+        assert receipt["deletion_available"] is True
         caps = {item["format"]: item for item in receipt["capabilities"]["formats"]}
         for fmt in ("JPEG", "WEBP", "HEIF", "AVIF"):
             assert caps[fmt]["encoder_available"] and caps[fmt]["roundtrip_verified"]
             assert caps[fmt]["reason"] is None
         assert caps["AVIF"]["provider"] == "Pillow" and caps["HEIF"]["provider"] == "pillow_heif"
-        assert receipt["start_actions"] == len(receipt["requests"]) == 6
+        assert receipt["start_actions"] == len(receipt["requests"]) == 9
         assert [item["output_format"] for item in receipt["requests"]] == [
-            "WEBP", "JPEG", "HEIF", "AVIF", "WEBP", "WEBP"]
+            "WEBP", "JPEG", "HEIF", "AVIF", "WEBP", "WEBP", "WEBP", "WEBP", "WEBP"]
         assert all(item["quality"] == 80 and item["max_width"] == 192
-                   and item["max_height"] == 108 and not item["delete_original"]
-                   for item in receipt["requests"])
+                   and item["max_height"] == 108 for item in receipt["requests"])
+        assert [item["delete_original"] for item in receipt["requests"]] == [
+            False, False, False, False, False, False, True, False, True]
         cases = receipt["cases"]
         assert [item["name"] for item in cases] == [
-            "WEBP", "JPEG", "HEIF", "AVIF", "WEBP-repeat", "partial"]
+            "WEBP", "JPEG", "HEIF", "AVIF", "WEBP-repeat", "partial",
+            "deletion-true", "deletion-false", "deletion-partial"]
         assert cases[4]["error"] == "OUTPUT_EXISTS" and cases[4]["status"] == "failed"
         assert cases[4]["prior_sha256"] == cases[0]["artifact"]["sha256"]
         assert cases[5]["status"] == "partial" and cases[5]["error"] == "INVALID_IMAGE"
         assert cases[5]["counts"]["succeeded"] == cases[5]["counts"]["failed"] == 1
         assert cases[5]["counts"]["published"] == 1
+        assert cases[6]["status"] == "succeeded" and cases[6]["counts"]["deleted"] == 1
+        assert cases[6]["source_disposition"] == "deleted" and cases[6]["source_absent"]
+        assert cases[7]["status"] == "succeeded" and cases[7]["counts"]["deleted"] == 0
+        assert cases[7]["source_disposition"] == "retained" and cases[7]["source_unchanged"]
+        assert cases[8]["status"] == "partial" and cases[8]["counts"]["deleted"] == 1
+        assert cases[8]["good_absent"] and cases[8]["bad_unchanged"]
+        assert cases[8]["dispositions"]["delete-partial-good.png"] == "deleted"
+        assert cases[8]["dispositions"]["delete-partial-bad.png"] == "retained"
 
         # Independent decoder process context; these packages are NOT on EXE's lookup path.
         import pillow_heif
         from PIL import Image
 
         pillow_heif.register_heif_opener()
-        for case in [*cases[:4], cases[5]]:
+        for case in [*cases[:4], cases[5], cases[6], cases[7], cases[8]]:
             item = case["artifact"]
             path = output / item["path"]
             assert path.resolve().is_relative_to(output)

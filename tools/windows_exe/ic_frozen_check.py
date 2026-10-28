@@ -126,6 +126,7 @@ def run(raw_output: str) -> int:
         from gui_pyside6_v2.__main__ import main as gui_main
         from gui_pyside6_v2.window import MainWindow
         from image_compressor import BatchResult
+        from image_compressor import _windows_deletion as native_deletion
 
         if QApplication.instance() is not None:
             raise RuntimeError("UNEXPECTED_EXISTING_APPLICATION")
@@ -151,7 +152,11 @@ def run(raw_output: str) -> int:
             svg = QSvgRenderer(QByteArray(asset_root.joinpath(name).read_bytes()))
             if not svg.isValid():
                 raise RuntimeError("SVG_INVALID")
-        forbidden_exact = {"gui", "classes", "gui_main", "image_compressor._windows_deletion"}
+        forbidden_exact = {"gui", "classes", "gui_main"}
+        receipt["deletion_module_loaded"] = native_deletion.__name__ in sys.modules
+        receipt["deletion_available"] = bool(native_deletion.available())
+        if not receipt["deletion_module_loaded"]:
+            raise RuntimeError("DELETION_MODULE_MISSING")
         forbidden_loaded = sorted(
             name for name in sys.modules
             if name in forbidden_exact or name.startswith(("gui.", "classes.", "gui_main."))
@@ -179,6 +184,13 @@ def run(raw_output: str) -> int:
                 self.failure = "CHECK_FAILED"
                 self.prior_webp = ""
                 self.formats = (("WEBP", 1), ("JPEG", 0), ("HEIF", 2), ("AVIF", 3))
+                self.delete_source = Path()
+                self.keep_source = Path()
+                self.partial_good = Path()
+                self.partial_bad = Path()
+                self.delete_expected = ""
+                self.keep_expected = ""
+                self.partial_bad_expected = ""
 
             def fail(self, reason: str) -> None:
                 self.failed = True
@@ -200,8 +212,9 @@ def run(raw_output: str) -> int:
                 assert self.window is not None
                 window = self.window
                 assert window.isVisible() and window.windowHandle().isExposed()
-                assert not window.settings.delete_original.isEnabled()
+                assert window.settings.delete_original.isEnabled()
                 assert not window.settings.delete_original.isChecked()
+                assert window.settings.delete_original.text()
                 assert window.settings.safety_explanation.isVisible()
                 font = QFontInfo(window.font())
                 raw_font = QRawFont.fromFont(window.font())
@@ -225,7 +238,7 @@ def run(raw_output: str) -> int:
                     "glyphs_verified": glyphs, "svg_visible": True,
                 })
 
-            def start(self, index: int) -> None:
+            def start(self, index: int, *, delete: bool = False) -> None:
                 assert self.window is not None
                 window = self.window
                 window.settings.output_format.setCurrentIndex(index)
@@ -234,7 +247,7 @@ def run(raw_output: str) -> int:
                 window.start_button.click()
                 assert window.controller.worker is not None
                 request = window.controller.request_snapshot
-                assert request is not None and not request.delete_original
+                assert request is not None and request.delete_original is delete
                 assert request.quality == 80
                 assert (request.max_width, request.max_height) == (192, 108)
                 receipt["requests"].append({"output_format": request.output_format,
@@ -376,9 +389,120 @@ def run(raw_output: str) -> int:
                     assert not any(name.startswith("PyQt") for name in sys.modules)
                     receipt["fallback_imported"] = "pillow_avif" in sys.modules
                     assert not receipt["fallback_imported"]
+                    self.queue_delete(True)
+                    self.phase = "deletion-true-selection"
+                elif self.phase == "deletion-true-selection":
+                    assert controller.paths == (self.delete_source,)
+                    box = window.settings.delete_original
+                    assert box.isEnabled() and not box.isChecked()
+                    box.click()  # Real control activation inside the frozen GUI.
+                    assert box.isChecked()
+                    self.delete_expected = digest(self.delete_source)
+                    self.start(1, delete=True)
+                    self.phase = "deletion-true"
+                elif self.phase == "deletion-true":
+                    result = controller.result
+                    assert result is not None and result.status == "succeeded"
+                    assert result.options is not None and result.options.delete_original
+                    assert result.counts.deleted == 1
+                    assert result.items[0].source_disposition == "deleted"
+                    assert not self.delete_source.exists()
+                    receipt["cases"].append({
+                        "name": "deletion-true", "status": result.status,
+                        "counts": asdict(result.counts),
+                        "source_disposition": result.items[0].source_disposition,
+                        "source_absent": True, "prior_sha256": self.delete_expected,
+                        "artifact": self.verify_image(result, "WEBP"),
+                    })
+                    self.queue_delete(False)
+                    self.phase = "deletion-false-selection"
+                elif self.phase == "deletion-false-selection":
+                    assert controller.paths == (self.keep_source,)
+                    box = window.settings.delete_original
+                    assert box.isEnabled() and box.isChecked()
+                    box.click()
+                    assert not box.isChecked()
+                    self.keep_expected = digest(self.keep_source)
+                    self.start(1)
+                    self.phase = "deletion-false"
+                elif self.phase == "deletion-false":
+                    result = controller.result
+                    assert result is not None and result.status == "succeeded"
+                    assert result.options is not None and not result.options.delete_original
+                    assert result.counts.deleted == 0
+                    assert result.items[0].source_disposition == "retained"
+                    assert digest(self.keep_source) == self.keep_expected
+                    receipt["cases"].append({
+                        "name": "deletion-false", "status": result.status,
+                        "counts": asdict(result.counts),
+                        "source_disposition": result.items[0].source_disposition,
+                        "source_unchanged": True,
+                        "artifact": self.verify_image(result, "WEBP"),
+                    })
+                    self.queue_delete_partial()
+                    self.phase = "deletion-partial-selection"
+                elif self.phase == "deletion-partial-selection":
+                    assert len(controller.paths) == 2
+                    box = window.settings.delete_original
+                    assert not box.isChecked()
+                    box.click()
+                    assert box.isChecked()
+                    self.partial_bad_expected = digest(self.partial_bad)
+                    self.start(1, delete=True)
+                    self.phase = "deletion-partial"
+                elif self.phase == "deletion-partial":
+                    result = controller.result
+                    assert result is not None and result.status == "partial"
+                    assert result.options is not None and result.options.delete_original
+                    assert result.counts.deleted == 1 and result.counts.published == 1
+                    dispositions = {item.source.name: item.source_disposition
+                                    for item in result.items}
+                    assert dispositions[self.partial_good.name] == "deleted"
+                    assert dispositions[self.partial_bad.name] == "retained"
+                    assert not self.partial_good.exists()
+                    assert digest(self.partial_bad) == self.partial_bad_expected
+                    receipt["cases"].append({
+                        "name": "deletion-partial", "status": result.status,
+                        "counts": asdict(result.counts),
+                        "dispositions": dispositions,
+                        "good_absent": True, "bad_unchanged": True,
+                        "artifact": self.verify_image(result, "WEBP"),
+                    })
+                    receipt["deletion_module_loaded"] = (
+                        "image_compressor._windows_deletion" in sys.modules
+                    )
+                    assert receipt["deletion_module_loaded"]
                     self.done = True
                     timer.stop()
                     window.close()
+
+            def queue_delete(self, delete: bool) -> None:
+                assert self.window is not None
+                window = self.window
+                path = inputs / ("delete-true.png" if delete else "delete-false.png")
+                with Image.new("RGB", (400, 300), (27, 143, 201)) as image:
+                    image.save(path)
+                sources[path] = digest(path)
+                if delete:
+                    self.delete_source = path
+                else:
+                    self.keep_source = path
+                window.clear_button.click()
+                window.add_paths((path,))
+
+            def queue_delete_partial(self) -> None:
+                assert self.window is not None
+                window = self.window
+                self.partial_good = inputs / "delete-partial-good.png"
+                self.partial_bad = inputs / "delete-partial-bad.png"
+                with Image.new("RGB", (400, 300), (70, 180, 22)) as image:
+                    image.save(self.partial_good)
+                with self.partial_bad.open("xb") as stream:
+                    stream.write(b"synthetic corrupt PNG")
+                sources[self.partial_good] = digest(self.partial_good)
+                sources[self.partial_bad] = digest(self.partial_bad)
+                window.clear_button.click()
+                window.add_paths((self.partial_good, self.partial_bad))
 
         driver = Driver()
         timer = QTimer(app)

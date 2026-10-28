@@ -1,11 +1,11 @@
-"""Minimum opt-in GUI consumer: real widgets/controller/thread/API, owned images only."""
+"""Opt-in GUI deletion: real checkbox activation, no modal, owned images only."""
 
 from threading import Event
 
 import pytest
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QPalette
-from PySide6.QtWidgets import QMessageBox
+from PySide6.QtTest import QTest
+from PySide6.QtWidgets import QMessageBox, QStyle, QStyleOptionButton
 
 from gui_pyside6_v2.localization import Translator
 from image_compressor import ErrorCode, imaging
@@ -14,94 +14,85 @@ from image_compressor import _windows_deletion as native
 from .conftest import add, assert_readback, pump
 
 
-def consent(monkeypatch, answer, mutate=None):
-    calls = []
-
-    def execute(dialog):
-        calls.append((dialog.windowTitle(), dialog.text()))
-        no = dialog.button(QMessageBox.StandardButton.No)
-        yes = dialog.button(QMessageBox.StandardButton.Yes)
-        assert dialog.defaultButton() is no
-        assert dialog.standardButtons() == (
-            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
-        )
-        parent = dialog.parentWidget()
-        assert yes.text() == parent.t("confirm_yes") and no.text() == parent.t("confirm_no")
-        # Top-level QMessageBox must receive the SAME shared palette, not white-on-white in Dark.
-        for role in (QPalette.ColorRole.Window, QPalette.ColorRole.WindowText):
-            assert dialog.palette().color(role) == parent.palette().color(role)
-        if mutate:
-            mutate()
-        return int(answer)
-
-    monkeypatch.setattr(QMessageBox, "exec", execute)
-    return calls
+def indicator_center(box):
+    option = QStyleOptionButton()
+    box.initStyleOption(option)
+    return box.style().subElementRect(QStyle.SubElement.SE_CheckBoxIndicator, option, box).center()
 
 
-def test_no_consent_starts_no_worker(window, app, image_factory, monkeypatch):
-    source = image_factory()
-    before = source.read_bytes()
-    c = add(app, window, [source])
-    window.settings.delete_original.setChecked(True)
-    calls = consent(monkeypatch, QMessageBox.StandardButton.No)
-    generation = c.generation
-    window.start_button.click()
-    assert calls and c.worker is None and c.generation == generation
-    assert c.result is None and not source.with_suffix(".webp").exists()
-    assert source.read_bytes() == before
+def text_center(box):
+    option = QStyleOptionButton()
+    box.initStyleOption(option)
+    return box.style().subElementRect(QStyle.SubElement.SE_CheckBoxContents, option, box).center()
+
+
+def no_modal(monkeypatch):
+    def forbidden(*args, **kwargs):
+        raise AssertionError("A destructive consent modal must not be shown")
+
+    monkeypatch.setattr(QMessageBox, "exec", forbidden)
+
+
+def test_default_off_real_click_and_space_activate_control(window, app, monkeypatch):
+    no_modal(monkeypatch)
+    box = window.settings.delete_original
+    assert box.isEnabled() and not box.isChecked()
+    assert box.text() and box.accessibleDescription()
+    QTest.mouseClick(box, Qt.MouseButton.LeftButton, pos=indicator_center(box))
+    assert box.isChecked() and window.settings.options().delete_original is True
+    box.setFocus()
+    QTest.keyClick(box, Qt.Key.Key_Space)
+    assert not box.isChecked() and window.settings.options().delete_original is False
+    # Clicking the visible label text (not only the tiny indicator) must also toggle.
+    QTest.mouseClick(box, Qt.MouseButton.LeftButton, pos=text_center(box))
+    assert box.isChecked()
 
 
 @pytest.mark.parametrize("language", ["ru", "en", "kk"])
-def test_confirmed_true_real_api_and_every_start_confirmation(
+def test_checked_real_api_deletes_only_after_verified_output(
     window, app, image_factory, monkeypatch, language,
 ):
     source = image_factory("PRIVATE_GUI_PATH/PRIVATE_GUI_NAME.png")
+    before = source.read_bytes()
     c = add(app, window, [source])
+    assert before and source.is_file()
     window.locale_combo.setCurrentIndex(("ru", "en", "kk").index(language))
-    assert window.settings.delete_original.isEnabled()
-    assert not window.settings.delete_original.isChecked()
-    window.settings.delete_original.setChecked(True)
-    window.theme_combo.setCurrentIndex(1)  # A destructive warning must remain readable in Dark.
-    calls = consent(monkeypatch, QMessageBox.StandardButton.Yes)
+    no_modal(monkeypatch)
+    box = window.settings.delete_original
+    QTest.mouseClick(box, Qt.MouseButton.LeftButton, pos=indicator_center(box))
+    assert box.isChecked()
+    window.theme_combo.setCurrentIndex(1)  # Both themes keep the same working control.
     window.start_button.click()
     pump(app, lambda: not c.busy)
     result = c.result
-    assert len(calls) == 1 and result.options.delete_original is True
+    assert result.options.delete_original is True
     assert result.status == "succeeded" and result.counts.deleted == 1
     assert result.counts.succeeded == result.counts.published == 1
-    assert result.items[0].source_disposition == "deleted" and not source.exists()
-    assert_readback(result.items[0], expected_size=(400, 300))
+    item = result.items[0]
+    assert item.source_disposition == "deleted" and not source.exists()
+    assert_readback(item, expected_size=(400, 300))
     assert window.t("source_deleted") in window.details.toPlainText()
-    assert window.t("retained") not in window.status_label.text()
-    assert "deleted=1" in window.log.toPlainText()
-    assert "PRIVATE_" not in window.log.toPlainText()
-    assert window.settings.delete_original.isEnabled()
-    # Even the next Start needs new consent; no automatic clean-up/retry of a prior request.
-    calls = consent(monkeypatch, QMessageBox.StandardButton.No)
-    generation = c.generation
-    window.start_button.click()
-    assert len(calls) == 1 and not c.busy and c.generation == generation and c.result is result
+    assert window.t("source_deleted") in window.journal_summary.toPlainText()
+    raw = chr(10).join(window._raw_events)
+    assert "deleted=1" in raw and "PRIVATE_" not in raw
+    assert "PRIVATE_GUI_PATH" not in window.journal_summary.toPlainText()
+    assert box.isEnabled() and box.isChecked()
+    # The next request still requires an explicit checked control and a new snapshot.
+    assert c.request_snapshot is not None and c.request_snapshot.delete_original is True
 
 
-@pytest.mark.parametrize("mutation", ["queue", "options", "generation"])
-def test_stale_yes_is_not_consent(window, app, image_factory, monkeypatch, mutation):
+def test_unchecked_real_api_retains_source(window, app, image_factory, monkeypatch):
     source = image_factory()
     before = source.read_bytes()
     c = add(app, window, [source])
-    window.settings.delete_original.setChecked(True)
-
-    def change():
-        if mutation == "queue":
-            c.clear()
-        elif mutation == "options":
-            window.settings.quality.setValue(41)
-        else:
-            c.generation += 1
-
-    calls = consent(monkeypatch, QMessageBox.StandardButton.Yes, change)
+    no_modal(monkeypatch)
     window.start_button.click()
-    assert len(calls) == 1 and not c.busy and c.result is None
-    assert source.read_bytes() == before and not source.with_suffix(".webp").exists()
+    pump(app, lambda: not c.busy)
+    result = c.result
+    assert result.options.delete_original is False
+    assert result.items[0].source_disposition == "retained"
+    assert source.read_bytes() == before
+    assert result.counts.deleted == 0
 
 
 @pytest.mark.parametrize("outcome", ["retained", "unknown"])
@@ -111,8 +102,9 @@ def test_real_partial_and_unknown_are_not_green_full_success(
     source = image_factory()
     before = source.read_bytes()
     c = add(app, window, [source])
-    window.settings.delete_original.setChecked(True)
-    consent(monkeypatch, QMessageBox.StandardButton.Yes)
+    no_modal(monkeypatch)
+    QTest.mouseClick(window.settings.delete_original, Qt.MouseButton.LeftButton,
+                     pos=indicator_center(window.settings.delete_original))
     if outcome == "retained":
         monkeypatch.setattr(native._api().dll, "FlushFileBuffers", lambda raw: 0)
     else:
@@ -125,7 +117,6 @@ def test_real_partial_and_unknown_are_not_green_full_success(
     assert result.items[0].source_disposition == outcome
     assert_readback(result.items[0])
     assert window.t("source_" + outcome) in window.details.toPlainText()
-    assert window.t("retained") not in window.status_label.text()
     assert window.status_label.property("tone") == "warning"
     assert c.model.rows[0].status == "partial"
     assert window.tabs.currentIndex() == 1
@@ -134,14 +125,15 @@ def test_real_partial_and_unknown_are_not_green_full_success(
     if outcome == "retained":
         assert source.read_bytes() == before
     else:
-        assert not source.exists()  # Real disposition, only its confirmation is fault-injected.
+        assert not source.exists()  # Real disposition; only its confirmation is fault-injected.
 
 
 def test_true_busy_and_finished_lifetime(window, app, image_factory, monkeypatch):
     source = image_factory()
     c = add(app, window, [source])
-    window.settings.delete_original.setChecked(True)
-    consent(monkeypatch, QMessageBox.StandardButton.Yes)
+    no_modal(monkeypatch)
+    QTest.mouseClick(window.settings.delete_original, Qt.MouseButton.LeftButton,
+                     pos=indicator_center(window.settings.delete_original))
     entered, release = Event(), Event()
     encode = imaging.encode
 
@@ -158,6 +150,7 @@ def test_true_busy_and_finished_lifetime(window, app, image_factory, monkeypatch
         worker = c.worker
         assert worker.isRunning() and not window.settings.delete_original.isEnabled()
         assert not window.start_button.isEnabled() and not window.clear_button.isEnabled()
+        assert window.t("converting") in window.journal_summary.toPlainText()
         window.start()
         assert c.worker is worker
         release.set()
@@ -169,15 +162,29 @@ def test_true_busy_and_finished_lifetime(window, app, image_factory, monkeypatch
         pump(app, lambda: not c.busy)
 
 
-def test_localized_irreversible_warning_and_dispositions():
+def test_unavailable_backend_is_explicit_not_silent_false(window, app, image_factory, monkeypatch):
+    source = image_factory()
+    before = source.read_bytes()
+    c = add(app, window, [source])
+    monkeypatch.setattr(native, "available", lambda: False)
+    no_modal(monkeypatch)
+    QTest.mouseClick(window.settings.delete_original, Qt.MouseButton.LeftButton,
+                     pos=indicator_center(window.settings.delete_original))
+    window.start_button.click()
+    pump(app, lambda: not c.busy)
+    result = c.result
+    assert result.status == "rejected" and result.counts.published == 0
+    assert result.errors and result.errors[0].code is ErrorCode.DESTRUCTIVE_MODE_UNSUPPORTED
+    assert source.read_bytes() == before and not source.with_suffix(".webp").exists()
+
+
+def test_localized_irreversible_label_and_dispositions():
     for language in ("ru", "en", "kk"):
         t = Translator(language)
-        warning = t("delete_confirmation", count=2, format="WEBP", quality=80,
-                    bounds="1920×1080", postfix="_small")
-        assert "2" in warning and "WEBP" in warning and "80" in warning and "1920×1080" in warning
-        assert len(warning) > 150 and warning != "delete_confirmation"
-        assert all(t("source_" + status) != "source_" + status for status in
-                   ("retained", "deleted", "unknown"))
-        for code in (ErrorCode.SOURCE_DELETION_FAILED, ErrorCode.SOURCE_DELETION_SKIPPED,
-                     ErrorCode.SOURCE_DELETION_UNCONFIRMED):
-            assert code.value in t.error(code)
+        label = t("delete").lower()
+        warning = t("safe").lower()
+        assert label != "delete" and warning != "safe"
+        assert any(word in warning for word in ("безвозврат", "permanent", "біржола"))
+        assert any(word in warning for word in ("корзин", "recycle", "себет"))
+        for status in ("retained", "deleted", "unknown"):
+            assert t("source_" + status) != "source_" + status

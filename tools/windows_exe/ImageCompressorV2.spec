@@ -39,7 +39,7 @@ a = Analysis(
         "PySide6.QtQml", "PySide6.QtQuick", "PySide6.QtWebEngineCore",
         "PySide6.QtWebEngineWidgets", "PySide6.QtTest", "PySide6.QtPdf",
         "pytest", "tests", "tests_pyside6_v2", "tests_windows_exe", "gui",
-        "classes", "gui_main", "image_compressor._windows_deletion",
+        "classes", "gui_main",
     ],
     noarchive=False,
     optimize=0,

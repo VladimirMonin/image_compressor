@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import time
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal
@@ -56,6 +57,8 @@ class Controller(QObject):
         self._after: State = "empty"
         self._received = False
         self.request_snapshot: api.ConversionRequest | None = None
+        self.operation_started: float | None = None
+        self.operation_finished: float | None = None
         self._progress_timer = QTimer(self)
         self._progress_timer.setInterval(40)
         self._progress_timer.timeout.connect(self._poll_progress)
@@ -73,6 +76,12 @@ class Controller(QObject):
         return bool(
             self.paths and self.capabilities is not None and not self.busy and not self.closing
         )
+
+    @property
+    def elapsed_seconds(self) -> float | None:
+        if self.operation_started is None or self.operation_finished is None:
+            return None
+        return max(0.0, self.operation_finished - self.operation_started)
 
     def _launch(self, worker: ApiWorker, state: State) -> None:
         assert self.worker is None
@@ -134,6 +143,8 @@ class Controller(QObject):
             delete_original=options.delete_original,
         )
         self.log_line.emit(f"event=conversion_started total={len(self.paths)}")
+        self.operation_started = time.monotonic()
+        self.operation_finished = None
         self._launch(
             ApiWorker(self.generation, "conversion", request=self.request_snapshot, parent=self),
             "converting",
@@ -160,6 +171,8 @@ class Controller(QObject):
         self.progress = None
         self.failure = None
         self.request_snapshot = None
+        self.operation_started = None
+        self.operation_finished = None
         self.state = "empty"
         self.log_line.emit("event=queue_cleared total=0")
         self.changed.emit()
@@ -237,6 +250,7 @@ class Controller(QObject):
                 self.log_line.emit(f"event=selection_notice reason={info.code.value}")
         elif kind == "conversion" and isinstance(payload, api.BatchResult):
             self.result = payload
+            self.operation_finished = time.monotonic()
             self._after = "terminal"
             self.model.apply_items(payload.items)
             c = payload.counts
@@ -276,6 +290,8 @@ class Controller(QObject):
         if not self._received:
             self.failure = api.ErrorCode.INTERNAL_ERROR
             self._after = "terminal"
+            if self.operation_started is not None and self.operation_finished is None:
+                self.operation_finished = time.monotonic()
             self.log_line.emit("event=adapter_failed reason=INTERNAL_ERROR")
         worker.deleteLater()
         self.state = "closing" if self.closing else self._after

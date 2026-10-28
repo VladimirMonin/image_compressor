@@ -42,7 +42,6 @@ def test_geometry_language_theme_and_bounded_growth(
         window.add_button,
         window.folder_button,
         window.settings.safety,
-        window.settings.delete_label,
         window.settings.safety_explanation,
     ]:
         assert control.isVisible()
@@ -89,13 +88,14 @@ def test_geometry_language_theme_and_bounded_growth(
         assert bounds(control, viewport).intersects(viewport.rect())
     minimum = window.minimumSize()
     for i in range(1200):
-        window.log.appendPlainText(f"event=synthetic_tick index={i}")
+        window._append_raw_event(f"event=synthetic_tick index={i}")
     model = window.controller.model
     paths = tuple(Path(f"synthetic-{index}.png") for index in range(1000))
     model.replace_selection(paths, (None,) * len(paths))
     window._refresh()
     app.processEvents()
-    assert window.log.document().blockCount() <= 500
+    assert len(window._raw_events) == 500
+    assert window._raw_events[-1] == "event=synthetic_tick index=1199"
     assert window.minimumSize() == minimum
     assert window.table.verticalScrollBar().maximum() > 0
     assert shell.rect().contains(bounds(window.footer, shell))
@@ -186,13 +186,14 @@ def test_language_theme_preserve_terminal_options_and_log(window, app, image_fac
     add(app, window, [image_factory()])
     window.settings.quality.setValue(0)
     result = convert(app, window)
-    saved_log = window.log.toPlainText()
+    saved_events = tuple(window._raw_events)
     for language in [1, 2, 0]:
         window.locale_combo.setCurrentIndex(language)
         window.theme_combo.setCurrentIndex(1 - language % 2)
         assert window.controller.result is result
         assert window.settings.quality.value() == 0
-        assert window.log.toPlainText() == saved_log
+        assert tuple(window._raw_events) == saved_events
+        assert window.details.toPlainText()
         assert window.progress.value() == 1
         assert window.start_button.isEnabled()
 
@@ -242,7 +243,7 @@ def test_capability_adapter_failure_retry_clears_failure(app, monkeypatch):
     try:
         pump(app, lambda: widget.controller.failure is not None and not widget.controller.busy)
         assert widget.controller.failure == ErrorCode.INTERNAL_ERROR
-        assert "PRIVATE_CAPABILITY_EXCEPTION" not in widget.log.toPlainText()
+        assert "PRIVATE_CAPABILITY_EXCEPTION" not in widget.details.toPlainText()
         widget.start_button.click()
         pump(app, lambda: widget.controller.capabilities is not None and not widget.controller.busy)
         assert widget.controller.failure is None
